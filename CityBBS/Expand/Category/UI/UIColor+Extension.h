@@ -13,9 +13,13 @@
 @interface UIColor (Extension)
 
 - (UIImage*)convertToImage;
+
+
 + (UIColor *)colorWithHexString:(NSString *)color;
 + (UIColor *)themeColor;
 + (UIColor *)textColor;
++ (UIColor *)textColor2;
+
 + (UIColor *)lineColor;
 + (UIColor *)backgroundColor;
 

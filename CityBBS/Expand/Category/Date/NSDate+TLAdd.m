@@ -1,15 +1,14 @@
 //
-//  TLTool.m
-//  ZHCustomer
+//  NSDate+TLAdd.m
+//  CityBBS
 //
-//  Created by  tianlei on 2017/1/12.
+//  Created by  tianlei on 2017/3/21.
 //  Copyright © 2017年  tianlei. All rights reserved.
 //
 
-#import "TLTool.h"
+#import "NSDate+TLAdd.h"
 
-@implementation TLTool
-
+@implementation NSDate (TLAdd)
 
 + (NSDate *)getDateByString:(NSString *)str
 {
@@ -20,4 +19,5 @@
     NSDate *date01 = [formatter dateFromString:dateStr];
     return date01;
 }
+
 @end

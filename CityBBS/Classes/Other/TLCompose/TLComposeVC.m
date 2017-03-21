@@ -19,11 +19,14 @@
 #import "TLPhotoChooseView.h"
 #import "TLImagePicker.h"
 #import "TLPlateChooseView.h"
+//#import "TZImagePickerController.h"
+#import "TLImagePickerController.h"
+
 
 #define TITLE_MARGIN 10
 #define TEXT_MARGIN 5
 
-@interface TLComposeVC ()<UITextViewDelegate>
+@interface TLComposeVC ()<UITextViewDelegate,TLImagePickerControllerDelegate>
 
 @property (nonatomic, strong) TLEmoticonInputView *emoticonInputView;
 @property (nonatomic, strong) TLComposeToolBar *toolBar;
@@ -168,7 +171,9 @@
         } else if (type == ChangeTypePhoto) {
             
             
-            [self.imagePicker picker];
+//            [self.imagePicker picker];
+            TLImagePickerController *imagePickerController = [[TLImagePickerController alloc] initWithDelegate:self];
+            [self presentViewController:imagePickerController animated:YES completion:nil];
         
         } else { // At
         
@@ -183,6 +188,21 @@
         
     };
     
+
+}
+
+
+- (void)imagePickerControllerDidCancel:(TLImagePickerController *)picker {
+
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+
+- (void)imagePickerController:(TLImagePickerController *)picker didFinishPickingWithImages:(NSArray <UIImage *> *)imgs {
+
+    [picker dismissViewControllerAnimated:YES completion:nil];
+
 
 }
 
@@ -308,6 +328,8 @@
     [self.plateChooseView dismiss];
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
+
+#pragma mark - 选择图片
 
 
 - (TLEmoticonInputView *)emoticonInputView {

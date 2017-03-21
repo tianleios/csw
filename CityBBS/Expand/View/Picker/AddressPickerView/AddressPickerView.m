@@ -102,8 +102,8 @@ static CGFloat const TITLEBUTTONWIDTH = 75.0;
 
     [super layoutSubviews];
     
-    self.addressPickerView.yy_size = self.height;
-    self.titleBackgroundView.yy_size = self.addressPickerView.y;
+    self.addressPickerView.bottom = self.height;
+    self.titleBackgroundView.bottom = self.addressPickerView.y;
 
 }
 

@@ -16,9 +16,10 @@ target 'CityBBS' do
   pod 'SVProgressHUD'
   pod 'PYPhotoBrowser'
   pod 'IQKeyboardManager'
+  pod 'TZImagePickerController'
   #七牛云
-  #pod 'Qiniu'
-  #pod 'Realm'
+  pod 'Qiniu'
+  pod 'Realm'
   
   #导航sdk
   #pod 'AMapLocation'

@@ -13,7 +13,6 @@
 
 #import "TLAlert.h"
 #import "TLAuthHelper.h"
-#import "TLTool.h"
 
 #import "TLBaseModel.h"
 #import "NSNumber+TLAdd.h"
@@ -47,7 +46,7 @@
 
 #import "NSObject+convert.h"
 #import "Foundation+Log.m"
-
+#import "NSDate+TLAdd.h"
 #import "UIFont+UI.h"
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width

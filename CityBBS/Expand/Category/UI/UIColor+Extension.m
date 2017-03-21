@@ -84,6 +84,18 @@
     return color;
 }
 
++ (UIColor *)textColor2 {
+    
+    static UIColor *color = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        color = [UIColor colorWithHexString:@"#999999"];
+    });
+    return color;
+}
+
+
 + (UIColor *)lineColor {
 
     static UIColor *color = nil;

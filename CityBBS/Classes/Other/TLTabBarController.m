@@ -26,7 +26,7 @@
     //, BPProjectCategoryVC  BPSubscriptionVC
     
     
-//    @"ZHMineVC"  ZHMineViewCtrl
+//    @"ZHMineVC"  ZHMineViewCtrl  TLHomeVC
     NSArray *VCNames = @[@"TLHomeVC",@"CSWTimeLineVC",@"CSWDIYVC",@"CSWMineVC"];
     NSArray *imageNames = @[@"头条_un",@"有料_un",@"视频_un",@"我的_un"];
     NSArray *selectedImageNames = @[@"头条",@"有料",@"视频",@"我的"];

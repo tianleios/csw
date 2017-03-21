@@ -143,28 +143,35 @@
 
 }
 
-- (void)setYy_size:(CGFloat)yy_size {
 
-        CGFloat cha = yy_size - self.yy;
-        self.y = self.y + cha;
+//
+- (CGFloat)bottom {
+
+    return self.frame.origin.y + self.frame.size.height;
     
 }
 
-- (CGFloat)yy_size{
+- (void)setBottom:(CGFloat)bottom {
 
-    return self.yy;
+    CGFloat cha = bottom - self.yy;
+    self.y = self.y + cha;
 }
 
-- (void)setXx_size:(CGFloat)xx_size {
 
-    CGFloat cha = xx_size - self.xx;
-    self.x = self.x + cha;
-}
-
-- (CGFloat)xx_size {
+- (CGFloat)right {
 
     return self.xx;
 
 }
+
+- (void)setRight:(CGFloat)right {
+
+    CGFloat cha = right - self.xx;
+    self.x = self.x + cha;
+
+}
+
+
+
 
 @end

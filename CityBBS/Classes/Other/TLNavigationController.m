@@ -21,12 +21,16 @@
 //    self.navigationBar.backIndicatorTransitionMaskImage = [UIImage imageNamed:@"返回"];
 //    self.navigationBar.backgroundColor = [UIColor themeColor];
     
+    [UINavigationBar appearance].barTintColor = [UIColor themeColor];
+    [UINavigationBar appearance].tintColor = [UIColor whiteColor];
+
+    [UINavigationBar appearance].translucent = NO;
+    [UINavigationBar appearance].barStyle = UIBarStyleBlack;
     
-    self.navigationBar.barTintColor = [UIColor themeColor];
-    self.navigationBar.tintColor = [UIColor whiteColor];
-    self.navigationBar.translucent = NO;
-    
-    self.navigationBar.barStyle = UIBarStyleBlack;
+//    self.navigationBar.barTintColor = [UIColor themeColor];
+//    self.navigationBar.tintColor = [UIColor whiteColor];
+//    self.navigationBar.translucent = NO;
+//    self.navigationBar.barStyle = UIBarStyleBlack;
 
     
 }

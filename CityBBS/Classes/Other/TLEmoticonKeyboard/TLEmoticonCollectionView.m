@@ -47,7 +47,7 @@
         CGRect frame = [cell.imageView convertRect:cell.imageView.bounds toView:self];
         
         self.magnifyImageView.centerX = CGRectGetMidX(frame);
-        self.magnifyImageView.yy_size = CGRectGetMaxY(frame);
+        self.magnifyImageView.bottom = CGRectGetMaxY(frame);
         self.magnifyContent.image = cell.imageView.image;
         [self addSubview:self.magnifyImageView];
         
@@ -76,7 +76,7 @@
         CGRect frame = [cell.imageView convertRect:cell.imageView.bounds toView:self];
         
         self.magnifyImageView.centerX = CGRectGetMidX(frame);
-        self.magnifyImageView.yy_size = CGRectGetMaxY(frame);
+        self.magnifyImageView.bottom = CGRectGetMaxY(frame);
         self.magnifyContent.image = cell.imageView.image;
         [self addSubview:self.magnifyImageView];
         
