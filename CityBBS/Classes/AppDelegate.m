@@ -28,6 +28,9 @@
     self.window.rootViewController = [[TLTabBarController alloc] init];
     
     
+    
+    
+    
     //
     [IQKeyboardManager sharedManager].enable = YES;
     [[IQKeyboardManager sharedManager].disabledToolbarClasses addObject:[TLComposeVC class]];
