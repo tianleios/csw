@@ -48,29 +48,41 @@
         
     } else {
         
+        if (![self.contentTf.text valid]) {
+            [TLAlert alertWithHUDText:@"请输入昵称"];
+            return;
+        }
+        
+        TLNetworking *http = [TLNetworking new];
+        http.showView = self.view;
+        http.code = @"805075";
+        http.parameters[@"userId"] = [TLUser user].userId;
+        http.parameters[@"token"] = [TLUser user].token;
+        http.parameters[@"nickname"] = self.contentTf.text;
+        [http postWithSuccess:^(id responseObject) {
+            
+            [TLAlert alertWithHUDText:@"修改成功"];
+            [TLUser user].nickname = self.contentTf.text;
+        
+            [[TLUser user] updateUserInfo];
+            self.editModel.content = self.contentTf.text;
+
+            if (self.done) {
+                self.done();
+            }
+            [self.navigationController popViewControllerAnimated:YES];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kUserInfoChange object:nil];
+            
+        } failure:^(NSError *error) {
+            
+        }];
+        
         
     }
-    self.editModel.content = self.contentTf.text;
 
-    if (self.done) {
-        self.done();
-    }
-    [self.navigationController popViewControllerAnimated:YES];
+
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

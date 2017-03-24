@@ -118,6 +118,19 @@
 #pragma mark- delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    NSString *key = [CSWCityManager manager].cityDict.allKeys[indexPath.section];
+    CSWCity *city = [CSWCityManager manager].cityDict[key][indexPath.row];
+    [CSWCityManager getCityDetailBy:city success:^{
+        
+        //切换成功
+   
+    } failure:^{
+        
+    }];
+    
+    if (self.changeCity) {
+        self.changeCity(city);
+    }
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     
 }
@@ -129,18 +142,24 @@
     return YES;
 }
 
-
+//
+- (nullable NSArray<NSString *> *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    
+    return [CSWCityManager manager].cityDict.allKeys;
+    
+}
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
-    return 10;
+    NSString *key = [CSWCityManager manager].cityDict.allKeys[section];
+    return [CSWCityManager manager].cityDict[key].count;
     
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-    return 2;
+    return [CSWCityManager manager].cityDict.allKeys.count;
     
 }
 
@@ -167,7 +186,9 @@
         
     }
     
-    cell.textLabel.text = @"城市";
+    NSString *key = [CSWCityManager manager].cityDict.allKeys[indexPath.section];
+    CSWCity *city = [CSWCityManager manager].cityDict[key][indexPath.row];
+    cell.textLabel.text = city.name;
     return cell;
 
 }
@@ -182,17 +203,13 @@
 
     UILabel *lbl = [UILabel labelWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 25, 30) textAligment:NSTextAlignmentLeft backgroundColor:bgView.backgroundColor font:FONT(14) textColor:[UIColor textColor]];
     [bgView addSubview:lbl];
-    lbl.text = @"当前";
+    
+    lbl.text = [CSWCityManager manager].cityDict.allKeys[section];
 
     return bgView;
 }
 
 
-//
-- (nullable NSArray<NSString *> *)sectionIndexTitlesForTableView:(UITableView *)tableView {
 
-    return @[@"推荐",@"当前",@"A",@"B",@"C"];
-
-}
 
 @end

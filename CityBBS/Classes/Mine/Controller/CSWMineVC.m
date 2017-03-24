@@ -58,7 +58,17 @@
     self.headerView = mineHeaderView;
     
     //
-    [self data];
+    [self userInfoChange];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoChange) name:kUserInfoChange object:nil];
+}
+
+//
+- (void)userInfoChange {
+    
+    [self.headerView.userPhoto sd_setImageWithURL:[NSURL URLWithString:[TLUser user].userExt.photo] placeholderImage:[UIImage imageNamed:@"user_placeholder"]];
+    self.headerView.nameLbl.text = [TLUser user].nickname;
+    self.headerView.levelLbl.text = @"论坛绞肉机";
+    self.headerView.numberArray = @[@1,@323,@3332,@111];
     
 }
 
@@ -195,14 +205,7 @@
 
 }
 
-- (void)data {
 
-    self.headerView.userPhoto.image = [UIImage imageNamed:@"头像"];
-    self.headerView.nameLbl.text = @"敌法师";
-    self.headerView.levelLbl.text = @"论坛绞肉机";
-    self.headerView.numberArray = @[@1,@323,@3332,@111];
-
-}
 
 #pragma mark- delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

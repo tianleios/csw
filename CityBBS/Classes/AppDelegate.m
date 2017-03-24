@@ -4,12 +4,15 @@
 //
 //  Created by  tianlei on 2017/3/4.
 //  Copyright © 2017年  tianlei. All rights reserved.
-//
+//  https://realm.io/cn/docs/objc/latest/
 
 #import "AppDelegate.h"
 #import "TLTabBarController.h"
 #import "IQKeyboardManager.h"
 #import "TLComposeVC.h"
+#import "AppConfig.h"
+#import "AppDelegate+Chat.h"
+#import "SVProgressHUD.h"
 
 @interface AppDelegate ()
 
@@ -20,23 +23,45 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    //2.应用环境
+    [AppConfig config].runEnv = RunEnvDev;
+    
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
-    
     self.window.rootViewController = [[TLTabBarController alloc] init];
     
     
+    //ProgressHUD
+    [SVProgressHUD setMaximumDismissTimeInterval:7];
+    [SVProgressHUD setMinimumDismissTimeInterval:3];
+
     
     
+    
+    //001700 七牛
     
     //
     [IQKeyboardManager sharedManager].enable = YES;
     [[IQKeyboardManager sharedManager].disabledToolbarClasses addObject:[TLComposeVC class]];
+    
+    
+  
+    //1.出事化环信
+    [self chatInit];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoginOut) name:kUserLoginOutNotification object:nil];
+    
+    
     return YES;
 }
 
+- (void)userLoginOut {
+
+    [[TLUser user] loginOut];
+
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

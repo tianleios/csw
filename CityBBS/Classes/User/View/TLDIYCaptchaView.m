@@ -39,16 +39,17 @@
     
 
     
-    captchaBtn.titleLabel.font = [UIFont thirdFont];
+ 
     self.captchaTf.keyboardType = UIKeyboardTypeNumberPad;
     captchaBtn.layer.borderColor = [UIColor whiteColor].CGColor;
     captchaBtn.layer.borderWidth = 1.0;
     captchaBtn.layer.cornerRadius = 4;
     captchaBtn.clipsToBounds = YES;
     captchaBtn.backgroundColor = [UIColor themeColor];
-    
+    captchaBtn.titleLabel.font = FONT(12);
 //    [captchaBtn setTitleColor:[[UIColor whiteColor] colorWithAlphaComponent:0.4]forState:UIControlStateNormal];
-    [self.captchaBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
+    [self.captchaBtn setTitleColor:[UIColor whiteColor]
+                          forState:UIControlStateNormal];
     
     captchaBtn.centerY = rightView.height/2.0;
     [rightView addSubview:captchaBtn];

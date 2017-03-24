@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E03B3171E84F16300616707 /* CSWCityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E03B3161E84F16300616707 /* CSWCityManager.m */; };
+		2E03B31A1E84F1B900616707 /* CSWCity.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E03B3191E84F1B900616707 /* CSWCity.m */; };
+		2E03B31D1E84FCED00616707 /* CSWCityDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E03B31C1E84FCED00616707 /* CSWCityDetail.m */; };
+		2E03B3201E84FF7100616707 /* CSWNavModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E03B31F1E84FF7100616707 /* CSWNavModel.m */; };
+		2E03B3231E85104000616707 /* RealmModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E03B3221E85104000616707 /* RealmModel.m */; };
 		2E0E18651E7A28C100079648 /* CSWForumGeneraCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E18641E7A28C100079648 /* CSWForumGeneraCell.m */; };
 		2E0E18681E7A29E400079648 /* CSWSubClassCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E18671E7A29E400079648 /* CSWSubClassCell.m */; };
 		2E0E186B1E7A376D00079648 /* CSWPlateDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E186A1E7A376D00079648 /* CSWPlateDetailVC.m */; };
@@ -285,6 +290,9 @@
 		2EABB1601E77CE5D00FD2A68 /* CSWArticleModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EABB15F1E77CE5D00FD2A68 /* CSWArticleModel.m */; };
 		2EABB1631E77CF7C00FD2A68 /* CSWLayoutHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EABB1621E77CF7C00FD2A68 /* CSWLayoutHelper.m */; };
 		2EABB1661E77FA9400FD2A68 /* CSWTimeLineToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EABB1651E77FA9400FD2A68 /* CSWTimeLineToolBar.m */; };
+		2EB021671E83B7D900991F78 /* CSWSJRuleVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB021661E83B7D900991F78 /* CSWSJRuleVC.m */; };
+		2EB0216A1E83BC1A00991F78 /* CSWSJCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB021691E83BC1A00991F78 /* CSWSJCell.m */; };
+		2EB0216D1E83C62700991F78 /* CSWCommentAndLikeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB0216C1E83C62700991F78 /* CSWCommentAndLikeView.m */; };
 		2EB40D5D1E790E1400608195 /* CSWCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB40D5C1E790E1400608195 /* CSWCommentModel.m */; };
 		2EB40D601E791AF600608195 /* CSWClickLinkLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB40D5F1E791AF600608195 /* CSWClickLinkLabel.m */; };
 		2EB40D631E79429C00608195 /* CSWArticleDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB40D621E79429C00608195 /* CSWArticleDetailVC.m */; };
@@ -309,6 +317,16 @@
 
 /* Begin PBXFileReference section */
 		00E9F737182A35C66A3AEA4A /* libPods-CityBBS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CityBBS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E03B3151E84F16300616707 /* CSWCityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWCityManager.h; sourceTree = "<group>"; };
+		2E03B3161E84F16300616707 /* CSWCityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWCityManager.m; sourceTree = "<group>"; };
+		2E03B3181E84F1B900616707 /* CSWCity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWCity.h; sourceTree = "<group>"; };
+		2E03B3191E84F1B900616707 /* CSWCity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWCity.m; sourceTree = "<group>"; };
+		2E03B31B1E84FCED00616707 /* CSWCityDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWCityDetail.h; sourceTree = "<group>"; };
+		2E03B31C1E84FCED00616707 /* CSWCityDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWCityDetail.m; sourceTree = "<group>"; };
+		2E03B31E1E84FF7100616707 /* CSWNavModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWNavModel.h; sourceTree = "<group>"; };
+		2E03B31F1E84FF7100616707 /* CSWNavModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWNavModel.m; sourceTree = "<group>"; };
+		2E03B3211E85104000616707 /* RealmModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealmModel.h; sourceTree = "<group>"; };
+		2E03B3221E85104000616707 /* RealmModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RealmModel.m; sourceTree = "<group>"; };
 		2E0E18631E7A28C100079648 /* CSWForumGeneraCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWForumGeneraCell.h; sourceTree = "<group>"; };
 		2E0E18641E7A28C100079648 /* CSWForumGeneraCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWForumGeneraCell.m; sourceTree = "<group>"; };
 		2E0E18661E7A29E400079648 /* CSWSubClassCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWSubClassCell.h; sourceTree = "<group>"; };
@@ -841,6 +859,12 @@
 		2EABB1621E77CF7C00FD2A68 /* CSWLayoutHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWLayoutHelper.m; sourceTree = "<group>"; };
 		2EABB1641E77FA9400FD2A68 /* CSWTimeLineToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWTimeLineToolBar.h; sourceTree = "<group>"; };
 		2EABB1651E77FA9400FD2A68 /* CSWTimeLineToolBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWTimeLineToolBar.m; sourceTree = "<group>"; };
+		2EB021651E83B7D900991F78 /* CSWSJRuleVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWSJRuleVC.h; sourceTree = "<group>"; };
+		2EB021661E83B7D900991F78 /* CSWSJRuleVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWSJRuleVC.m; sourceTree = "<group>"; };
+		2EB021681E83BC1A00991F78 /* CSWSJCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWSJCell.h; sourceTree = "<group>"; };
+		2EB021691E83BC1A00991F78 /* CSWSJCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWSJCell.m; sourceTree = "<group>"; };
+		2EB0216B1E83C62700991F78 /* CSWCommentAndLikeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWCommentAndLikeView.h; sourceTree = "<group>"; };
+		2EB0216C1E83C62700991F78 /* CSWCommentAndLikeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWCommentAndLikeView.m; sourceTree = "<group>"; };
 		2EB40D5B1E790E1400608195 /* CSWCommentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWCommentModel.h; sourceTree = "<group>"; };
 		2EB40D5C1E790E1400608195 /* CSWCommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWCommentModel.m; sourceTree = "<group>"; };
 		2EB40D5E1E791AF600608195 /* CSWClickLinkLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWClickLinkLabel.h; sourceTree = "<group>"; };
@@ -879,6 +903,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2E03B3111E84F10800616707 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2E03B3151E84F16300616707 /* CSWCityManager.h */,
+				2E03B3161E84F16300616707 /* CSWCityManager.m */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		2E0E18621E7A284500079648 /* Forum */ = {
 			isa = PBXGroup;
 			children = (
@@ -1025,6 +1058,8 @@
 			children = (
 				2E45DA851E80CEB600DD3532 /* CSWMoneyRewardFlowVC.h */,
 				2E45DA861E80CEB600DD3532 /* CSWMoneyRewardFlowVC.m */,
+				2EB021651E83B7D900991F78 /* CSWSJRuleVC.h */,
+				2EB021661E83B7D900991F78 /* CSWSJRuleVC.m */,
 			);
 			path = "赏金";
 			sourceTree = "<group>";
@@ -1147,10 +1182,10 @@
 			children = (
 				2E9539991E6BE91400668E0F /* TLHeader.h */,
 				2E9539851E6BE91400668E0F /* Foundation+Log.m */,
+				2E95383D1E6BE91300668E0F /* AppConfig */,
 				2E45DAB21E81215B00DD3532 /* PhotoChoose */,
 				2E95399E1E6BE91400668E0F /* View */,
 				2E9538331E6BE91300668E0F /* 3rd */,
-				2E95383D1E6BE91300668E0F /* AppConfig */,
 				2E9538401E6BE91300668E0F /* BaseModal */,
 				2E9538451E6BE91300668E0F /* BaseVC */,
 				2E9538661E6BE91300668E0F /* Category */,
@@ -1219,6 +1254,8 @@
 				2E0E187F1E7A69D600079648 /* TLSettingModel.m */,
 				2E9538431E6BE91300668E0F /* TLBaseModel.h */,
 				2E9538441E6BE91300668E0F /* TLBaseModel.m */,
+				2E03B3211E85104000616707 /* RealmModel.h */,
+				2E03B3221E85104000616707 /* RealmModel.m */,
 			);
 			path = BaseModal;
 			sourceTree = "<group>";
@@ -2156,6 +2193,8 @@
 				2E0E18C81E7BC4AF00079648 /* CSWUserEditCell.m */,
 				2E45DA771E80C5C300DD3532 /* CSWFansCell.h */,
 				2E45DA781E80C5C300DD3532 /* CSWFansCell.m */,
+				2EB021681E83BC1A00991F78 /* CSWSJCell.h */,
+				2EB021691E83BC1A00991F78 /* CSWSJCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2163,6 +2202,8 @@
 		2EABB05B1E7157C800FD2A68 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				2EABB0C21E715A7D00FD2A68 /* Model */,
+				2E03B3111E84F10800616707 /* ViewModel */,
 				2EABB10A1E715B1000FD2A68 /* TLNavigationController.h */,
 				2EABB10B1E715B1000FD2A68 /* TLNavigationController.m */,
 				2EABB10C1E715B1000FD2A68 /* TLTabBarController.h */,
@@ -2171,7 +2212,6 @@
 				2E45DA5C1E7EE4A000DD3532 /* TLTabBar.m */,
 				2E45DA641E7FAD6F00DD3532 /* TLBarButton.h */,
 				2E45DA651E7FAD6F00DD3532 /* TLBarButton.m */,
-				2EABB0C21E715A7D00FD2A68 /* Model */,
 				2EABB0C31E715A7D00FD2A68 /* Controller */,
 				2EABB0C41E715A7D00FD2A68 /* View */,
 				2EABB0D01E715A7D00FD2A68 /* TLEmoticonKeyboard */,
@@ -2225,6 +2265,8 @@
 				2E0E18621E7A284500079648 /* Forum */,
 				2EABB1581E77BEF000FD2A68 /* CSWTimeLineCell.h */,
 				2EABB1591E77BEF000FD2A68 /* CSWTimeLineCell.m */,
+				2EB0216B1E83C62700991F78 /* CSWCommentAndLikeView.h */,
+				2EB0216C1E83C62700991F78 /* CSWCommentAndLikeView.m */,
 				2EB40D5E1E791AF600608195 /* CSWClickLinkLabel.h */,
 				2EB40D5F1E791AF600608195 /* CSWClickLinkLabel.m */,
 				2EABB1641E77FA9400FD2A68 /* CSWTimeLineToolBar.h */,
@@ -2240,6 +2282,12 @@
 			children = (
 				2E45DA671E7FD9A600DD3532 /* TLTabBarItem.h */,
 				2E45DA681E7FD9A600DD3532 /* TLTabBarItem.m */,
+				2E03B3181E84F1B900616707 /* CSWCity.h */,
+				2E03B3191E84F1B900616707 /* CSWCity.m */,
+				2E03B31B1E84FCED00616707 /* CSWCityDetail.h */,
+				2E03B31C1E84FCED00616707 /* CSWCityDetail.m */,
+				2E03B31E1E84FF7100616707 /* CSWNavModel.h */,
+				2E03B31F1E84FF7100616707 /* CSWNavModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2556,6 +2604,7 @@
 			files = (
 				2E953A1D1E6BE91400668E0F /* EaseSDKHelper.m in Sources */,
 				2E0E187B1E7A675200079648 /* CSWSettingCell.m in Sources */,
+				2EB0216A1E83BC1A00991F78 /* CSWSJCell.m in Sources */,
 				2EABB1601E77CE5D00FD2A68 /* CSWArticleModel.m in Sources */,
 				2E953A191E6BE91400668E0F /* PSTGridLayoutItem.m in Sources */,
 				2E9539F01E6BE91400668E0F /* EMCDDeviceManagerBase.m in Sources */,
@@ -2574,6 +2623,7 @@
 				2E953A141E6BE91400668E0F /* PSTCollectionViewFlowLayout.m in Sources */,
 				2EABB13F1E75285E00FD2A68 /* TLPhotoChooseView.m in Sources */,
 				2E953A641E6BE91400668E0F /* TLTextView.m in Sources */,
+				2E03B3231E85104000616707 /* RealmModel.m in Sources */,
 				2E953A011E6BE91400668E0F /* EMSDWebImageDecoder.m in Sources */,
 				2E953A601E6BE91400668E0F /* TLPickerTextField.m in Sources */,
 				2E953A221E6BE91400668E0F /* NSDateFormatter+Category.m in Sources */,
@@ -2584,6 +2634,7 @@
 				2E45DA721E7FDF9800DD3532 /* CSWDIYCell.m in Sources */,
 				2E953A381E6BE91400668E0F /* EaseMessageTimeCell.m in Sources */,
 				2E953A371E6BE91400668E0F /* EaseMessageCell.m in Sources */,
+				2E03B3201E84FF7100616707 /* CSWNavModel.m in Sources */,
 				2E0E18DC1E7BD6A500079648 /* TLDatePicker.m in Sources */,
 				2EB40D661E79461800608195 /* CSWSwitchView.m in Sources */,
 				2EABB1541E77896D00FD2A68 /* TLPlateChooseCell.m in Sources */,
@@ -2620,9 +2671,11 @@
 				2E0E18AF1E7B8E6900079648 /* TLAccountSetBaseVC.m in Sources */,
 				2EABB1511E7786F600FD2A68 /* TLPlateChooseView.m in Sources */,
 				2E953A481E6BE91400668E0F /* EaseRecordView.m in Sources */,
+				2E03B31D1E84FCED00616707 /* CSWCityDetail.m in Sources */,
 				2E0E18B91E7B8E6900079648 /* TLUserProtocalVC.m in Sources */,
 				2EABB1031E715A7E00FD2A68 /* TLEmoticon.m in Sources */,
 				2E45DA8A1E80D13600DD3532 /* CSWSearchVC.m in Sources */,
+				2EB0216D1E83C62700991F78 /* CSWCommentAndLikeView.m in Sources */,
 				2EB40D691E7962B400608195 /* CSWForumVC.m in Sources */,
 				2EABB1201E72454A00FD2A68 /* TLGroupItem.m in Sources */,
 				2EABB0F01E715A7D00FD2A68 /* TLComposeToolBar.m in Sources */,
@@ -2692,6 +2745,7 @@
 				2EABB1261E7252BF00FD2A68 /* TLFunc3Cell.m in Sources */,
 				2E0E18B51E7B8E6900079648 /* TLAccountBaseVC.m in Sources */,
 				2E953A321E6BE91400668E0F /* EaseUsersListViewController.m in Sources */,
+				2E03B3171E84F16300616707 /* CSWCityManager.m in Sources */,
 				2E953A5D1E6BE91400668E0F /* TLCaptchaView.m in Sources */,
 				2E953A2D1E6BE91400668E0F /* FixFopen.c in Sources */,
 				2E953A511E6BE91400668E0F /* TLPageDataHelper.m in Sources */,
@@ -2699,6 +2753,7 @@
 				2EABB11C1E715E2100FD2A68 /* TLHomeVC.m in Sources */,
 				2E9539C41E6BE91400668E0F /* UIDevice+FCUUID.m in Sources */,
 				2E9539DF1E6BE91400668E0F /* NSTimer+tlNoCycle.m in Sources */,
+				2EB021671E83B7D900991F78 /* CSWSJRuleVC.m in Sources */,
 				2E0E18B71E7B8E6900079648 /* TLUserForgetPwdVC.m in Sources */,
 				2E9539DA1E6BE91400668E0F /* MBProgressHUD+add.m in Sources */,
 				2EABB0EF1E715A7D00FD2A68 /* TLComposeTextView.m in Sources */,
@@ -2746,6 +2801,7 @@
 				2E953A661E6BE91400668E0F /* TLAlert.m in Sources */,
 				2E953A0B1E6BE91400668E0F /* UIImage+EMWebP.m in Sources */,
 				2EABB0F21E715A7D00FD2A68 /* TLTextAttachment.m in Sources */,
+				2E03B31A1E84F1B900616707 /* CSWCity.m in Sources */,
 				2E953A631E6BE91400668E0F /* TLTextField.m in Sources */,
 				2E9539DD1E6BE91400668E0F /* NSObject+convert.m in Sources */,
 				2E953A101E6BE91400668E0F /* PSTCollectionView.m in Sources */,

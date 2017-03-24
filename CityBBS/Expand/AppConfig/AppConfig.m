@@ -73,15 +73,49 @@ void TLLog(NSString *format, ...) {
 
 }
 
+- (NSString *)systemCode {
+
+    return @"CD-CCSW000008";
+
+}
+
+- (NSString *)companyCode {
+
+    return @"CD-CCSW000008";
+}
+
+
+- (NSString *)qiNiuKey {
+    
+    return @"http://omxvtiss6.bkt.clouddn.com";
+    
+}
+
+- (NSString *)chatKey {
+    
+    if (self.runEnv == RunEnvDev) {
+        
+        return @"tianleios#zh-dev";
+        
+    } else {
+        
+        return @"1139170317178872#zhpay";
+    }
+    //
+    
+    
+}
+
 - (NSString *)addr {
 
     if (self.runEnv == RunEnvDev) {
         
-      return @"http://121.43.101.148:5601"; //dev
+//      return @"http://121.43.101.148:5601"; //dev
+        return   @"http://121.43.101.148:8901";
 
     } else {
     
-      return @"http://139.224.200.54:5601"; //test
+      return @"http://139.224.200.54:5601"; //release
 
     }
 

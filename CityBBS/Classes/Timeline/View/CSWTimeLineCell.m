@@ -12,6 +12,7 @@
 #import "PYPhotosView.h"
 #import "CSWTimeLineToolBar.h"
 #import "CSWClickLinkLabel.h"
+#import "CSWCommentAndLikeView.h"
 
 @interface CSWTimeLineCell()<MLLinkLabelDelegate>
 
@@ -29,13 +30,16 @@
 
 //底部评论背景
 @property (nonatomic, strong) UIImageView *arrowImageView;
-@property (nonatomic, strong) UIView *bottomBgView;
 
-@property (nonatomic, strong) UIImageView *likeImageView;
-@property (nonatomic, strong) UILabel *likeCountLbl;
-@property (nonatomic, strong) MLLinkLabel *likeLabel;
-@property (nonatomic, strong) CALayer *line;
-@property (nonatomic, strong) UIButton *lookMoreCommentBtn;
+
+//@property (nonatomic, strong) UIView *bottomBgView;
+@property (nonatomic, strong) CSWCommentAndLikeView *commentAndLikeView;
+
+//@property (nonatomic, strong) UIImageView *likeImageView;
+//@property (nonatomic, strong) UILabel *likeCountLbl;
+//@property (nonatomic, strong) MLLinkLabel *likeLabel;
+//@property (nonatomic, strong) CALayer *line;
+//@property (nonatomic, strong) UIButton *lookMoreCommentBtn;
 
 @end
 
@@ -50,8 +54,8 @@
         //
         self.photoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 15, 50, 50)];
         [self.contentView addSubview:self.photoImageView];
-        self.photoImageView.layer.cornerRadius = 25;
-        self.photoImageView.layer.masksToBounds = YES;
+//        self.photoImageView.layer.cornerRadius = 25;
+//        self.photoImageView.layer.masksToBounds = YES;
         self.photoImageView.backgroundColor = [UIColor orangeColor];
         
         //名称
@@ -139,78 +143,12 @@
         self.arrowImageView = [[UIImageView alloc] init];
         [self.contentView addSubview:self.arrowImageView];
         self.arrowImageView.image = [UIImage imageNamed:@"timeline_article_arrow"];
-        
-        self.bottomBgView = [[UIView alloc] init];
-        [self.contentView addSubview:self.bottomBgView];
-        self.bottomBgView.backgroundColor = [UIColor colorWithHexString:@"#f5f5f5"];
-        self.bottomBgView.layer.cornerRadius = 8;
-        self.bottomBgView.layer.masksToBounds = YES;
-        
-        //
-        self.likeImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"time_line_dz"]];
-        self.likeImageView.contentMode =  UIViewContentModeScaleAspectFit;
-        [self.bottomBgView addSubview:self.likeImageView];
-        [self.likeImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.bottomBgView.mas_left).offset(layout.commentMargin);
-            make.centerY.equalTo(self.bottomBgView.mas_top).offset(15);
-            make.width.mas_equalTo(15);
-            make.height.mas_equalTo(layout.likeHeight);
 
-        }];
+        self.commentAndLikeView = [[CSWCommentAndLikeView alloc] init];
+        [self.contentView addSubview:self.commentAndLikeView];
         
-        //点赞人数
-        self.likeCountLbl = [UILabel labelWithFrame:CGRectZero
-                                       textAligment:NSTextAlignmentCenter backgroundColor:[UIColor clearColor]
-                                               font:layout.likeFont
-                                          textColor:[UIColor textColor]];
+        //点赞和评论
 
-        self.likeCountLbl.numberOfLines = 1;
-        [self.bottomBgView addSubview:self.likeCountLbl];
-        
-        //更多点赞列表
-        self.likeLabel = [[MLLinkLabel alloc] initWithFrame:CGRectZero];
-        self.likeLabel.dataDetectorTypes = MLDataDetectorTypeAll;
-        self.likeLabel.font = layout.likeFont;
-        self.likeLabel.delegate = self;
-        self.likeLabel.textAlignment = NSTextAlignmentLeft;
-//        self.likeLabel.textColor = [UIColor colorWithHexString:@"#7d0000"];
-        self.likeLabel.textColor = [UIColor textColor];
-
-        self.likeLabel.numberOfLines = 1;
-        [self.bottomBgView addSubview:self.likeLabel];
-        
-        
-        [self.likeCountLbl mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.likeImageView.mas_right).offset(8);
-            make.top.equalTo(self.bottomBgView.mas_top);
-            make.height.mas_equalTo(layout.likeHeight);
-//            make.right.lessThanOrEqualTo();
-            make.right.lessThanOrEqualTo(self.likeLabel.mas_left);
-        }];
-        
- 
-        [self.likeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.bottomBgView.mas_top);
-            make.height.equalTo(self.likeCountLbl.mas_height);
-            make.left.equalTo(self.likeCountLbl.mas_right).offset(9);
-            
-            make.right.lessThanOrEqualTo(self.bottomBgView.mas_right).offset(-layout.commentMargin);
-//            make.right.equalTo(self.bottomBgView.mas_right).offset(-layout.commentMargin);
-            
-        }];
-        
-        //线
-        self.line = [CALayer layer];
-        self.line.backgroundColor = [UIColor whiteColor].CGColor;
-        [self.bottomBgView.layer addSublayer:self.line];
-        
-        //更多评论
-        self.lookMoreCommentBtn = [[UIButton alloc] init];
-       [self.lookMoreCommentBtn setTitle:@"查看全部评论>>" forState:UIControlStateNormal];
-        self.lookMoreCommentBtn.titleLabel.font = layout.commentFont;
-        [self.lookMoreCommentBtn setTitleColor:[UIColor colorWithHexString:@"#999999"] forState:UIControlStateNormal];
-        self.lookMoreCommentBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        [self.bottomBgView addSubview:self.lookMoreCommentBtn];
         
         //评论
         //-----底线
@@ -266,71 +204,12 @@
     //背景
     self.toolBar.frame = _layoutItem.toolBarFrame;
     self.arrowImageView.frame = _layoutItem.arrowFrame;
-    self.bottomBgView.frame = _layoutItem.bottomBgFrame;
-    
-    [self.bottomBgView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            
-            if ([obj isKindOfClass:[CSWClickLinkLabel class]]) {
-                
-                [obj removeFromSuperview];
-
-            }
-    }];
-    
-    //点赞
-    if (_layoutItem.isHasLike) { //有点赞
-        
-        self.line.frame = _layoutItem.lineFrame;
-        self.likeCountLbl.text = @"2121";
-        self.likeLabel.attributedText = _layoutItem.likeAttributedString;
-        
-    } else {
-    
-        self.likeLabel.hidden = YES;
-        self.line.hidden = YES;
-    }
-    
-    //评论
-    [_layoutItem.commentFrames enumerateObjectsUsingBlock:^(NSValue * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-         CSWClickLinkLabel *linkLable = [[CSWClickLinkLabel alloc] initWithFrame:[obj CGRectValue]];
-        linkLable.textColor = [UIColor textColor];
-        linkLable.font = [CSWLayoutHelper helper].commentFont;
-        linkLable.numberOfLines = 0;
-        linkLable.textColor = [UIColor textColor];
-//        linkLable.backgroundColor = idx%2 ? [UIColor orangeColor] : [UIColor cyanColor];
-        linkLable.attributedText = _layoutItem.attributedComments[idx];
-        [self.bottomBgView addSubview:linkLable];
-    }];
-    
-    if (_layoutItem.isShowLookMoreCommentBtn) {
-        
-        self.lookMoreCommentBtn.hidden = NO;
-        self.lookMoreCommentBtn.frame = _layoutItem.lookMoreCommentBtnFrame;
-    } else {
-        
-        self.lookMoreCommentBtn.hidden = YES;
-
-    }
     
     
-    //点赞和评论
-    
-//    MLLinkLabel *linkLable = [[MLLinkLabel alloc] initWithFrame:CGRectMake(100, self.arrowImageView.yy, 300, 50)];
-//    [self.contentView addSubview:linkLable];
-//    
-//    NSAttributedString *attr = [[NSAttributedString alloc] initWithString:@"link" attributes:@{
-//                                                                                               NSLinkAttributeName : @"userId",
-//                                                                                               NSForegroundColorAttributeName : [UIColor orangeColor]
-//                                                                                              }];
-//    
-//    linkLable.attributedText = attr;
-//    
-//    [linkLable setDidClickLinkBlock:^(MLLink *link, NSString *linkText, MLLinkLabel *label) {
-//        
-//    }];
-    
-    
+#pragma mark - //底部点赞和评论的背景
+//    self.bottomBgView.frame = _layoutItem.bottomBgFrame;
+    self.commentAndLikeView.frame= _layoutItem.bottomBgFrame;
+    self.commentAndLikeView.layoutItem = _layoutItem;
     
 }
 

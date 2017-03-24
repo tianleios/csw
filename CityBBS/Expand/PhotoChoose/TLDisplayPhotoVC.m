@@ -20,9 +20,14 @@
 @end
 
 @implementation TLDisplayPhotoVC
+{
+    dispatch_group_t _group;
+
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     
     if (self.navigationController) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(cancel)];
@@ -31,16 +36,18 @@
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"完成" style:UIBarButtonItemStylePlain target:self action:@selector(complection)];
     }
     
+    _group = dispatch_group_create();
+    
     self.assetRoom = [NSMutableArray array];
     self.photoItems = [NSMutableArray array];
-    //第一格为照相，先添加
+    
+    //第一格为相机
     TLPhotoChooseItem *cameraItem = [TLPhotoChooseItem new];
     cameraItem.isCamera = YES;
     [self.photoItems addObject:cameraItem];
     
     
     //
-    
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
     flowLayout.minimumLineSpacing = 2;
     flowLayout.minimumInteritemSpacing = 2;
@@ -70,13 +77,14 @@
     
     
     //图片库
-    PHPhotoLibrary *photoLibrary = [PHPhotoLibrary sharedPhotoLibrary];
+//    PHPhotoLibrary *photoLibrary = [PHPhotoLibrary sharedPhotoLibrary];
     
     //一、  PHAsset 和 PHCollection 两种途径获取资源
     //二、  两个子类 1.PHCollectionList:文件夹  2.PHAssetCollection:相册
-    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-        NSLog(@"获取权限");
-    }];
+//    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+//        NSLog(@"获取权限");
+//    }];
+    
     
     
     //拉取选项
@@ -84,8 +92,8 @@
     //    fetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
     
     //获取相册
-    PHFetchResult<PHAssetCollection *> *albumResult =	 [PHAssetCollection
-                                                          
+    PHFetchResult<PHAssetCollection *> *albumResult = [PHAssetCollection
+                                                       
                                                           fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum
                                                           subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary
                                                           options:fetchOptions];
@@ -111,6 +119,18 @@
                     photoItem.thumbnailSize = CGSizeMake(w, w);
                     photoItem.asset = asset;
                     [self.photoItems addObject:photoItem];
+                    
+                    if (self.replacePhotoItems) {
+                        
+                        [self.replacePhotoItems enumerateObjectsUsingBlock:^(TLPhotoChooseItem * _Nonnull replaceItem, NSUInteger idx, BOOL * _Nonnull stop) {
+                            
+                            if ([photoItem.asset.localIdentifier isEqualToString: replaceItem.asset.localIdentifier]) {
+                                
+                                photoItem.isSelected = YES;
+                            }
+                            
+                        }];
+                    }
                 }
                 
             }];
@@ -118,8 +138,8 @@
         }
         
     }];
-    //从相册中，获取图片资源
     
+    //从相册中，获取图片资源
     
     //由 asset 获取图片
     PHImageRequestOptions *imageRequestOptions = [[PHImageRequestOptions alloc] init];
@@ -132,47 +152,48 @@
     
     //取出图片 取出图片放在
     
-    //    [self.assetRoom enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
-    //
-    //        [cachingImageManager requestImageForAsset:asset targetSize:CGSizeMake(w, w) contentMode:PHImageContentModeAspectFit options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-    //
-    //
-    //
-    //        }];
-    //
-    //    }];
 }
 
 #pragma mark- 确定图片选择
 - (void)complection {
     
     NSMutableArray <UIImage *>*imgs = [NSMutableArray array];
-    CGFloat count = [TLChooseResultManager manager].hasChooseItems.count;
+    NSInteger count = [TLChooseResultManager manager].hasChooseItems.count;
     
     //外界希望得到的应该是原图
     [[TLChooseResultManager manager].hasChooseItems enumerateObjectsUsingBlock:^(TLPhotoChooseItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        [[PHImageManager defaultManager] requestImageForAsset:obj.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+        
+        dispatch_group_enter(_group);
+        //异步获取
+        [[PHImageManager defaultManager] requestImageForAsset:obj.asset
+                                                   targetSize:PHImageManagerMaximumSize
+                                                  contentMode:PHImageContentModeAspectFill
+                                                      options:nil
+                                                resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
             
 //            NSLog(@"%@",result);
             [imgs addObject:result];
-            NSLog(@"%@",self.delegate);
-            if (idx == count - 1 && self.delegate && [self.delegate respondsToSelector:@selector(imagePickerController:didFinishPickingWithImages:)]) {
-                
-                [self.delegate imagePickerController:self.pickerCtrl didFinishPickingWithImages:imgs];
-                
-            }
+            NSLog(@"%ld",count - 1 -idx);
+                                                    
+           dispatch_group_leave(_group);
             
         }];
         
-        
-
-        
     }];
     
+    dispatch_group_notify(_group, dispatch_get_main_queue(), ^{
+        
+        //判断方式有问题 ，注意
+        if ( self.delegate && [self.delegate respondsToSelector:@selector(imagePickerController:didFinishPickingWithImages:chooseItems:)]) {
+            
+            [self.delegate imagePickerController:self.pickerCtrl didFinishPickingWithImages:imgs chooseItems:[TLChooseResultManager manager].hasChooseItems];
+            
+            [[TLChooseResultManager manager].hasChooseItems removeAllObjects];
+            
+        }
     
-    
- 
+     });
     
 }
 
@@ -181,6 +202,7 @@
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerControllerDidCancel:)]) {
         
+        [[TLChooseResultManager manager].hasChooseItems removeAllObjects];
         [self.delegate imagePickerControllerDidCancel:self.pickerCtrl];
         
     }
@@ -193,6 +215,15 @@
     
     [picker dismissViewControllerAnimated:YES completion:nil];
     UIImage *img = (UIImage *)info[@"UIImagePickerControllerOriginalImage"];
+    
+    if ( self.delegate && [self.delegate respondsToSelector:@selector(imagePickerController:didFinishPickingWithImages: chooseItems:)]) {
+        
+        [self.delegate imagePickerController:self.pickerCtrl didFinishPickingWithImages:@[img] chooseItems:nil];
+        //清除
+        [[TLChooseResultManager manager].hasChooseItems removeAllObjects];
+
+        
+    }
     
 }
 

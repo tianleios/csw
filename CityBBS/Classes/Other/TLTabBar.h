@@ -12,8 +12,8 @@
 
 @protocol TLTabBarDelegate <NSObject>
 
-- (void)didSelected:(NSInteger)idx tabBar:(TLTabBar *)tabBar;
-- (void)didSelectedMiddleItemTabBar:(TLTabBar *)tabBar;
+- (BOOL)didSelected:(NSInteger)idx tabBar:(TLTabBar *)tabBar;
+- (BOOL)didSelectedMiddleItemTabBar:(TLTabBar *)tabBar;
 
 
 @end

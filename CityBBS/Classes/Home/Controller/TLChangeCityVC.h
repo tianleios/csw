@@ -7,7 +7,10 @@
 //
 
 #import "TLBaseVC.h"
+#import "CSWCity.h"
 
 @interface TLChangeCityVC : TLBaseVC
+
+@property (nonatomic, copy) void(^changeCity)(CSWCity *city);
 
 @end

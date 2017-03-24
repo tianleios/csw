@@ -13,6 +13,8 @@
 #import "TLDatePicker.h"
 #import "CSWEditVC.h"
 #import "TLTextView.h"
+#import "QNUploadManager.h"
+#import "TLUploadManager.h"
 
 @interface CSWUserDetailEditVC ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -47,12 +49,12 @@
     //
     CSWUserEditModel *phootModel = [CSWUserEditModel new];
     phootModel.title = @"头像";
-    phootModel.imageName = @"个人详情头像";
+    phootModel.imageName = @"user_placeholder";
     
     //昵称
     CSWUserEditModel *nickNameModel = [CSWUserEditModel new];
     nickNameModel.title = @"昵称";
-    nickNameModel.content = @"请填写昵称";
+    nickNameModel.content = [TLUser user].nickname;
     
     //生日
     CSWUserEditModel *birthdayModel = [CSWUserEditModel new];
@@ -71,6 +73,60 @@
     
     self.models = @[phootModel,nickNameModel,birthdayModel,sexModel,emailModel];
     
+    
+    __weak typeof(self) weakSelf = self;
+    [self.imgPicker setPickFinish:^(NSDictionary * info, UIImage * img) {
+        
+        //图片上传
+        TLNetworking *getUploadToken = [TLNetworking new];
+        getUploadToken.showView = weakSelf.view;
+        getUploadToken.code = IMG_UPLOAD_CODE;
+        getUploadToken.parameters[@"token"] = [TLUser user].token;
+        [getUploadToken postWithSuccess:^(id responseObject) {
+            
+            [MBProgressHUD showHUDAddedTo:weakSelf.view animated:YES];
+            QNUploadManager *uploadManager = [[QNUploadManager alloc] init];
+            NSString *token = responseObject[@"data"][@"uploadToken"];
+            
+            UIImage *image = info[@"UIImagePickerControllerOriginalImage"];
+            NSData *imgData = UIImageJPEGRepresentation(image, 0.4);
+            
+            [uploadManager putData:imgData key:[TLUploadManager imageNameByImage:image] token:token complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                
+                //设置头像
+                TLNetworking *http = [TLNetworking new];
+                http.showView = weakSelf.view;
+                http.code = USER_CHANGE_USER_PHOTO;
+                http.parameters[@"userId"] = [TLUser user].userId;
+                http.parameters[@"photo"] = key;
+                http.parameters[@"token"] = [TLUser user].token;
+                [http postWithSuccess:^(id responseObject) {
+                    
+                    [TLAlert alertWithHUDText:@"修改头像成功"];
+                    [TLUser user].userExt.photo = key;
+                    
+                     weakSelf.models[0].img = img;
+                    [weakSelf.editTableView reloadData];
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kUserInfoChange object:nil];
+                    
+                } failure:^(NSError *error) {
+                    
+                    
+                }];
+                
+                
+            } option:nil];
+            
+        } failure:^(NSError *error) {
+            
+        }];
+
+
+        
+    }];
+    
 }
 
 #pragma mark- datePicker
@@ -80,57 +136,13 @@
    
 }
 
-- (TLTextView *)textView {
-
-    if (!_textView) {
-        
-        _textView = [[TLTextView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 150)];
-        _textView.font = FONT(15);
-        _textView.textColor = [UIColor textColor];
-        _textView.backgroundColor = [UIColor whiteColor];
-        _textView.textContainerInset = UIEdgeInsetsMake(10, 6, 10, 6);
-        _textView.placholder = @"个性签名~~";
-    }
-    return _textView;
-
+#pragma mark- 资料保存
+- (void)save {
+    
+    
+    
 }
 
-- (TLDatePicker *)datePicker {
-
-    if (!_datePicker) {
-        __weak typeof(self) weakSelf = self;
-        _datePicker = [TLDatePicker new];
-        _datePicker.datePicker.datePickerMode = UIDatePickerModeDate;
-        [_datePicker setConfirmAction:^(NSDate *date) {
-            
-            CSWUserEditModel *editModel = weakSelf.models[2];
-            editModel.content =  [date description];
-            [weakSelf.editTableView reloadData];
-            
-        }];
-    }
-    return _datePicker;
-
-}
-
-- (TLImagePicker *)imgPicker {
-
-    if (!_imgPicker) {
-        
-        __weak typeof(self) weakSelf = self;
-        _imgPicker = [[TLImagePicker alloc] initWithVC:self];
-        _imgPicker.allowsEditing = YES;
-        [_imgPicker setPickFinish:^(NSDictionary * info, UIImage * img) {
-           
-            weakSelf.models[0].img = img;
-            [weakSelf.editTableView reloadData];
-            
-        }];
-        
-    }
-    return _imgPicker;
-
-}
 #pragma mark- delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
@@ -167,7 +179,8 @@
                 [alertController addAction:[UIAlertAction actionWithTitle:@"男" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                     
                     model.content = @"男";
-                   [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];                    
+                   [tableView reloadData];
+                    
                 }]];
                 
                 
@@ -204,6 +217,53 @@
     
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+}
+
+
+- (TLTextView *)textView {
+    
+    if (!_textView) {
+        
+        _textView = [[TLTextView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 150)];
+        _textView.font = FONT(15);
+        _textView.textColor = [UIColor textColor];
+        _textView.backgroundColor = [UIColor whiteColor];
+        _textView.textContainerInset = UIEdgeInsetsMake(10, 6, 10, 6);
+        _textView.placholder = @"个性签名~~";
+    }
+    return _textView;
+    
+}
+
+- (TLDatePicker *)datePicker {
+    
+    if (!_datePicker) {
+        __weak typeof(self) weakSelf = self;
+        _datePicker = [TLDatePicker new];
+        _datePicker.datePicker.datePickerMode = UIDatePickerModeDate;
+        [_datePicker setConfirmAction:^(NSDate *date) {
+            
+            CSWUserEditModel *editModel = weakSelf.models[2];
+            editModel.content =  [date description];
+            [weakSelf.editTableView reloadData];
+            
+        }];
+    }
+    return _datePicker;
+    
+}
+
+- (TLImagePicker *)imgPicker {
+    
+    if (!_imgPicker) {
+        
+        __weak typeof(self) weakSelf = self;
+        _imgPicker = [[TLImagePicker alloc] initWithVC:self];
+        _imgPicker.allowsEditing = YES;
+        
+    }
+    return _imgPicker;
     
 }
 
@@ -267,12 +327,7 @@
     return cell;
 }
 
-#pragma mark- 资料保存
-- (void)save {
 
-    
-
-}
 
 
 

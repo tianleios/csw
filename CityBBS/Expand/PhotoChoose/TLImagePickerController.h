@@ -9,15 +9,21 @@
 #import <UIKit/UIKit.h>
 
 #import "TLImagePickerControllerDelegate.h"
+#import "TLPhotoChooseItem.h"
 
 @class TLImagePickerController;
 
-
 @interface TLImagePickerController : UINavigationController
 
-- (instancetype)initWithDelegate:(id<TLImagePickerControllerDelegate>)delegate;
+//- (instancetype)initWithDelegate:(id<TLImagePickerControllerDelegate>)pickerDelegate;
 
 
-@property (nonatomic, weak) id<TLImagePickerControllerDelegate> delegate;
+@property (nonatomic, weak) id<TLImagePickerControllerDelegate> pickerDelegate;
+
+
+/**
+ 重选时填入此模型，进行比对
+ */
+@property (nonatomic, copy) NSArray <TLPhotoChooseItem *>*replacePhotoItems;
 
 @end

@@ -53,7 +53,7 @@
 
 + (NSString *)systemCode {
     
-    return @"CD-CZH000001";
+    return [AppConfig config].systemCode;
     
 }
 

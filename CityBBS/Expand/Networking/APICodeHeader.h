@@ -10,7 +10,7 @@
 #define APICodeHeader_h
 
 //验证码
-#define CAPTCHA_CODE @"805904"
+#define CAPTCHA_CODE @"001201"
 
 //用户
 #define USER_REG_CODE @"805041"//注册
@@ -21,6 +21,11 @@
 
 #define USER_SET_TRADE_PWD @"805045"//设置交易密码
 #define USER_FIND_TRADE_PWD @"805057"// 找回交易密码
+#define USER_CHANGE_USER_PHOTO @"805077"// 修改头像
+
+//七牛图片上传
+#define IMG_UPLOAD_CODE @"001700"// 
+
 
 //商品相关
 #define GOODS_ADD @"808010" //增加商品

@@ -33,6 +33,7 @@
         self.userPhoto = [[UIImageView alloc] init];
         [self.contentView addSubview:self.userPhoto];
         self.userPhoto.contentMode = UIViewContentModeScaleAspectFill;
+        self.userPhoto.layer.cornerRadius = 30.0;
         self.userPhoto.clipsToBounds = YES;
         
 

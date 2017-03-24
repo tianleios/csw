@@ -26,6 +26,35 @@
         iv.clipsToBounds = YES;
         iv.contentMode = UIViewContentModeScaleAspectFill;
         self.imageIV = iv;
+        
+        
+        //
+        UIView *bgV = [[UIView alloc] init];
+        bgV.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+        [self.contentView addSubview:bgV];
+        [bgV mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.equalTo(self);
+            make.height.mas_equalTo(35);
+        }];
+        
+        
+        [[UIColor blackColor] colorWithAlphaComponent:0.2];
+        //底部
+        UILabel *titleLbl = [UILabel labelWithFrame:CGRectZero
+                                        textAligment:NSTextAlignmentLeft
+                                     backgroundColor:[UIColor clearColor
+                                                      ]
+                                                font:FONT(16)
+                                           textColor:[UIColor whiteColor]];
+        [bgV addSubview:titleLbl];
+        
+        //
+        [titleLbl mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsMake(0, 15, 0, -15));
+        }];
+        
+        titleLbl.text = @"橙袋科技征文启事";
+        
     }
     return self;
 }

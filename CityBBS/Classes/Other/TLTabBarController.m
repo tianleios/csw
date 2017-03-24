@@ -11,6 +11,7 @@
 #import "CSWTimeLineVC.h"
 #import "TLTabBar.h"
 #import "TLComposeVC.h"
+#import "TLUserLoginVC.h"
 
 @interface TLTabBarController ()<UITabBarControllerDelegate,TLTabBarDelegate>
 
@@ -82,17 +83,42 @@
 }
 
 #pragma tabBar-delegate
-- (void)didSelected:(NSInteger)idx tabBar:(TLTabBar *)tabBar {
+- (BOOL)didSelected:(NSInteger)idx tabBar:(TLTabBar *)tabBar {
 
+    if (idx == 3 && ![TLUser user].isLogin) {
+        
+        
+        TLUserLoginVC *loginVC = [TLUserLoginVC new];
+        TLNavigationController *nav = [[TLNavigationController alloc] initWithRootViewController:loginVC];
+        [self presentViewController:nav animated:YES completion:nil];
+        
+        return NO;
+    }
+    
     self.selectedIndex = idx;
+    return YES;
+   
 }
 
-- (void)didSelectedMiddleItemTabBar:(TLTabBar *)tabBar {
+- (BOOL)didSelectedMiddleItemTabBar:(TLTabBar *)tabBar {
 
-    TLNavigationController *nav = [[TLNavigationController alloc] initWithRootViewController:[TLComposeVC new]];
+    if ([TLUser user].isLogin) {
+        
+        TLNavigationController *nav = [[TLNavigationController alloc] initWithRootViewController:[TLComposeVC new]];
+        [self presentViewController:nav animated:YES completion:nil];
+        
+        return YES;
+    }
+    
+    TLUserLoginVC *loginVC = [TLUserLoginVC new];
+    TLNavigationController *nav = [[TLNavigationController alloc] initWithRootViewController:loginVC];
     [self presentViewController:nav animated:YES completion:nil];
+    
+    return NO;
 
 }
+
+
 
 - (void)usrLoginOut {
 

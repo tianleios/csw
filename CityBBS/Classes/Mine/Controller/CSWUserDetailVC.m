@@ -103,19 +103,34 @@
     
     //底部工具栏--我的直接编写资料
     //
-    if (self.type == CSWUserDetailVCTypeMine) { //我的
-        
-    } else { //其它用户
-    
-    }
-    
     [self.view addSubview:self.bootoomTooBar];
     self.bootoomTooBar.y = SCREEN_HEIGHT - 64 - 45;
     
     
     self.navBarImageView=(UIImageView *)self.navigationController.navigationBar.subviews.firstObject;
-//    self.navBarImageView = (UIImageView *)NSClassFromString(@"_UIBarBackground");
     self.navBarImageView.alpha = 0;
+    
+    
+    //初始化数据
+    if (self.type == CSWUserDetailVCTypeMine) { //我的
+        
+
+        [self userInfoChange];
+    } else { //其它用户
+        
+    
+    }
+    
+
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoChange) name:kUserInfoChange object:nil];
+}
+
+- (void)userInfoChange {
+
+    [self.userPhoto sd_setImageWithURL:[NSURL URLWithString:[TLUser user].userExt.photo ] placeholderImage:[UIImage imageNamed:@"user_placeholder"]];
+    self.nickNameLbl.text = [TLUser user].nickname;
+
 }
 
 

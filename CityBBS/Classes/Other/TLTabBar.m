@@ -118,7 +118,9 @@
 - (void)selectedXiaoMi {
 
     if (self.tl_delegate && [self.tl_delegate respondsToSelector:@selector(didSelected:tabBar:)]) {
-        [self.tl_delegate didSelectedMiddleItemTabBar:self];
+        if( [self.tl_delegate didSelectedMiddleItemTabBar:self]) {
+        
+        }
     }
 
 }
@@ -130,44 +132,72 @@
         return;
     }
     
+
     NSInteger idx = btn.tag - 100;
-    _lastTabBarBtn.iconImageView.image = [UIImage imageNamed:@"有料_un"];
-    _lastTabBarBtn.titleLbl.textColor = [UIColor textColor];
-    
-    btn.iconImageView.image = [UIImage imageNamed:@"有料"];
-    btn.titleLbl.textColor = [UIColor themeColor];
-    
-    btn.selected = NO;
-    _lastTabBarBtn = btn;
-    _lastTabBarBtn.selected = YES;
 
     if (self.tl_delegate && [self.tl_delegate respondsToSelector:@selector(didSelected:tabBar:)]) {
-        [self.tl_delegate didSelected:idx tabBar:self];
-    }
-    
-
-}
-
-//fix: 超出父视图，无法显示
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-
-
-    UIView *v = [super hitTest:point withEvent:event];
-    
-    if (v == nil) {
         
-        CGPoint falsePoint = [self.middleImageView convertPoint:point fromView:self.falseTabBar];
-        if ([self.middleImageView.layer containsPoint:falsePoint]) {
-            return self.middleImageView;
-        } else {
+        if([self.tl_delegate didSelected:idx tabBar:self]) {
         
-            return nil;
+            _lastTabBarBtn.iconImageView.image = [UIImage imageNamed:@"有料_un"];
+            _lastTabBarBtn.titleLbl.textColor = [UIColor textColor];
+            
+            btn.iconImageView.image = [UIImage imageNamed:@"有料"];
+            btn.titleLbl.textColor = [UIColor themeColor];
+            
+            btn.selected = NO;
+            _lastTabBarBtn = btn;
+            _lastTabBarBtn.selected = YES;
+            
+        
         }
-        
     }
     
-    return v;
+
 }
+
+////fix: 超出父视图，无法显示
+//- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+//
+//    
+//    BOOL canNotResponseEvent = self.hidden || (self.alpha <= 0.01f) || (self.userInteractionEnabled == NO);
+//    if (canNotResponseEvent) {
+//        return nil;
+//    }
+//
+//    UIView *v = [super hitTest:point withEvent:event];
+//    
+//    if (v == nil) {
+//        
+//        
+//        if (!self.middleImageView && ![self pointInside:point withEvent:event]) {
+//            return nil;
+//        }
+//        if (self.middleImageView) {
+//            CGRect plusButtonFrame = self.middleImageView.frame;
+//            BOOL isInPlusButtonFrame = CGRectContainsPoint(plusButtonFrame, point);
+//            if (!isInPlusButtonFrame && (point.y < 0) ) {
+//                return nil;
+//            }
+//            if (isInPlusButtonFrame) {
+//                return self.middleImageView;
+//            }
+//        }
+//        
+////        CGPoint falsePoint = [self.middleImageView convertPoint:point fromView:self.falseTabBar];
+////        if ([self.middleImageView.layer containsPoint:falsePoint]) {
+////            return self.middleImageView;
+////        } else {
+////        
+////            return nil;
+////        }
+//        
+//    }
+//    
+//    return v;
+//    
+//  
+//}
 
 
 @end

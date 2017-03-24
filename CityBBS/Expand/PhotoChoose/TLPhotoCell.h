@@ -13,6 +13,6 @@
 
 @property (nonatomic, strong) TLPhotoChooseItem *photoItem;
 
-@property (nonatomic, copy) void(^chooseHandle)(TLPhotoChooseItem *item,BOOL isChoose);
+//@property (nonatomic, copy) void(^chooseHandle)(TLPhotoChooseItem *item,BOOL isChoose);
 
 @end

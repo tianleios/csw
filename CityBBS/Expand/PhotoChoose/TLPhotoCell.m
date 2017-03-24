@@ -57,7 +57,7 @@
 - (void)choose {
     
     //将要选中，该对象。判断是否超标
-    if (self.photoItem.isSelected == NO) {
+    if (self.photoItem.isSelected == NO ) {
         
         //超标 + 警告
         if([TLChooseResultManager manager].hasChooseItems.count >= [TLChooseResultManager manager].maxCount) {
@@ -67,28 +67,61 @@
 
         } else {
         
-            self.photoItem.isSelected = !self.photoItem.isSelected;
-            self.selectedBtn.selected = self.photoItem.isSelected;
+        
+        
+            self.photoItem.isSelected = YES;
+            self.selectedBtn.selected = YES;
             
-            if (self.chooseHandle) {
-                self.chooseHandle(self.photoItem,YES);
-            }
             [[TLChooseResultManager manager].hasChooseItems addObject:self.photoItem];
+            [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.3 initialSpringVelocity:10 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                
+                self.selectedBtn.transform = CGAffineTransformMakeScale(1.2, 1.2);
+                
+                
+            } completion:^(BOOL finished) {
+                
+                [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.3 initialSpringVelocity:10 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                    
+                    self.selectedBtn.transform = CGAffineTransformIdentity;
+                    
+                    
+                } completion:^(BOOL finished) {
+                    
+                }];
+                
+            }];
+            
         }
         
     } else {
     
-        self.photoItem.isSelected = !self.photoItem.isSelected;
-        self.selectedBtn.selected = self.photoItem.isSelected;
-        
-        if (self.chooseHandle) {
-            self.chooseHandle(self.photoItem,NO);
-        }
-    
+        self.photoItem.isSelected = NO;
+        self.selectedBtn.selected = NO;
         [[TLChooseResultManager manager].hasChooseItems removeObject:self.photoItem];
 
     }
 
+    
+ 
+    
+    
+    return;
+    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        
+        self.selectedBtn.transform = CGAffineTransformMakeScale(1.2, 1.2);
+        
+    } completion:^(BOOL finished) {
+        
+        [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            
+            self.selectedBtn.transform = CGAffineTransformIdentity;
+            
+        } completion:^(BOOL finished) {
+            
+            
+        }];
+        
+    }];
  
 
 }

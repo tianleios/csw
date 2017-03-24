@@ -17,12 +17,15 @@
 #import "TLNavigationController.h"
 #import "CSWMallVC.h"
 #import "CSWSearchVC.h"
+#import "CSWCityManager.h"
+#import "CSWCityManager.h"
 
 @interface TLHomeVC ()<UICollectionViewDataSource,UICollectionViewDelegate>
 
 @property (nonatomic, strong) UICollectionView *homeCollectionView;
 @property (nonatomic, strong) NSMutableArray <TLGroupItem *>*groups;
 @property (nonatomic, strong) UIButton *titleBtn;
+@property (nonatomic, strong) UILabel *currentCityLbl;
 @end
 
 @implementation TLHomeVC
@@ -38,6 +41,7 @@
                                                font:FONT(18)
                                           textColor:[UIColor whiteColor]];
         [_titleBtn addSubview:titlelbl];
+        self.currentCityLbl = titlelbl;
         [titlelbl mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.equalTo(_titleBtn.mas_centerX);
             make.bottom.equalTo(_titleBtn.mas_bottom).offset(-4);
@@ -92,7 +96,7 @@
     
     //头
     TLGroupItem *bannerItem = [TLGroupItem new];
-    bannerItem.itemSize = CGSizeMake(self.homeCollectionView.width, 200);
+    bannerItem.itemSize = CGSizeMake(self.homeCollectionView.width, 180);
     bannerItem.edgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     bannerItem.cellNumber = 1;
     bannerItem.minimumLineSpacing = 0;
@@ -128,16 +132,34 @@
 
     [self.groups addObjectsFromArray:@[bannerItem,func3Item,func8Item,headLineItem]];
     
+
+    [[CSWCityManager manager] getCityListSuccess:^{
+        
+        
+        
+    } failure:^{
+        
+        
+    }];
+
 }
 
 #pragma mark- 切换城市
 - (void)changeCity {
 
-    TLChangeCityVC *composeVC = [[TLChangeCityVC alloc] init];
+    TLChangeCityVC *changeCityVC = [[TLChangeCityVC alloc] init];
+    changeCityVC.changeCity = ^(CSWCity *city){
     
-    TLNavigationController *nav = [[TLNavigationController alloc] initWithRootViewController:composeVC];
+        
+        self.currentCityLbl.text = city.name;
+        
+    };
+    
+    TLNavigationController *nav = [[TLNavigationController alloc] initWithRootViewController:changeCityVC];
+    
     nav.navigationBar.barTintColor = [UIColor whiteColor];
     nav.navigationBar.barStyle = 0;
+    
     [self presentViewController:nav animated:YES completion:nil];
 
 }

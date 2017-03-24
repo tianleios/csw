@@ -15,6 +15,8 @@
 #import <CoreLocation/CoreLocation.h>
 #import "TLUserProtocalVC.h"
 #import "TLDIYCaptchaView.h"
+#import "TLChangeCityVC.h"
+#import "TLNavigationController.h"
 
 @interface TLUserRegistVC ()<CLLocationManagerDelegate>
 
@@ -34,6 +36,7 @@
 @property (nonatomic,copy) NSString *province;
 @property (nonatomic,copy) NSString *city;
 @property (nonatomic,copy) NSString *area;
+
 @property (nonatomic,assign) BOOL isBuild;
 
 
@@ -289,11 +292,26 @@
     
 }
 
-
-#pragma mark- 定位不成功是选择地址
+#pragma mark- 定位成不成功都要选择地址
 - (void)chooseAddress {
 
-    [[UIApplication sharedApplication].keyWindow addSubview:self.addressPicker];
+    TLChangeCityVC *changeCityVC = [[TLChangeCityVC alloc] init];
+    changeCityVC.changeCity = ^(CSWCity *city){
+        
+        
+        self.addressTf.text = city.name;
+        self.province = city.province;
+        self.city = city.city;
+        self.area = city.area;
+        
+    };
+    
+    TLNavigationController *nav = [[TLNavigationController alloc] initWithRootViewController:changeCityVC];
+    
+    nav.navigationBar.barTintColor = [UIColor whiteColor];
+    nav.navigationBar.barStyle = 0;
+    
+    [self presentViewController:nav animated:YES completion:nil];
     
 }
 
@@ -354,7 +372,6 @@
     self.pwdTf = pwdTf;
     
     //选择地区
-    
     self.addressTf = [[TLAccountTf alloc] initWithFrame:CGRectMake(margin, pwdTf.yy + middleMargin, w, h)];
     self.addressTf.tl_placeholder = @"请选择地区";
     self.addressTf.leftIconView.image = [UIImage imageNamed:@"定位"];

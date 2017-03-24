@@ -19,23 +19,57 @@
 //@property (nonatomic, strong) NSMutableArray <PHAsset *> *assetRoom;
 //@property (nonatomic, strong) NSMutableArray <TLPhotoChooseItem *> *photoItems;
 
+@property (nonatomic, strong) TLDisplayPhotoVC *displayVC;
 @end
 
 @implementation TLImagePickerController
 
-- (instancetype)initWithDelegate:(id<TLImagePickerControllerDelegate> )delegate {
+//- (instancetype)initWithDelegate:(id<TLImagePickerControllerDelegate> )pickerDelegate {
+//
+//    TLDisplayPhotoVC *displayVC = [[TLDisplayPhotoVC alloc] init];
+//    displayVC.delegate = delegate;
+//    if (self = [super initWithRootViewController:displayVC]) {
+//        displayVC.pickerCtrl = self;
+//        self.delegate = delegate;
+//        
+//    }
+//    
+//    return self;
+//
+//}
 
-    TLDisplayPhotoVC *displayVC = [[TLDisplayPhotoVC alloc] init];
-    displayVC.delegate = delegate;
-    if (self = [super initWithRootViewController:displayVC]) {
-        displayVC.pickerCtrl = self;
-        self.delegate = delegate;
-        
-    }
+- (void)setPickerDelegate:(id<TLImagePickerControllerDelegate>)pickerDelegate {
+
+    _pickerDelegate = pickerDelegate;
     
-    return self;
+    self.displayVC.delegate = _pickerDelegate;
+    
 
 }
+
+- (void)setReplacePhotoItems:(NSArray<TLPhotoChooseItem *> *)replacePhotoItems {
+
+    
+    _replacePhotoItems = replacePhotoItems;
+    [[TLChooseResultManager manager].hasChooseItems addObjectsFromArray:_replacePhotoItems];
+    self.displayVC.replacePhotoItems = _replacePhotoItems;
+    
+}
+
+- (instancetype)init
+{
+    
+    self.displayVC = [[TLDisplayPhotoVC alloc] init];
+
+    self = [super initWithRootViewController:self.displayVC];
+    if (self) {
+        
+        self.displayVC.pickerCtrl = self;
+        
+    }
+    return self;
+}
+
 
 //+ (TLImagePickerController *)show {
 //    

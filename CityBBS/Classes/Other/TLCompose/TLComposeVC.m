@@ -41,6 +41,8 @@
 
 @property (nonatomic, strong) TLPlateChooseView *plateChooseView;
 
+@property (nonatomic, copy) NSArray <TLPhotoChooseItem *>*replacePhotoItems;
+
 @end
 
 @implementation TLComposeVC
@@ -170,9 +172,10 @@
             
         } else if (type == ChangeTypePhoto) {
             
-            
-//            [self.imagePicker picker];
-            TLImagePickerController *imagePickerController = [[TLImagePickerController alloc] initWithDelegate:self];
+            //要把已经选中的图片回源，显示已经展示得图片
+             TLImagePickerController *imagePickerController = [[TLImagePickerController alloc] init];
+            imagePickerController.pickerDelegate = self;
+            imagePickerController.replacePhotoItems = self.replacePhotoItems;
             [self presentViewController:imagePickerController animated:YES completion:nil];
         
         } else { // At
@@ -199,10 +202,12 @@
 
 
 
-- (void)imagePickerController:(TLImagePickerController *)picker didFinishPickingWithImages:(NSArray <UIImage *> *)imgs {
+- (void)imagePickerController:(TLImagePickerController *)picker didFinishPickingWithImages:(NSArray <UIImage *> *)imgs chooseItems:(NSArray<TLPhotoChooseItem *> *)items{
 
+    if (items) {
+        self.replacePhotoItems = items;
+    }
     [picker dismissViewControllerAnimated:YES completion:nil];
-
 
 }
 

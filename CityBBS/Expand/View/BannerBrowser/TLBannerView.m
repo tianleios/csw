@@ -25,10 +25,31 @@
 static NSString * const XNBannerCellID = @"XNBannerCellID ";
 
 @implementation TLBannerView
+
 - (void)dealloc
 {
     [self.timer invalidate];
     self.timer = nil;
+}
+
+- (UIPageControl *)pageControl {
+
+    if (!_pageControl) {
+        
+        CGFloat pageControlHeight = 35;
+        UIPageControl *tmpPageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, self.frame.size.height - pageControlHeight, self.frame.size.width, pageControlHeight)];
+        [self addSubview:tmpPageControl];
+        tmpPageControl.hidesForSinglePage = YES;
+        tmpPageControl.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        tmpPageControl.currentPageIndicatorTintColor =  [UIColor themeColor];
+        
+        tmpPageControl.pageIndicatorTintColor =
+        [UIColor whiteColor];
+        
+        _pageControl = tmpPageControl;
+    }
+    
+    return _pageControl;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -71,7 +92,10 @@ static NSString * const XNBannerCellID = @"XNBannerCellID ";
     //对图片进行处理
     
     //1.对URL进行处理
-    if(imgUrls.count > 0){
+    if(imgUrls.count <= 0){
+    
+        return;
+    }
         
         if (imgUrls.count > 1) {
 
@@ -89,29 +113,34 @@ static NSString * const XNBannerCellID = @"XNBannerCellID ";
         
         if (_isAuto) {
             
-            CGFloat pageControlHeight = 35;
-            UIPageControl *tmpPageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, self.frame.size.height - pageControlHeight, self.frame.size.width, pageControlHeight)];
-            [self addSubview:tmpPageControl];
-            tmpPageControl.hidesForSinglePage = YES;
-            tmpPageControl.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-            tmpPageControl.currentPageIndicatorTintColor =             [UIColor colorWithHexString:@"#fe4332"];
-
-            tmpPageControl.pageIndicatorTintColor =
-            [UIColor colorWithHexString:@"#cccccc"];
+//            CGFloat pageControlHeight = 35;
+//            UIPageControl *tmpPageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, self.frame.size.height - pageControlHeight, self.frame.size.width, pageControlHeight)];
+//            [self addSubview:tmpPageControl];
+//            tmpPageControl.hidesForSinglePage = YES;
+//            tmpPageControl.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+//            tmpPageControl.currentPageIndicatorTintColor =             [UIColor colorWithHexString:@"#fe4332"];
+//
+//            tmpPageControl.pageIndicatorTintColor =
+//            [UIColor colorWithHexString:@"#cccccc"];
             
             if (self.urls.count - 2 >= 2) {
                 
-                tmpPageControl.numberOfPages = self.urls.count - 2;
+                self.pageControl.numberOfPages = self.urls.count - 2;
 
             } else {
                 
-                tmpPageControl.numberOfPages = 1;
+                self.pageControl.numberOfPages = 1;
 
             
             }
-            [self addSubview:tmpPageControl];
             
-            _pageControl = tmpPageControl;
+            [self addSubview:self.pageControl];
+            
+            
+            //处理frame
+          CGSize size = [self.pageControl sizeForNumberOfPages:self.pageControl.numberOfPages];
+            self.pageControl.frame = CGRectMake(self.width - size.width - 30, self.height-  size.height, size.width, size.height);
+            
             
         }
         
@@ -139,8 +168,6 @@ static NSString * const XNBannerCellID = @"XNBannerCellID ";
         
     
         [self.bannerCollectionView reloadData];
-        
-    }
     
 
 }

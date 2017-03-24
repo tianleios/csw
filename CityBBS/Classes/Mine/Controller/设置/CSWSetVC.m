@@ -91,7 +91,17 @@
 #pragma mark- 退出登录
 - (void)loginOut {
 
-
+    UITabBarController *tbcController = self.tabBarController;
+    [self.navigationController popViewControllerAnimated:NO];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        tbcController.selectedIndex = 0;
+        
+    });
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kUserLoginOutNotification object:nil];
+    
+    
 }
 
 - (UIButton *)loginOutBtn {

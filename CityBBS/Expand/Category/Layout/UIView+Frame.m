@@ -10,6 +10,33 @@
 
 @implementation UIView (Frame)
 
+//基本法，不要改动
+- (void)setSize:(CGSize)size
+{
+    CGRect frame = self.frame;
+    frame.size = size;
+    self.frame = frame;
+}
+
+- (CGSize)size
+{
+    return self.frame.size;
+}
+
+- (void)setOrigin:(CGPoint)origin
+{
+    CGRect frame = self.frame;
+    frame.origin = origin;
+    self.frame = frame;
+}
+
+- (CGPoint)origin
+{
+    return self.frame.origin;
+}
+
+
+//衍生
 -(void)setX:(CGFloat)x
 {
     
@@ -64,29 +91,7 @@
     
 }
 
-- (void)setSize:(CGSize)size
-{
-    CGRect frame = self.frame;
-    frame.size = size;
-    self.frame = frame;
-}
 
-- (CGSize)size
-{
-    return self.frame.size;
-}
-
-- (void)setOrigin:(CGPoint)origin
-{
-    CGRect frame = self.frame;
-    frame.origin = origin;
-    self.frame = frame;
-}
-
-- (CGPoint)origin
-{
-    return self.frame.origin;
-}
 
 - (void)setCenterX:(CGFloat)centerX
 {
@@ -157,12 +162,13 @@
     self.y = self.y + cha;
 }
 
-
 - (CGFloat)right {
 
-    return self.xx;
+    
+    return self.origin.x + self.size.width;
 
 }
+
 
 - (void)setRight:(CGFloat)right {
 
