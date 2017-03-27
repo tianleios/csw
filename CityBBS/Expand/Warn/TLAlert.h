@@ -9,16 +9,25 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 @class MBProgressHUD;
+@class SVProgressHUD;
 
 @interface TLAlert : NSObject
 
-//设置延迟时间
-+ (MBProgressHUD *)alertWithHUDText:(NSString *)text duration:(NSTimeInterval)sec complection:(void(^)())complection;
-+ (MBProgressHUD *)alertWithHUDText:(NSString *)text;
+//SVProgressHUD新版
++ (void)alertHUDWithMsg:(NSString *)msg;
 
+
+//设置延迟时间
++ (void)alertWithHUDText:(NSString *)text duration:(NSTimeInterval)sec complection:(void(^)())complection;
+
+
+
++ (void)alertWithHUDText:(NSString *)text;
+
+
+//--//基于系统的alertController
 + (void)alertWithMsg:(NSString * )message;
 + (void)alertWithMsg:(NSString * )message viewCtrl:(UIViewController *)vc;
-
 
 + (void)alertWithTitile:(NSString *)title
                 message:(NSString *)message;
@@ -34,12 +43,28 @@
 //             controller:(UIViewController *)controller
 //             completion:(void (^)(void))completion;
 
-//带有 删除 和 确认 的提示
 + (UIAlertController *)alertWithTitle:(NSString *)title
-                              Message:(NSString *)message
+                                  msg:(NSString *)msg
                            confirmMsg:(NSString *)confirmMsg
-                            CancleMsg:(NSString *)msg
+                            cancleMsg:(NSString *)cancleMsg
+                                maker:(UIViewController *)viewCtrl
                                cancle:(void(^)(UIAlertAction *action))cancle
                               confirm:(void(^)(UIAlertAction *action))confirm;
+    
+
++ (UIAlertController *)alertWithTitle:(NSString *)title
+                                  msg:(NSString *)msg
+                           confirmMsg:(NSString *)confirmMsg
+                            cancleMsg:(NSString *)msg
+                               cancle:(void(^)(UIAlertAction *action))cancle
+                              confirm:(void(^)(UIAlertAction *action))confirm;
+
+////带有 删除 和 确认 的提示
+//+ (UIAlertController *)alertWithTitle:(NSString *)title
+//                              Message:(NSString *)message
+//                           confirmMsg:(NSString *)confirmMsg
+//                            CancleMsg:(NSString *)msg
+//                               cancle:(void(^)(UIAlertAction *action))cancle
+//                              confirm:(void(^)(UIAlertAction *action))confirm;
 
 @end

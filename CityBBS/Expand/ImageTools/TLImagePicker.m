@@ -51,7 +51,9 @@
         if (authStatus == AVAuthorizationStatusRestricted || authStatus ==AVAuthorizationStatusDenied)
         {
             //无权限
-            [TLAlert alertWithTitle:nil Message:@"没有权限访问您的相机,请在设置中打开" confirmMsg:@"设置" CancleMsg:@"取消" cancle:^(UIAlertAction *action) {
+            
+            [TLAlert alertWithTitle:nil msg:@"没有权限访问您的相机,请在设置中打开"  confirmMsg:@"设置" cancleMsg:@"取消" cancle:^(UIAlertAction *action) {
+                
                 
             } confirm:^(UIAlertAction *action) {
                 
@@ -59,8 +61,11 @@
                 if ([[UIApplication sharedApplication] canOpenURL:url]) {
                     [[UIApplication sharedApplication] openURL:url];
                 }
-                
             }];
+          
+            
+                
+        
             
             return ;
         }
@@ -78,7 +83,9 @@
         
         if (status == PHAuthorizationStatusDenied) {
             
-            [TLAlert alertWithTitle:nil Message:@"没有权限访问您的相册,请在设置中打开" confirmMsg:@"设置" CancleMsg:@"取消" cancle:^(UIAlertAction *action) {
+            
+            [TLAlert alertWithTitle:nil msg:@"没有权限访问您的相机,请在设置中打开"  confirmMsg:@"设置" cancleMsg:@"取消" cancle:^(UIAlertAction *action) {
+                
                 
             } confirm:^(UIAlertAction *action) {
                 
@@ -86,9 +93,9 @@
                 if ([[UIApplication sharedApplication] canOpenURL:url]) {
                     [[UIApplication sharedApplication] openURL:url];
                 }
-                
             }];
             
+           
             return ;
         }
         

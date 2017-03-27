@@ -36,6 +36,102 @@
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"完成" style:UIBarButtonItemStylePlain target:self action:@selector(complection)];
     }
     
+    //1.请求权限后在加载图片
+//    PHAuthorizationStatusNotDetermined  //还不确定
+//    PHAuthorizationStatusRestricted, //拒绝受限制，可能是权限，或者家长控制
+//    PHAuthorizationStatusDenied,   明确拒绝访问相册
+//    PHAuthorizationStatusAuthorized // 允许访问
+    
+    switch ([PHPhotoLibrary authorizationStatus]) {
+            
+        case PHAuthorizationStatusNotDetermined: {
+        
+            
+        }
+        break;
+            
+        case PHAuthorizationStatusRestricted: {
+            //提示用户打开相册，并返回
+            
+            [TLAlert alertWithTitle:nil msg:@"您尚未允许城市网访问您的相册" confirmMsg:@"设置" cancleMsg:@"取消" maker:self.navigationController cancle:^(UIAlertAction *action) {
+                
+                
+            } confirm:^(UIAlertAction *action) {
+                
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+            }];
+            
+            return;
+
+            
+        }
+            
+        break;
+            
+        case PHAuthorizationStatusDenied: {
+            //提示用户打开相册，并返回
+//            [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+            
+            [TLAlert alertWithTitle:nil msg:@"您尚未允许城市网访问您的相册" confirmMsg:@"设置" cancleMsg:@"取消" maker:self.navigationController cancle:^(UIAlertAction *action) {
+                
+                
+            } confirm:^(UIAlertAction *action) {
+                
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+            }];
+            
+            return;
+        }
+            
+        break;
+            
+        case PHAuthorizationStatusAuthorized: {
+            
+            [self beginLoadPhoto];
+            return;
+            
+        }
+        break;
+    }
+    
+    //如果是尚未确定是否能访问相册将调用该方法
+    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+        
+        switch ([PHPhotoLibrary authorizationStatus]) {
+            case PHAuthorizationStatusNotDetermined: {
+                
+            }
+                break;
+                
+            case PHAuthorizationStatusRestricted: {
+                
+            }
+                
+                break;
+                
+            case PHAuthorizationStatusDenied: {
+                
+                [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+            }
+                break;
+                
+            case PHAuthorizationStatusAuthorized: {
+                
+                //开始加载图片
+                [self beginLoadPhoto];
+            }
+                break;
+        }
+        
+    }];
+    
+    
+   
+    
+}
+
+- (void)beginLoadPhoto {
+
     _group = dispatch_group_create();
     
     self.assetRoom = [NSMutableArray array];
@@ -77,13 +173,13 @@
     
     
     //图片库
-//    PHPhotoLibrary *photoLibrary = [PHPhotoLibrary sharedPhotoLibrary];
+    //    PHPhotoLibrary *photoLibrary = [PHPhotoLibrary sharedPhotoLibrary];
     
     //一、  PHAsset 和 PHCollection 两种途径获取资源
     //二、  两个子类 1.PHCollectionList:文件夹  2.PHAssetCollection:相册
-//    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-//        NSLog(@"获取权限");
-//    }];
+    //    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+    //        NSLog(@"获取权限");
+    //    }];
     
     
     
@@ -94,9 +190,9 @@
     //获取相册
     PHFetchResult<PHAssetCollection *> *albumResult = [PHAssetCollection
                                                        
-                                                          fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum
-                                                          subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary
-                                                          options:fetchOptions];
+                                                       fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum
+                                                       subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary
+                                                       options:fetchOptions];
     
     //遍历相册
     [albumResult enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -149,9 +245,7 @@
     //什么时候缓存完成呢
     PHCachingImageManager *cachingImageManager = (PHCachingImageManager *)[PHCachingImageManager defaultManager];
     [cachingImageManager startCachingImagesForAssets:self.assetRoom targetSize:CGSizeMake(w, w) contentMode:PHImageContentModeAspectFit options:imageRequestOptions];
-    
-    //取出图片 取出图片放在
-    
+
 }
 
 #pragma mark- 确定图片选择

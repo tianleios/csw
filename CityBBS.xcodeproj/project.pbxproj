@@ -12,6 +12,8 @@
 		2E03B31D1E84FCED00616707 /* CSWCityDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E03B31C1E84FCED00616707 /* CSWCityDetail.m */; };
 		2E03B3201E84FF7100616707 /* CSWNavModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E03B31F1E84FF7100616707 /* CSWNavModel.m */; };
 		2E03B3231E85104000616707 /* RealmModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E03B3221E85104000616707 /* RealmModel.m */; };
+		2E03B3501E86660600616707 /* TLComposeArticleItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E03B34F1E86660600616707 /* TLComposeArticleItem.m */; };
+		2E03B3531E866EF800616707 /* TLComposeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E03B3521E866EF800616707 /* TLComposeManager.m */; };
 		2E0E18651E7A28C100079648 /* CSWForumGeneraCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E18641E7A28C100079648 /* CSWForumGeneraCell.m */; };
 		2E0E18681E7A29E400079648 /* CSWSubClassCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E18671E7A29E400079648 /* CSWSubClassCell.m */; };
 		2E0E186B1E7A376D00079648 /* CSWPlateDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E186A1E7A376D00079648 /* CSWPlateDetailVC.m */; };
@@ -47,6 +49,8 @@
 		2E0E18DF1E7BD7F500079648 /* CSWEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E18DE1E7BD7F500079648 /* CSWEditVC.m */; };
 		2E0E18E31E7BE23000079648 /* CSWSetVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E18E21E7BE23000079648 /* CSWSetVC.m */; };
 		2E0E18E61E7BEA1200079648 /* TLAboutUsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E18E51E7BEA1200079648 /* TLAboutUsVC.m */; };
+		2E27E9F41E88C35D002A1821 /* SVProgressHUD+TLAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E27E9F31E88C35D002A1821 /* SVProgressHUD+TLAdd.m */; };
+		2E27E9F71E88CDE8002A1821 /* TLProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E27E9F61E88CDE8002A1821 /* TLProgressHUD.m */; };
 		2E45DA5D1E7EE4A000DD3532 /* TLTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E45DA5C1E7EE4A000DD3532 /* TLTabBar.m */; };
 		2E45DA601E7F87B200DD3532 /* CSWArticleTypeSwitchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E45DA5F1E7F87B200DD3532 /* CSWArticleTypeSwitchView.m */; };
 		2E45DA631E7FA12900DD3532 /* CSWPlateHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E45DA621E7FA12900DD3532 /* CSWPlateHeaderView.m */; };
@@ -327,6 +331,10 @@
 		2E03B31F1E84FF7100616707 /* CSWNavModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWNavModel.m; sourceTree = "<group>"; };
 		2E03B3211E85104000616707 /* RealmModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealmModel.h; sourceTree = "<group>"; };
 		2E03B3221E85104000616707 /* RealmModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RealmModel.m; sourceTree = "<group>"; };
+		2E03B34E1E86660600616707 /* TLComposeArticleItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLComposeArticleItem.h; sourceTree = "<group>"; };
+		2E03B34F1E86660600616707 /* TLComposeArticleItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLComposeArticleItem.m; sourceTree = "<group>"; };
+		2E03B3511E866EF800616707 /* TLComposeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLComposeManager.h; sourceTree = "<group>"; };
+		2E03B3521E866EF800616707 /* TLComposeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLComposeManager.m; sourceTree = "<group>"; };
 		2E0E18631E7A28C100079648 /* CSWForumGeneraCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWForumGeneraCell.h; sourceTree = "<group>"; };
 		2E0E18641E7A28C100079648 /* CSWForumGeneraCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWForumGeneraCell.m; sourceTree = "<group>"; };
 		2E0E18661E7A29E400079648 /* CSWSubClassCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWSubClassCell.h; sourceTree = "<group>"; };
@@ -396,6 +404,10 @@
 		2E0E18E21E7BE23000079648 /* CSWSetVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWSetVC.m; sourceTree = "<group>"; };
 		2E0E18E41E7BEA1200079648 /* TLAboutUsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLAboutUsVC.h; sourceTree = "<group>"; };
 		2E0E18E51E7BEA1200079648 /* TLAboutUsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLAboutUsVC.m; sourceTree = "<group>"; };
+		2E27E9F21E88C35D002A1821 /* SVProgressHUD+TLAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SVProgressHUD+TLAdd.h"; sourceTree = "<group>"; };
+		2E27E9F31E88C35D002A1821 /* SVProgressHUD+TLAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SVProgressHUD+TLAdd.m"; sourceTree = "<group>"; };
+		2E27E9F51E88CDE8002A1821 /* TLProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLProgressHUD.h; sourceTree = "<group>"; };
+		2E27E9F61E88CDE8002A1821 /* TLProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLProgressHUD.m; sourceTree = "<group>"; };
 		2E45DA5B1E7EE4A000DD3532 /* TLTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLTabBar.h; sourceTree = "<group>"; };
 		2E45DA5C1E7EE4A000DD3532 /* TLTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLTabBar.m; sourceTree = "<group>"; };
 		2E45DA5E1E7F87B200DD3532 /* CSWArticleTypeSwitchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWArticleTypeSwitchView.h; sourceTree = "<group>"; };
@@ -912,6 +924,17 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		2E03B3241E8624A800616707 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2E03B3511E866EF800616707 /* TLComposeManager.h */,
+				2E03B3521E866EF800616707 /* TLComposeManager.m */,
+				2E03B34E1E86660600616707 /* TLComposeArticleItem.h */,
+				2E03B34F1E86660600616707 /* TLComposeArticleItem.m */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		2E0E18621E7A284500079648 /* Forum */ = {
 			isa = PBXGroup;
 			children = (
@@ -1100,6 +1123,8 @@
 				2E45DA991E80FA2A00DD3532 /* UIButton+convience.m */,
 				2E45DA9A1E80FA2A00DD3532 /* UILable+convience.h */,
 				2E45DA9B1E80FA2A00DD3532 /* UILable+convience.m */,
+				2E27E9F21E88C35D002A1821 /* SVProgressHUD+TLAdd.h */,
+				2E27E9F31E88C35D002A1821 /* SVProgressHUD+TLAdd.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2001,6 +2026,8 @@
 			children = (
 				2E9539C11E6BE91400668E0F /* TLAlert.h */,
 				2E9539C21E6BE91400668E0F /* TLAlert.m */,
+				2E27E9F51E88CDE8002A1821 /* TLProgressHUD.h */,
+				2E27E9F61E88CDE8002A1821 /* TLProgressHUD.m */,
 			);
 			path = Warn;
 			sourceTree = "<group>";
@@ -2373,6 +2400,7 @@
 		2EABB1131E715C9600FD2A68 /* Compose */ = {
 			isa = PBXGroup;
 			children = (
+				2E03B3241E8624A800616707 /* ViewModel */,
 				2EABB0C51E715A7D00FD2A68 /* TLCompose */,
 				2EABB1141E715C9600FD2A68 /* Controller */,
 				2EABB1151E715C9600FD2A68 /* Model */,
@@ -2626,6 +2654,7 @@
 				2E03B3231E85104000616707 /* RealmModel.m in Sources */,
 				2E953A011E6BE91400668E0F /* EMSDWebImageDecoder.m in Sources */,
 				2E953A601E6BE91400668E0F /* TLPickerTextField.m in Sources */,
+				2E27E9F71E88CDE8002A1821 /* TLProgressHUD.m in Sources */,
 				2E953A221E6BE91400668E0F /* NSDateFormatter+Category.m in Sources */,
 				2E45DA6C1E7FDAB000DD3532 /* CSWDIYOverAllVC.m in Sources */,
 				2E45DAA31E80FA5F00DD3532 /* NSAttributedString+add.m in Sources */,
@@ -2633,6 +2662,7 @@
 				2E9539CB1E6BE91400668E0F /* SGScanningQRCodeVC.m in Sources */,
 				2E45DA721E7FDF9800DD3532 /* CSWDIYCell.m in Sources */,
 				2E953A381E6BE91400668E0F /* EaseMessageTimeCell.m in Sources */,
+				2E27E9F41E88C35D002A1821 /* SVProgressHUD+TLAdd.m in Sources */,
 				2E953A371E6BE91400668E0F /* EaseMessageCell.m in Sources */,
 				2E03B3201E84FF7100616707 /* CSWNavModel.m in Sources */,
 				2E0E18DC1E7BD6A500079648 /* TLDatePicker.m in Sources */,
@@ -2644,6 +2674,7 @@
 				2E953A3E1E6BE91400668E0F /* EaseBubbleView+Video.m in Sources */,
 				2E0E18BC1E7B8E6900079648 /* TLUser.m in Sources */,
 				2E9539F81E6BE91400668E0F /* MWGridViewController.m in Sources */,
+				2E03B3501E86660600616707 /* TLComposeArticleItem.m in Sources */,
 				2E953A3A1E6BE91400668E0F /* EaseBubbleView+Gif.m in Sources */,
 				2E953A071E6BE91400668E0F /* NSData+EMImageContentType.m in Sources */,
 				2E953A4F1E6BE91400668E0F /* TLImagePicker.m in Sources */,
@@ -2673,6 +2704,7 @@
 				2E953A481E6BE91400668E0F /* EaseRecordView.m in Sources */,
 				2E03B31D1E84FCED00616707 /* CSWCityDetail.m in Sources */,
 				2E0E18B91E7B8E6900079648 /* TLUserProtocalVC.m in Sources */,
+				2E03B3531E866EF800616707 /* TLComposeManager.m in Sources */,
 				2EABB1031E715A7E00FD2A68 /* TLEmoticon.m in Sources */,
 				2E45DA8A1E80D13600DD3532 /* CSWSearchVC.m in Sources */,
 				2EB0216D1E83C62700991F78 /* CSWCommentAndLikeView.m in Sources */,

@@ -19,6 +19,7 @@
 #import "CSWSearchVC.h"
 #import "CSWCityManager.h"
 #import "CSWCityManager.h"
+#import "SVProgressHUD.h"
 
 @interface TLHomeVC ()<UICollectionViewDataSource,UICollectionViewDelegate>
 
@@ -142,7 +143,9 @@
         
     }];
 
+    self.navigationController.tabBarItem.badgeValue = @"10";
 }
+
 
 #pragma mark- 切换城市
 - (void)changeCity {
@@ -185,6 +188,14 @@
 #pragma mark- collectionView --- delegate
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
+    [TLProgressHUD showWithStatus:@"正在定位中"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [TLProgressHUD dismiss];
+        
+    });
+    
+    return;
     if (indexPath.section == 1) {
         CSWMallVC *mallVC = [[CSWMallVC alloc] init];
         [self.navigationController pushViewController:mallVC animated:YES];

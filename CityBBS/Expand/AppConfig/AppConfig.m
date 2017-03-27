@@ -85,7 +85,7 @@ void TLLog(NSString *format, ...) {
 }
 
 
-- (NSString *)qiNiuKey {
+- (NSString *)qiniuDomain {
     
     return @"http://omxvtiss6.bkt.clouddn.com";
     

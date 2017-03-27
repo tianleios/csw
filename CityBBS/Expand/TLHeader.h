@@ -25,6 +25,7 @@
 #import "TLCaptchaView.h"
 #import "TLPlaceholderView.h"
 #import "TLPageDataHelper.h"
+#import "TLProgressHUD.h"
 
 
 #import "TLNetworking.h"

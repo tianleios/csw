@@ -1,0 +1,30 @@
+//
+//  TLProgressHUD.h
+//  CityBBS
+//
+//  Created by  tianlei on 2017/3/27.
+//  Copyright © 2017年  tianlei. All rights reserved.
+#import <SVProgressHUD/SVProgressHUD.h>
+@interface TLProgressHUD : SVProgressHUD
+
+//show
++ (void)showWithStatus:(NSString *)msg;
++ (void)showInfoWithStatus:(NSString *)status;
++ (void)showSuccessWithStatus:(NSString *)status;
++ (void)showErrorWithStatus:(NSString *)status;
+
+//show with mask
+//+ (void)showWithMask:(NSString *)msg;
+//+ (void)showInfoWithMask:(NSString *)msg;
+//+ (void)showSuccessWithMask:(NSString *)msg;
+//+ (void)showErrorWithMask:(NSString *)msg;
+
+//dismiss
++ (void)dismiss;
+
+//autoDismss
++ (void)showWithStatusAutoDismiss:(NSString *)msg;
++ (void)showWithStatusAutoDismiss:(NSString *)msg delay:(NSInteger)delayTime;
++ (void)showWithStatusAutoDismiss:(NSString *)msg delay:(NSInteger)delayTime completion:(void(^)())completion;
+
+@end

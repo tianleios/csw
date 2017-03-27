@@ -9,6 +9,7 @@
 #import <Realm/Realm.h>
 
 @interface RealmModel : RLMObject
+@property  NSString *ID;
 
 @end
 
@@ -17,7 +18,10 @@
 @class Person;
 // 狗狗的数据模型
 @interface Dog : RLMObject
+{
+    NSString *name1;
 
+}
 @property NSString *name;
 @property Person   *owner;
 

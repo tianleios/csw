@@ -37,7 +37,7 @@
  3.主键，声明主键之后，对象将允许进行查询，并且更新速度更加高效
  */
 + (NSString *)primaryKey {
-    return @"id";
+    return @"ID";
 }
 
 @end
@@ -49,13 +49,14 @@
 
 @implementation Person
 
+
 + (void)realmTest {
     
     //
     Dog *kit = [[Dog alloc] init];
     Dog *yang = [[Dog alloc] init];
     
-
+   //
     Person *tianlei = [[Person alloc] init];
     tianlei.name = @"田磊";
     tianlei.birthdate = [NSDate date];
@@ -102,13 +103,16 @@
 
 }
 
+
 - (void)threadIntroduce {
 
     
    //Realm 通过确保每个线程始终拥有 Realm 的一个快照，以便让并发运行变得十分轻松
    //你可以同时有任意数目的线程访问同一个 Realm 文件，并且由于每个线程都有对应的快照，因此线程之间绝不会产生影响
+   //RLMRealm、RLMObject、RLMResults 或者 RLMArray 受管理实例皆_受到线程的限制_，这意味着它们只能够在被创建的线程上使用，否则就会抛出异常*
 
 }
+
 @end
 
 

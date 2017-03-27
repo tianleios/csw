@@ -20,6 +20,7 @@ target 'CityBBS' do
   #七牛云
   pod 'Qiniu'
   pod 'Realm'
+  pod 'FDFullscreenPopGesture'
   
   #导航sdk
   #pod 'AMapLocation'

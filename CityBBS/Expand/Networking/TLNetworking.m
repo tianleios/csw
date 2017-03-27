@@ -82,12 +82,13 @@
 {
     //如果想要设置其它 请求头信息 直接设置 HTTPSessionManager 的 requestSerializer 就可以了，不用直接设置 NSURLRequest
     
-    MBProgressHUD *hud = nil;
+   TLProgressHUD *hud = nil;
     
     if(self.showView){
     
-        hud = [MBProgressHUD showHUDAddedTo:self.showView animated:YES];
+//        hud = [MBProgressHUD showHUDAddedTo:self.showView animated:YES];
 //        hud.bezelView.backgroundColor = [UIColor whiteColor];
+        [TLProgressHUD show];
     }
     
     if(self.code && self.code.length > 0){
@@ -114,9 +115,9 @@
     
     if (!self.url || !self.url.length) {
         NSLog(@"url 不存在啊");
-        if (hud) {
-            [hud hideAnimated:YES];
-        }
+//        if (hud || self.showView) {
+//            [hud hideAnimated:YES];
+//        }
         return nil;
     }
     TLLog(@"%@",self.code);
@@ -124,7 +125,8 @@
 //      TLLog(@"%@",responseObject);
 
       if(self.showView){
-          [hud hideAnimated:YES];
+//          [hud hideAnimated:YES];
+          [TLProgressHUD dismiss];
       }
       
       if([responseObject[@"errorCode"] isEqual:@"0"]){ //成功
@@ -164,7 +166,8 @@
    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
        
        if(self.showView){
-           [hud hideAnimated:YES];
+//           [hud hideAnimated:YES];
+           [TLProgressHUD dismiss];
        }
        
        if (self.isShowMsg) {

@@ -60,7 +60,6 @@
     tabBar.backgroundColor = [UIColor orangeColor];
     [self setValue:tabBar forKey:@"tabBar"];
     
-    
 
 }
 

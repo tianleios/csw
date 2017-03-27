@@ -126,7 +126,8 @@
     CLAuthorizationStatus authStatus = [CLLocationManager authorizationStatus];
     if (authStatus == kCLAuthorizationStatusDenied) { //定位权限不可用可用
         
-        [TLAlert alertWithTitle:nil Message:@"您的定位服务不可用,无法参加该活动" confirmMsg:@"设置" CancleMsg:@"取消" cancle:^(UIAlertAction *action) {
+        [TLAlert alertWithTitle:nil msg:@"您的定位服务不可用,无法参加该活动"  confirmMsg:@"设置" cancleMsg:@"取消" cancle:^(UIAlertAction *action) {
+            
             
         } confirm:^(UIAlertAction *action) {
             
@@ -134,9 +135,9 @@
             if ([[UIApplication sharedApplication] canOpenURL:url]) {
                 [[UIApplication sharedApplication] openURL:url];
             }
-            
         }];
         
+      
         return;
         
     }

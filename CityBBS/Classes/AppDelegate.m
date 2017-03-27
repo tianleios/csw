@@ -13,6 +13,7 @@
 #import "AppConfig.h"
 #import "AppDelegate+Chat.h"
 #import "SVProgressHUD.h"
+#import "TLComposeArticleItem.h"
 
 @interface AppDelegate ()
 
@@ -37,23 +38,16 @@
     [SVProgressHUD setMaximumDismissTimeInterval:7];
     [SVProgressHUD setMinimumDismissTimeInterval:3];
 
-    
-    
-    
-    //001700 七牛
-    
     //
     [IQKeyboardManager sharedManager].enable = YES;
     [[IQKeyboardManager sharedManager].disabledToolbarClasses addObject:[TLComposeVC class]];
     
-    
-  
     //1.出事化环信
     [self chatInit];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoginOut) name:kUserLoginOutNotification object:nil];
     
-    
+
     return YES;
 }
 
