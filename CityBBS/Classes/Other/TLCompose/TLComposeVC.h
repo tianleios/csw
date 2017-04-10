@@ -10,4 +10,6 @@
 
 @interface TLComposeVC : TLBaseVC
 
+@property (nonatomic, copy) void(^composeSucces)();
+
 @end

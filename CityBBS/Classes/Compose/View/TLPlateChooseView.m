@@ -8,6 +8,7 @@
 
 #import "TLPlateChooseView.h"
 #import "TLPlateChooseCell.h"
+#import "CSWSmallPlateModel.h"
 
 @interface TLPlateChooseView()<UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -98,11 +99,31 @@
 
 }
 
+- (void)setPlateModelRoom:(NSArray<CSWSmallPlateModel *> *)plateModelRoom {
+
+    //c此处不要copy,保持模型数据一致
+//    _plateModelRoom = [plateModelRoom copy];
+    _plateModelRoom = plateModelRoom;
+    [self.chooseCollectionView reloadData];
+
+}
+
+
 #pragma mark- collectionView delegate
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-
+    
+    //取消上一个选中
+    [self.plateModelRoom enumerateObjectsUsingBlock:^(CSWSmallPlateModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.isSelected) {
+            obj.isSelected = NO;
+            *stop = YES;
+        }
+    }];
+    
+    //找出dangqing
+    self.plateModelRoom[indexPath.row].isSelected = YES;
     if (self.choosePlate) {
-        self.choosePlate(indexPath.row);
+        self.choosePlate(indexPath.row,self.plateModelRoom[indexPath.row]);
     }
     
     [self.bgCtrl removeFromSuperview];
@@ -118,7 +139,7 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
 
     
-    return 8;
+    return self.plateModelRoom.count;
 
 }
 
@@ -126,8 +147,19 @@
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 
     TLPlateChooseCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TLPlateChooseCell" forIndexPath:indexPath ];
-    cell.titleLbl.text = @"板块";
-    cell.imageView.image = [UIImage imageNamed:@"出租"];
+    
+    CSWSmallPlateModel *plate = self.plateModelRoom[indexPath.row];
+    cell.titleLbl.text = plate.name;
+    [cell.imageView sd_setImageWithURL:[NSURL URLWithString:[plate.pic convertThumbnailImageUrl]] placeholderImage:nil];
+    if (plate.isSelected) {
+        
+        cell.titleLbl.textColor = [UIColor themeColor];
+        
+    } else {
+        
+        cell.titleLbl.textColor = [UIColor textColor];
+        
+    }
     return cell;
 
 }

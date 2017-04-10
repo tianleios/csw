@@ -61,17 +61,19 @@
             make.top.equalTo(self.typeImageView.mas_bottom).offset(7);
             make.centerX.equalTo(self.contentView.mas_centerX);
         }];
-        [self data];
         
     }
     return self;
 }
 
-- (void)data {
-    
-    self.typeImageView.image = [UIImage imageNamed:@"二手"];
-    self.titleLbl.text = @"招聘";
-    
+
+
+- (void)setFuncModel:(CSWFuncModel *)funcModel {
+
+    _funcModel = funcModel;
+    NSString *urlStr = [_funcModel.pic convertImageUrlWithScale:100];
+   [self.typeImageView sd_setImageWithURL:[NSURL URLWithString:urlStr] placeholderImage:nil];
+    self.titleLbl.text = _funcModel.name;
 }
 
 + (NSString *)reuseId {

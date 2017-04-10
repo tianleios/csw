@@ -21,7 +21,7 @@
 #import "TLPlateChooseView.h"
 //#import "TZImagePickerController.h"
 #import "TLImagePickerController.h"
-
+#import "CSWSmallPlateModel.h"
 
 #define TITLE_MARGIN 10
 #define TEXT_MARGIN 5
@@ -37,19 +37,21 @@
 @property (nonatomic, strong) UIScrollView *bgScrollView;
 @property (nonatomic, strong) TLPhotoChooseView *photoChooseView;
 @property (nonatomic, strong) TLImagePicker *imagePicker;
-@property (nonatomic, strong) UIButton *titleBtn;
+
+@property (nonatomic, strong) UIButton *titleBtn;//顶部板块吊起
+@property (nonatomic, strong) UILabel *titleLbl;
 
 @property (nonatomic, strong) TLPlateChooseView *plateChooseView;
 
 @property (nonatomic, copy) NSArray <TLPhotoChooseItem *>*replacePhotoItems;
 
+//数据
+@property (nonatomic, copy) NSArray <CSWSmallPlateModel *>*smallPlateModelRoom;
+
 @end
 
 @implementation TLComposeVC
-- (void)injected {
 
-    
-}
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
 
@@ -66,7 +68,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismiss) name:SVProgressHUDDidReceiveTouchEventNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismiss) name:SVProgressHUDDidReceiveTouchEventNotification object:nil];
     //键盘通知
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillAppear:) name:UIKeyboardWillChangeFrameNotification object:nil];
@@ -186,18 +188,38 @@
     };
     
 #pragma mark- 板块选择
-    self.plateChooseView.choosePlate = ^(NSInteger idx){
-    
+    [self.plateChooseView setChoosePlate:^(NSInteger idx,CSWSmallPlateModel *plateModel){
         
-    };
+        weakself.titleLbl.text = plateModel.name;
+        
+    }];
     
+    //获取板块,小版块
+    TLNetworking *http = [TLNetworking new];
+    http.showView = self.view;
+    http.code = @"610047";
+    http.parameters[@"companyCode"] = [CSWCityManager manager].currentCity.code;
+    [http postWithSuccess:^(id responseObject) {
+        
+        self.smallPlateModelRoom = [CSWSmallPlateModel tl_objectArrayWithDictionaryArray:responseObject[@"data"]];
+        self.smallPlateModelRoom[0].isSelected = YES;
+        self.titleLbl.text = self.smallPlateModelRoom[0].name;
+        
+    } failure:^(NSError *error) {
+        
+        
+    }];
 
+    
+    
 }
 
 
+#pragma mark- 图片选择的代理
 - (void)imagePickerControllerDidCancel:(TLImagePickerController *)picker {
 
     [picker dismissViewControllerAnimated:YES completion:nil];
+    
 }
 
 
@@ -207,6 +229,7 @@
     if (items) {
         self.replacePhotoItems = items;
     }
+    self.photoChooseView = 
     [picker dismissViewControllerAnimated:YES completion:nil];
 
 }
@@ -276,16 +299,14 @@
         self.bgScrollView.contentSize = CGSizeMake(self.bgScrollView.width, self.composeTextView.yy + SCREEN_WIDTH + 20);
     } else {
         
-          self.bgScrollView.contentSize = CGSizeMake(self.bgScrollView.width, self.bgScrollView.height + 20);
-    
+        self.bgScrollView.contentSize = CGSizeMake(self.bgScrollView.width, self.bgScrollView.height + 20);
     }
-    
-   
-    
     
 }
 
-#pragma mark- 改变话题
+
+
+#pragma mark- 改变板块
 - (void)changeTopic {
 
     //--
@@ -295,19 +316,42 @@
  
     } else {
     
+        self.plateChooseView.plateModelRoom = self.smallPlateModelRoom;
         [self.plateChooseView show];
-
+        
     }
     
-
 }
 
 #pragma mark- 发布
 - (void)send {
+    
+//    if (![self.titleTextView.text valid]) {
+//        return;
+//    }
 
-    if (![self.composeTextView.attributedText string].length) {
+    __block NSString *plateCode = nil;
+    [self.smallPlateModelRoom enumerateObjectsUsingBlock:^(CSWSmallPlateModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.isSelected) {
+            plateCode = obj.code;
+        }
+    }];
+    
+    if (![[self.composeTextView.attributedText string] valid]) {
+        [TLProgressHUD showErrorWithStatus:@"帖子内容不能为空"];
         return;
     }
+    
+    if (![plateCode valid]) {
+        
+        [TLProgressHUD showErrorWithStatus:@"请选择板块"];
+        return;
+        
+    }
+    
+ 
+    
+    
     NSMutableString *plainStr = [self.composeTextView.attributedText string].mutableCopy;
     
     //倒叙遍历
@@ -324,7 +368,31 @@
     
     //--//
 //    _lbl.attributedText = [TLEmoticonHelper convertEmoticonStrToAttributedString:plainStr];
-    
+    TLNetworking *http = [TLNetworking new];
+    http.showView = self.view;
+    http.code = @"610110";
+    http.parameters[@"title"] = self.titleTextView.text;
+    http.parameters[@"content"] = plainStr;
+    http.parameters[@"pic"] = @"dsfds";
+    http.parameters[@"plateCode"] = plateCode;
+    http.parameters[@"publisher"] = [TLUser user].userId;
+    http.parameters[@"isPublish"] = @"1";
+
+
+    [http postWithSuccess:^(id responseObject) {
+        
+        if (self.composeSucces) {
+            
+            self.composeSucces();
+            
+        }
+        [TLAlert alertHUDWithMsg:@"发布成功"];
+        
+    } failure:^(NSError *error) {
+        
+        
+    }];
+
     
 }
 
@@ -333,8 +401,6 @@
     [self.plateChooseView dismiss];
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
-
-#pragma mark - 选择图片
 
 
 - (TLEmoticonInputView *)emoticonInputView {
@@ -457,6 +523,7 @@
             
         }];
         titlelbl.text = @"选择板块";
+        self.titleLbl = titlelbl;
         
         //
         UIImageView *arrawView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"headline_location_arrow"]];

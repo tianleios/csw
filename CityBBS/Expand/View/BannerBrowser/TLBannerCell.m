@@ -11,6 +11,7 @@
 @interface TLBannerCell ()
 
 @property (nonatomic,weak) UIImageView *imageIV;
+@property (nonatomic, strong) UILabel *titleLbl;
 
 @end
 
@@ -47,33 +48,39 @@
                                                 font:FONT(16)
                                            textColor:[UIColor whiteColor]];
         [bgV addSubview:titleLbl];
+        self.titleLbl = titleLbl;
         
         //
         [titleLbl mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(UIEdgeInsetsMake(0, 15, 0, -15));
         }];
         
-        titleLbl.text = @"橙袋科技征文启事";
+//        titleLbl.text = @"橙袋科技征文启事";
         
     }
     return self;
 }
 
-- (void)setUrlString:(NSString *)urlString
-{
-    _urlString = [urlString copy];
-    if ([_urlString hasPrefix:@"http:"]) { //网络图片
+
+- (void)setBanner:(TLBannerModel *)banner {
+
+    _banner = banner;
+
+    self.titleLbl.text = banner.title;
+
+    if ([_banner.imgUrl hasPrefix:@"http:"]) { //网络图片
         
-        NSURL *url = [NSURL URLWithString:urlString];
+        NSURL *url = [NSURL URLWithString:_banner.imgUrl];
         [_imageIV sd_setImageWithURL:url placeholderImage:nil];
         
     } else { //本地图片
-    
-        self.imageIV.image = [UIImage imageWithContentsOfFile:_urlString];
-    
+        
+        self.imageIV.image = [UIImage imageWithContentsOfFile:_banner.imgUrl];
+        
     }
-
 }
+
+
 
 
 

@@ -12,6 +12,7 @@
 
 + (void)showWithStatus:(NSString *)msg {
     
+    [super setDefaultMaskType:SVProgressHUDMaskTypeClear];
     [super showWithStatus:msg];
     
 }
@@ -41,6 +42,16 @@
 }
 
 
++ (void)showErrorWithStatusAutoDismiss:(NSString *)msg {
+
+    [super showErrorWithStatus:msg];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [super dismiss];
+    });
+
+}
+
+
 + (void)showWithStatusAutoDismiss:(NSString *)msg {
 
     [self showWithStatusAutoDismiss:msg delay:3 completion:nil];
@@ -59,9 +70,7 @@
     [self setDefaultMaskType:SVProgressHUDMaskTypeBlack];
     [self dismissWithDelay:delayTime completion:completion];
     
-
 }
-
 
 
 @end

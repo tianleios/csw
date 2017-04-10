@@ -15,7 +15,7 @@
 #import "AppConfig.h"
 
 //#define EaseMobAppKey @"easemob-demo#chatdemoui"
-#define EaseMobAppKey @"tianleios#zh-dev"
+//#define EaseMobAppKey @"tianleios#zh-dev"
 
 
 @implementation AppDelegate (Chat)
@@ -60,9 +60,9 @@
 
     if([[EMClient sharedClient] isConnected] && !aError){
         
-        
        NSArray *arr = [[EMClient sharedClient].chatManager getAllConversations];
 //        [[NSNotificationCenter defaultCenter] postNotificationName:<#(nonnull NSNotificationName)#> object:<#(nullable id)#>];
+        
     }
 
 

@@ -12,6 +12,8 @@
 
 //@property (nonatomic, assign) UIEdgeInsets edgeInsets;
 
-
+//图片选择
 - (void)beginChooseWithImg:(UIImage *)img;
+
+
 @end

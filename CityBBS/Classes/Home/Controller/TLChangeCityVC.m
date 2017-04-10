@@ -1,4 +1,4 @@
-//
+    //
 //  TLChangeCityVC.m
 //  CityBBS
 //
@@ -118,20 +118,27 @@
 #pragma mark- delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    [TLProgressHUD showWithStatus:@"站点切换中"];
     NSString *key = [CSWCityManager manager].cityDict.allKeys[indexPath.section];
     CSWCity *city = [CSWCityManager manager].cityDict[key][indexPath.row];
-    [CSWCityManager getCityDetailBy:city success:^{
+    [[CSWCityManager manager] getCityDetailBy:city success:^{
         
+        [TLProgressHUD dismiss];
+
         //切换成功
+        if (self.changeCity) {
+            self.changeCity(city);
+        }
+        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
    
     } failure:^{
         
+        [TLProgressHUD dismiss];
+        [TLProgressHUD showErrorWithStatus:@"切换失败"];
+        
     }];
     
-    if (self.changeCity) {
-        self.changeCity(city);
-    }
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+
     
 }
 

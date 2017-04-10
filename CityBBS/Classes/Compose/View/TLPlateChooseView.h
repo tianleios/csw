@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+@class CSWSmallPlateModel;
 
 @interface TLPlateChooseView : UIView
 
@@ -15,6 +16,7 @@
 
 @property (nonatomic, assign) BOOL isShow;
 
-@property (nonatomic, copy) void(^choosePlate)(NSInteger idx);
+@property (nonatomic, copy) void(^choosePlate)(NSInteger idx, CSWSmallPlateModel *plateModel);
+@property (nonatomic, copy) NSArray <CSWSmallPlateModel *>*plateModelRoom;
 
 @end

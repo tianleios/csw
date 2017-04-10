@@ -46,6 +46,13 @@
 - (NSString *)convertThumbnailImageUrl;
 - (NSString *)convertImageUrl;
 - (CGSize)imgSizeByImageName:(NSString *)imageName;
+- (NSString *)convertOriginalImgUrl;
+/**
+ 输出图片url
+ @param scale 0~100的值
+ */
+- (NSString *)convertImageUrlWithScale:(NSInteger)scale;
+
 
 - (CGSize)calculateStringSize:(CGSize)size font:(UIFont *)font;
 

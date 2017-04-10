@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TLBannerModel.h"
 
 @interface TLBannerCell : UICollectionViewCell
 
-@property (nonatomic,copy) NSString *urlString;
-
+@property (nonatomic, strong) TLBannerModel *banner;
 
 @end
 

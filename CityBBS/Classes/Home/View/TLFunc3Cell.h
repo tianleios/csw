@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class CSWFuncModel;
+
 @interface TLFunc3Cell : UICollectionViewCell
 
 + (NSString *)reuseId;
+@property (nonatomic, strong) CSWFuncModel *funcModel;
 
 @end

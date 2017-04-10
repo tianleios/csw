@@ -27,33 +27,40 @@
         
         //
         self.bgImageView = [[UIImageView alloc] init];
-        self.bgImageView.contentMode = UIViewContentModeScaleAspectFit;
+        self.bgImageView.contentMode = UIViewContentModeScaleAspectFill;
+        self.bgImageView.clipsToBounds = YES;
         [self.contentView addSubview:self.bgImageView];
+//        self.bgImageView.backgroundColor = [UIColor orangeColor];
         [self.bgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
+            make.left.top.right.bottom.equalTo(self.contentView);
         }];
+        self.bgImageView.layer.cornerRadius = 3;
+        self.bgImageView.layer.masksToBounds = YES;
+        
+        
         //lbl
         self.titleLbl = [UILabel labelWithFrame:CGRectZero
                                    textAligment:NSTextAlignmentCenter
-                                backgroundColor:[UIColor clearColor
-                                                                                                               ]
+                                backgroundColor:[UIColor clearColor]
                                            font:FONT(14)
                                       textColor:[UIColor whiteColor]];
         [self.contentView addSubview:self.titleLbl];
         [self.titleLbl mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
         }];
-        [self data];
-        
+                
     }
     return self;
 }
 
-- (void)data {
 
-    self.bgImageView.image = [UIImage imageNamed:@"积分商城"];
-    self.titleLbl.text = @"积分商城";
 
+- (void)setFuncModel:(CSWFuncModel *)funcModel {
+
+    _funcModel = funcModel;
+    [self.bgImageView sd_setImageWithURL:[NSURL URLWithString:[_funcModel.pic convertOriginalImgUrl]] placeholderImage:nil];
+
+    self.titleLbl.text = _funcModel.name;
 }
 
 + (NSString *)reuseId {

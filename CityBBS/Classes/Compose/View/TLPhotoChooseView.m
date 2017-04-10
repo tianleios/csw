@@ -13,8 +13,9 @@
 @interface TLPhotoChooseView()<UICollectionViewDelegate,UICollectionViewDataSource,UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UICollectionView *photoChooseCollectionView;
-@property (nonatomic, strong) NSMutableArray <TLPhotoItem *>*photoRooms;
 @property (nonatomic, strong) TLImagePicker *imagePicker;
+@property (nonatomic, strong) NSMutableArray <TLPhotoItem *>*photoRooms;
+
 
 @end
 
@@ -213,7 +214,6 @@
 
     } else if(self.photoRooms.count == 9) {
     
-   
        __block TLPhotoItem *item;
         [self.photoRooms enumerateObjectsUsingBlock:^(TLPhotoItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (obj.isAdd) {
@@ -243,8 +243,10 @@
   
         
     }
-
+   
+    //刷新数据
     [self.photoChooseCollectionView  reloadData];
+    
 }
 
 - (void)initData {
@@ -299,6 +301,8 @@
 
 - (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath*)destinationIndexPath  {
     
+    
+    //有bug为解决
     return;
     
     //位置变动一定会调用该方法，重新对photoItem进行排序

@@ -23,6 +23,7 @@
 + (void)dismiss;
 
 //autoDismss
++ (void)showErrorWithStatusAutoDismiss:(NSString *)msg;
 + (void)showWithStatusAutoDismiss:(NSString *)msg;
 + (void)showWithStatusAutoDismiss:(NSString *)msg delay:(NSInteger)delayTime;
 + (void)showWithStatusAutoDismiss:(NSString *)msg delay:(NSInteger)delayTime completion:(void(^)())completion;

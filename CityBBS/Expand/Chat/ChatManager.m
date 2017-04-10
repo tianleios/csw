@@ -14,7 +14,7 @@
 #import "ConversationListVC.h"
 
 
-#define IM_PWD @"888888"
+#define IM_PWD @"123456"
 
 
 NSString *const kKefuUnreadMsgKey = @"kKefuUnreadMsgKey";
@@ -168,6 +168,7 @@ static ChatManager *manager = nil;
 
 - (BOOL)loginWithUserName:(NSString *)userName pwd:(NSString *)password{
 
+    
     EMError *error = [[EMClient sharedClient] loginWithUsername:userName password:password];
     
     if(!error){

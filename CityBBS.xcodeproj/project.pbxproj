@@ -49,6 +49,15 @@
 		2E0E18DF1E7BD7F500079648 /* CSWEditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E18DE1E7BD7F500079648 /* CSWEditVC.m */; };
 		2E0E18E31E7BE23000079648 /* CSWSetVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E18E21E7BE23000079648 /* CSWSetVC.m */; };
 		2E0E18E61E7BEA1200079648 /* TLAboutUsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E18E51E7BEA1200079648 /* TLAboutUsVC.m */; };
+		2E0F0E261E9B2D8A00BF94F0 /* CSWTabBarModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E251E9B2D8A00BF94F0 /* CSWTabBarModel.m */; };
+		2E0F0E291E9B35E400BF94F0 /* CSWBannerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E281E9B35E400BF94F0 /* CSWBannerModel.m */; };
+		2E0F0E2C1E9B362E00BF94F0 /* CSWFuncModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E2B1E9B362E00BF94F0 /* CSWFuncModel.m */; };
+		2E0F0E2F1E9B45E900BF94F0 /* AppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E2E1E9B45E900BF94F0 /* AppConfig.m */; };
+		2E0F0E321E9B6B5800BF94F0 /* CSWLoadRootVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E311E9B6B5800BF94F0 /* CSWLoadRootVC.m */; };
+		2E0F0E391E9B783B00BF94F0 /* CSWBigPlateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E381E9B783B00BF94F0 /* CSWBigPlateModel.m */; };
+		2E0F0E3C1E9B7E8A00BF94F0 /* TLBannerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E3B1E9B7E8A00BF94F0 /* TLBannerModel.m */; };
+		2E0F0E3F1E9B7F8500BF94F0 /* TLBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E3E1E9B7F8500BF94F0 /* TLBannerView.m */; };
+		2E0F0E421E9B840300BF94F0 /* CSWSmallPlateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E411E9B840300BF94F0 /* CSWSmallPlateModel.m */; };
 		2E27E9F41E88C35D002A1821 /* SVProgressHUD+TLAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E27E9F31E88C35D002A1821 /* SVProgressHUD+TLAdd.m */; };
 		2E27E9F71E88CDE8002A1821 /* TLProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E27E9F61E88CDE8002A1821 /* TLProgressHUD.m */; };
 		2E45DA5D1E7EE4A000DD3532 /* TLTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E45DA5C1E7EE4A000DD3532 /* TLTabBar.m */; };
@@ -89,7 +98,6 @@
 		2E9539C31E6BE91400668E0F /* FCUUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9538361E6BE91300668E0F /* FCUUID.m */; };
 		2E9539C41E6BE91400668E0F /* UIDevice+FCUUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9538381E6BE91300668E0F /* UIDevice+FCUUID.m */; };
 		2E9539C51E6BE91400668E0F /* UICKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E95383B1E6BE91300668E0F /* UICKeyChainStore.m */; };
-		2E9539C61E6BE91400668E0F /* AppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E95383F1E6BE91300668E0F /* AppConfig.m */; };
 		2E9539C81E6BE91400668E0F /* TLBaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9538441E6BE91300668E0F /* TLBaseModel.m */; };
 		2E9539C91E6BE91400668E0F /* ScanSuccessJumpVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9538491E6BE91300668E0F /* ScanSuccessJumpVC.m */; };
 		2E9539CA1E6BE91400668E0F /* SGGenerateQRCodeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E95384B1E6BE91300668E0F /* SGGenerateQRCodeVC.m */; };
@@ -224,7 +232,6 @@
 		2E953A521E6BE91400668E0F /* TLUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9539951E6BE91400668E0F /* TLUploadManager.m */; };
 		2E953A531E6BE91400668E0F /* AppDelegate+JPush.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9539981E6BE91400668E0F /* AppDelegate+JPush.m */; };
 		2E953A5A1E6BE91400668E0F /* TLBannerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9539A91E6BE91400668E0F /* TLBannerCell.m */; };
-		2E953A5B1E6BE91400668E0F /* TLBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9539AB1E6BE91400668E0F /* TLBannerView.m */; };
 		2E953A5D1E6BE91400668E0F /* TLCaptchaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9539AF1E6BE91400668E0F /* TLCaptchaView.m */; };
 		2E953A5F1E6BE91400668E0F /* TLMsgBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9539B31E6BE91400668E0F /* TLMsgBadgeView.m */; };
 		2E953A601E6BE91400668E0F /* TLPickerTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9539B51E6BE91400668E0F /* TLPickerTextField.m */; };
@@ -404,6 +411,24 @@
 		2E0E18E21E7BE23000079648 /* CSWSetVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWSetVC.m; sourceTree = "<group>"; };
 		2E0E18E41E7BEA1200079648 /* TLAboutUsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLAboutUsVC.h; sourceTree = "<group>"; };
 		2E0E18E51E7BEA1200079648 /* TLAboutUsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLAboutUsVC.m; sourceTree = "<group>"; };
+		2E0F0E241E9B2D8A00BF94F0 /* CSWTabBarModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWTabBarModel.h; sourceTree = "<group>"; };
+		2E0F0E251E9B2D8A00BF94F0 /* CSWTabBarModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWTabBarModel.m; sourceTree = "<group>"; };
+		2E0F0E271E9B35E400BF94F0 /* CSWBannerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWBannerModel.h; sourceTree = "<group>"; };
+		2E0F0E281E9B35E400BF94F0 /* CSWBannerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWBannerModel.m; sourceTree = "<group>"; };
+		2E0F0E2A1E9B362E00BF94F0 /* CSWFuncModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWFuncModel.h; sourceTree = "<group>"; };
+		2E0F0E2B1E9B362E00BF94F0 /* CSWFuncModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWFuncModel.m; sourceTree = "<group>"; };
+		2E0F0E2D1E9B45E900BF94F0 /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppConfig.h; sourceTree = "<group>"; };
+		2E0F0E2E1E9B45E900BF94F0 /* AppConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppConfig.m; sourceTree = "<group>"; };
+		2E0F0E301E9B6B5800BF94F0 /* CSWLoadRootVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWLoadRootVC.h; sourceTree = "<group>"; };
+		2E0F0E311E9B6B5800BF94F0 /* CSWLoadRootVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWLoadRootVC.m; sourceTree = "<group>"; };
+		2E0F0E371E9B783B00BF94F0 /* CSWBigPlateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWBigPlateModel.h; sourceTree = "<group>"; };
+		2E0F0E381E9B783B00BF94F0 /* CSWBigPlateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWBigPlateModel.m; sourceTree = "<group>"; };
+		2E0F0E3A1E9B7E8A00BF94F0 /* TLBannerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLBannerModel.h; sourceTree = "<group>"; };
+		2E0F0E3B1E9B7E8A00BF94F0 /* TLBannerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLBannerModel.m; sourceTree = "<group>"; };
+		2E0F0E3D1E9B7F8500BF94F0 /* TLBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLBannerView.h; sourceTree = "<group>"; };
+		2E0F0E3E1E9B7F8500BF94F0 /* TLBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLBannerView.m; sourceTree = "<group>"; };
+		2E0F0E401E9B840300BF94F0 /* CSWSmallPlateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWSmallPlateModel.h; sourceTree = "<group>"; };
+		2E0F0E411E9B840300BF94F0 /* CSWSmallPlateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWSmallPlateModel.m; sourceTree = "<group>"; };
 		2E27E9F21E88C35D002A1821 /* SVProgressHUD+TLAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SVProgressHUD+TLAdd.h"; sourceTree = "<group>"; };
 		2E27E9F31E88C35D002A1821 /* SVProgressHUD+TLAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SVProgressHUD+TLAdd.m"; sourceTree = "<group>"; };
 		2E27E9F51E88CDE8002A1821 /* TLProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLProgressHUD.h; sourceTree = "<group>"; };
@@ -481,8 +506,6 @@
 		2E9538381E6BE91300668E0F /* UIDevice+FCUUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+FCUUID.m"; sourceTree = "<group>"; };
 		2E95383A1E6BE91300668E0F /* UICKeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICKeyChainStore.h; sourceTree = "<group>"; };
 		2E95383B1E6BE91300668E0F /* UICKeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICKeyChainStore.m; sourceTree = "<group>"; };
-		2E95383E1E6BE91300668E0F /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppConfig.h; sourceTree = "<group>"; };
-		2E95383F1E6BE91300668E0F /* AppConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppConfig.m; sourceTree = "<group>"; };
 		2E9538431E6BE91300668E0F /* TLBaseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLBaseModel.h; sourceTree = "<group>"; };
 		2E9538441E6BE91300668E0F /* TLBaseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLBaseModel.m; sourceTree = "<group>"; };
 		2E9538481E6BE91300668E0F /* ScanSuccessJumpVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanSuccessJumpVC.h; sourceTree = "<group>"; };
@@ -759,8 +782,6 @@
 		2E9539991E6BE91400668E0F /* TLHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLHeader.h; sourceTree = "<group>"; };
 		2E9539A81E6BE91400668E0F /* TLBannerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLBannerCell.h; sourceTree = "<group>"; };
 		2E9539A91E6BE91400668E0F /* TLBannerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLBannerCell.m; sourceTree = "<group>"; };
-		2E9539AA1E6BE91400668E0F /* TLBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLBannerView.h; sourceTree = "<group>"; };
-		2E9539AB1E6BE91400668E0F /* TLBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLBannerView.m; sourceTree = "<group>"; };
 		2E9539AE1E6BE91400668E0F /* TLCaptchaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLCaptchaView.h; sourceTree = "<group>"; };
 		2E9539AF1E6BE91400668E0F /* TLCaptchaView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLCaptchaView.m; sourceTree = "<group>"; };
 		2E9539B21E6BE91400668E0F /* TLMsgBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMsgBadgeView.h; sourceTree = "<group>"; };
@@ -1058,6 +1079,54 @@
 			path = "设置";
 			sourceTree = "<group>";
 		};
+		2E0F0E231E9B2D8A00BF94F0 /* 子系统导航 */ = {
+			isa = PBXGroup;
+			children = (
+				2E0F0E241E9B2D8A00BF94F0 /* CSWTabBarModel.h */,
+				2E0F0E251E9B2D8A00BF94F0 /* CSWTabBarModel.m */,
+				2E0F0E271E9B35E400BF94F0 /* CSWBannerModel.h */,
+				2E0F0E281E9B35E400BF94F0 /* CSWBannerModel.m */,
+				2E0F0E2A1E9B362E00BF94F0 /* CSWFuncModel.h */,
+				2E0F0E2B1E9B362E00BF94F0 /* CSWFuncModel.m */,
+			);
+			path = "子系统导航";
+			sourceTree = "<group>";
+		};
+		2E0F0E331E9B781D00BF94F0 /* 板块 */ = {
+			isa = PBXGroup;
+			children = (
+				2E0F0E341E9B781D00BF94F0 /* Controller */,
+				2E0F0E351E9B781D00BF94F0 /* Model */,
+				2E0F0E361E9B781D00BF94F0 /* View */,
+			);
+			path = "板块";
+			sourceTree = "<group>";
+		};
+		2E0F0E341E9B781D00BF94F0 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		2E0F0E351E9B781D00BF94F0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2E0F0E371E9B783B00BF94F0 /* CSWBigPlateModel.h */,
+				2E0F0E381E9B783B00BF94F0 /* CSWBigPlateModel.m */,
+				2E0F0E401E9B840300BF94F0 /* CSWSmallPlateModel.h */,
+				2E0F0E411E9B840300BF94F0 /* CSWSmallPlateModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		2E0F0E361E9B781D00BF94F0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		2E45DA731E80C47500DD3532 /* FansAndFocus */ = {
 			isa = PBXGroup;
 			children = (
@@ -1264,8 +1333,8 @@
 		2E95383D1E6BE91300668E0F /* AppConfig */ = {
 			isa = PBXGroup;
 			children = (
-				2E95383E1E6BE91300668E0F /* AppConfig.h */,
-				2E95383F1E6BE91300668E0F /* AppConfig.m */,
+				2E0F0E2D1E9B45E900BF94F0 /* AppConfig.h */,
+				2E0F0E2E1E9B45E900BF94F0 /* AppConfig.m */,
 			);
 			path = AppConfig;
 			sourceTree = "<group>";
@@ -2013,10 +2082,12 @@
 		2E9539A71E6BE91400668E0F /* BannerBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				2E0F0E3D1E9B7F8500BF94F0 /* TLBannerView.h */,
+				2E0F0E3E1E9B7F8500BF94F0 /* TLBannerView.m */,
 				2E9539A81E6BE91400668E0F /* TLBannerCell.h */,
 				2E9539A91E6BE91400668E0F /* TLBannerCell.m */,
-				2E9539AA1E6BE91400668E0F /* TLBannerView.h */,
-				2E9539AB1E6BE91400668E0F /* TLBannerView.m */,
+				2E0F0E3A1E9B7E8A00BF94F0 /* TLBannerModel.h */,
+				2E0F0E3B1E9B7E8A00BF94F0 /* TLBannerModel.m */,
 			);
 			path = BannerBrowser;
 			sourceTree = "<group>";
@@ -2249,6 +2320,7 @@
 		2EABB05C1E7157C800FD2A68 /* Timeline */ = {
 			isa = PBXGroup;
 			children = (
+				2E0F0E331E9B781D00BF94F0 /* 板块 */,
 				2EABB05D1E7157C800FD2A68 /* Controller */,
 				2EABB05E1E7157C800FD2A68 /* Model */,
 				2EABB05F1E7157C800FD2A68 /* View */,
@@ -2315,6 +2387,7 @@
 				2E03B31C1E84FCED00616707 /* CSWCityDetail.m */,
 				2E03B31E1E84FF7100616707 /* CSWNavModel.h */,
 				2E03B31F1E84FF7100616707 /* CSWNavModel.m */,
+				2E0F0E231E9B2D8A00BF94F0 /* 子系统导航 */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2322,6 +2395,8 @@
 		2EABB0C31E715A7D00FD2A68 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				2E0F0E301E9B6B5800BF94F0 /* CSWLoadRootVC.h */,
+				2E0F0E311E9B6B5800BF94F0 /* CSWLoadRootVC.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2653,6 +2728,7 @@
 				2E953A641E6BE91400668E0F /* TLTextView.m in Sources */,
 				2E03B3231E85104000616707 /* RealmModel.m in Sources */,
 				2E953A011E6BE91400668E0F /* EMSDWebImageDecoder.m in Sources */,
+				2E0F0E291E9B35E400BF94F0 /* CSWBannerModel.m in Sources */,
 				2E953A601E6BE91400668E0F /* TLPickerTextField.m in Sources */,
 				2E27E9F71E88CDE8002A1821 /* TLProgressHUD.m in Sources */,
 				2E953A221E6BE91400668E0F /* NSDateFormatter+Category.m in Sources */,
@@ -2677,6 +2753,7 @@
 				2E03B3501E86660600616707 /* TLComposeArticleItem.m in Sources */,
 				2E953A3A1E6BE91400668E0F /* EaseBubbleView+Gif.m in Sources */,
 				2E953A071E6BE91400668E0F /* NSData+EMImageContentType.m in Sources */,
+				2E0F0E321E9B6B5800BF94F0 /* CSWLoadRootVC.m in Sources */,
 				2E953A4F1E6BE91400668E0F /* TLImagePicker.m in Sources */,
 				2E0E18651E7A28C100079648 /* CSWForumGeneraCell.m in Sources */,
 				2E0E18CC1E7BC78D00079648 /* CSWUserEditModel.m in Sources */,
@@ -2721,7 +2798,6 @@
 				2E953A621E6BE91400668E0F /* TLTableView.m in Sources */,
 				2EABB0F11E715A7D00FD2A68 /* TLComposeVC.m in Sources */,
 				2E9539EE1E6BE91400668E0F /* EMCDDeviceManager+ProximitySensor.m in Sources */,
-				2E9539C61E6BE91400668E0F /* AppConfig.m in Sources */,
 				2E953A2C1E6BE91400668E0F /* EaseEmotionManager.m in Sources */,
 				2E9539D71E6BE91400668E0F /* TLWebVC.m in Sources */,
 				2E953A4E1E6BE91400668E0F /* TLWXManager.m in Sources */,
@@ -2748,6 +2824,8 @@
 				2E953A281E6BE91400668E0F /* EaseMessageReadManager.m in Sources */,
 				2E953A0F1E6BE91400668E0F /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */,
 				2E0E18B61E7B8E6900079648 /* TLRealNameAuthVC.m in Sources */,
+				2E0F0E3C1E9B7E8A00BF94F0 /* TLBannerModel.m in Sources */,
+				2E0F0E2C1E9B362E00BF94F0 /* CSWFuncModel.m in Sources */,
 				2E953A421E6BE91400668E0F /* EaseChatToolbarItem.m in Sources */,
 				2E953A201E6BE91400668E0F /* EaseUserModel.m in Sources */,
 				2EB40D5D1E790E1400608195 /* CSWCommentModel.m in Sources */,
@@ -2790,7 +2868,6 @@
 				2E9539DA1E6BE91400668E0F /* MBProgressHUD+add.m in Sources */,
 				2EABB0EF1E715A7D00FD2A68 /* TLComposeTextView.m in Sources */,
 				2EABB0891E7157C800FD2A68 /* AppDelegate.m in Sources */,
-				2E953A5B1E6BE91400668E0F /* TLBannerView.m in Sources */,
 				2E953A651E6BE91400668E0F /* TLTimeButton.m in Sources */,
 				2E9539CA1E6BE91400668E0F /* SGGenerateQRCodeVC.m in Sources */,
 				2E953A1F1E6BE91400668E0F /* EaseMessageModel.m in Sources */,
@@ -2807,6 +2884,7 @@
 				2E953A0A1E6BE91400668E0F /* UIImage+EMMultiFormat.m in Sources */,
 				2E0E18C31E7BB5FD00079648 /* TLDIYCaptchaView.m in Sources */,
 				2E953A361E6BE91400668E0F /* EaseCustomMessageCell.m in Sources */,
+				2E0F0E421E9B840300BF94F0 /* CSWSmallPlateModel.m in Sources */,
 				2E953A1E1E6BE91400668E0F /* EaseConversationModel.m in Sources */,
 				2E953A2E1E6BE91400668E0F /* EaseConversationListViewController.m in Sources */,
 				2E9539EC1E6BE91400668E0F /* EMCDDeviceManager+Media.m in Sources */,
@@ -2825,6 +2903,7 @@
 				2E9539F61E6BE91400668E0F /* MWCaptionView.m in Sources */,
 				2EB40D601E791AF600608195 /* CSWClickLinkLabel.m in Sources */,
 				2E45DAA41E80FA5F00DD3532 /* NSString+Extension.m in Sources */,
+				2E0F0E391E9B783B00BF94F0 /* CSWBigPlateModel.m in Sources */,
 				2E953A301E6BE91400668E0F /* EaseMessageViewController.m in Sources */,
 				2E953A0D1E6BE91400668E0F /* UIImageView+EMWebCache.m in Sources */,
 				2E9539C31E6BE91400668E0F /* FCUUID.m in Sources */,
@@ -2853,6 +2932,7 @@
 				2EABB1571E77BDAF00FD2A68 /* CSWTimeLineVC.m in Sources */,
 				2E45DA9D1E80FA2A00DD3532 /* UILable+convience.m in Sources */,
 				2E9539DC1E6BE91400668E0F /* NSNumber+TLAdd.m in Sources */,
+				2E0F0E3F1E9B7F8500BF94F0 /* TLBannerView.m in Sources */,
 				2E953A031E6BE91400668E0F /* EMSDWebImageDownloaderOperation.m in Sources */,
 				2E953A021E6BE91400668E0F /* EMSDWebImageDownloader.m in Sources */,
 				2E45DA791E80C5C300DD3532 /* CSWFansCell.m in Sources */,
@@ -2867,6 +2947,7 @@
 				2E0E18B11E7B8E6900079648 /* TLPwdRelatedVC.m in Sources */,
 				2E953A3D1E6BE91400668E0F /* EaseBubbleView+Text.m in Sources */,
 				2E953A491E6BE91400668E0F /* EaseConversationCell.m in Sources */,
+				2E0F0E261E9B2D8A00BF94F0 /* CSWTabBarModel.m in Sources */,
 				2E45DAC71E812BD200DD3532 /* TLChooseResultManager.m in Sources */,
 				2E953A151E6BE91400668E0F /* PSTCollectionViewItemKey.m in Sources */,
 				2E0E18841E7A747300079648 /* CSWUserDetailVC.m in Sources */,
@@ -2877,6 +2958,7 @@
 				2EABB1051E715A7E00FD2A68 /* TLEmoticonCollectionView.m in Sources */,
 				2E953A181E6BE91400668E0F /* PSTGridLayoutInfo.m in Sources */,
 				2E9539EA1E6BE91400668E0F /* EMAudioPlayerUtil.m in Sources */,
+				2E0F0E2F1E9B45E900BF94F0 /* AppConfig.m in Sources */,
 				2E953A091E6BE91400668E0F /* UIImage+EMGIF.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

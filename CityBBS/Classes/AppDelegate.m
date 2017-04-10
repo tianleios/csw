@@ -14,6 +14,7 @@
 #import "AppDelegate+Chat.h"
 #import "SVProgressHUD.h"
 #import "TLComposeArticleItem.h"
+#import "CSWLoadRootVC.h"
 
 @interface AppDelegate ()
 
@@ -27,35 +28,50 @@
     //2.应用环境
     [AppConfig config].runEnv = RunEnvDev;
     
-    
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.backgroundColor = [UIColor whiteColor];
-    [self.window makeKeyAndVisible];
-    self.window.rootViewController = [[TLTabBarController alloc] init];
-    
+    //
+    [IQKeyboardManager sharedManager].enable = YES;
+    [[IQKeyboardManager sharedManager].disabledToolbarClasses addObject:[TLComposeVC class]];
     
     //ProgressHUD
     [SVProgressHUD setMaximumDismissTimeInterval:7];
     [SVProgressHUD setMinimumDismissTimeInterval:3];
-
-    //
-    [IQKeyboardManager sharedManager].enable = YES;
-    [[IQKeyboardManager sharedManager].disabledToolbarClasses addObject:[TLComposeVC class]];
+    
     
     //1.出事化环信
     [self chatInit];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoginOut) name:kUserLoginOutNotification object:nil];
     
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.backgroundColor = [UIColor whiteColor];
+    [self.window makeKeyAndVisible];
+    self.window.rootViewController = [[CSWLoadRootVC alloc] init];
 
+    //取出用户信息
+    [TLUser user].isLogin;
     return YES;
+    
 }
+
+#pragma mark- 加载应用主体
+- (void)loadRoot {
+
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.backgroundColor = [UIColor whiteColor];
+    [self.window makeKeyAndVisible];
+    self.window.rootViewController = [[TLTabBarController alloc] init];
+
+}
+
 
 - (void)userLoginOut {
 
     [[TLUser user] loginOut];
 
 }
+
+
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

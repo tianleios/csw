@@ -15,6 +15,7 @@
 #import "TLArticleCell.h"
 #import "TLChangeCityVC.h"
 #import "TLNavigationController.h"
+#import "TLUserLoginVC.h"
 #import "CSWMallVC.h"
 #import "CSWSearchVC.h"
 #import "CSWCityManager.h"
@@ -81,6 +82,18 @@
     self.navigationItem.titleView = self.titleBtn;
     [self.titleBtn addTarget:self action:@selector(changeCity) forControlEvents:UIControlEventTouchUpInside];
 
+    //UI
+    [self setUpUI];
+    
+    //当前城市
+    self.currentCityLbl.text = [CSWCityManager manager].currentCity.name;
+ 
+    self.navigationController.tabBarItem.badgeValue = @"10";
+}
+
+
+- (void)setUpUI {
+
     [self.view addSubview:self.homeCollectionView];
     [self.homeCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
@@ -103,7 +116,7 @@
     bannerItem.minimumLineSpacing = 0;
     bannerItem.minimumInteritemSpacing = 0;
     bannerItem.cellClass = [TLDisplayBannerCell class];
-
+    
     //3功能
     TLGroupItem *func3Item = [TLGroupItem new];
     func3Item.itemSize = CGSizeMake((self.homeCollectionView.width - 32)/3.0, 40);
@@ -112,7 +125,7 @@
     func3Item.minimumLineSpacing = 6;
     func3Item.minimumInteritemSpacing = 0;
     func3Item.cellClass = [TLFunc3Cell class];
-
+    
     //func8
     TLGroupItem *func8Item = [TLGroupItem new];
     func8Item.itemSize = CGSizeMake((self.homeCollectionView.width - 32)/4.0, 72);
@@ -121,7 +134,7 @@
     func8Item.minimumLineSpacing = 4;
     func8Item.minimumInteritemSpacing = 4;
     func8Item.cellClass = [TLFunc8Cell class];
-
+    
     //headLineItem
     TLGroupItem *headLineItem = [TLGroupItem new];
     headLineItem.itemSize = CGSizeMake(self.homeCollectionView.width - 20, 90);
@@ -130,10 +143,10 @@
     headLineItem.minimumLineSpacing = 0;
     headLineItem.minimumInteritemSpacing = 0;
     headLineItem.cellClass = [TLArticleCell class];
-
+    
     [self.groups addObjectsFromArray:@[bannerItem,func3Item,func8Item,headLineItem]];
     
-
+    
     [[CSWCityManager manager] getCityListSuccess:^{
         
         
@@ -143,26 +156,23 @@
         
     }];
 
-    self.navigationController.tabBarItem.badgeValue = @"10";
+
 }
-
-
 #pragma mark- 切换城市
 - (void)changeCity {
 
     TLChangeCityVC *changeCityVC = [[TLChangeCityVC alloc] init];
     changeCityVC.changeCity = ^(CSWCity *city){
     
-        
-        self.currentCityLbl.text = city.name;
+        [CSWCityManager manager].currentCity = city;
+        self.currentCityLbl.text = [CSWCityManager manager].currentCity.name;
+        [self.homeCollectionView reloadData];
         
     };
     
     TLNavigationController *nav = [[TLNavigationController alloc] initWithRootViewController:changeCityVC];
-    
     nav.navigationBar.barTintColor = [UIColor whiteColor];
     nav.navigationBar.barStyle = 0;
-    
     [self presentViewController:nav animated:YES completion:nil];
 
 }
@@ -178,8 +188,14 @@
 #pragma mark- 发布帖子
 - (void)compose {
     
+    if (![TLUser user].userId) {
+        
+        TLNavigationController *navCtrl = [[TLNavigationController alloc] initWithRootViewController:[[TLUserLoginVC alloc] init]];
+        [self presentViewController:navCtrl animated:YES completion:nil];
+        return;
+    }
+    
     TLComposeVC *composeVC = [[TLComposeVC alloc] init];
-
     TLNavigationController *nav = [[TLNavigationController alloc] initWithRootViewController:composeVC];
     [self presentViewController:nav animated:YES completion:nil];
     
@@ -242,24 +258,32 @@
 
     switch (indexPath.section) {
         case 0: {
-       TLDisplayBannerCell *cell  = [collectionView dequeueReusableCellWithReuseIdentifier:[TLDisplayBannerCell reuseId] forIndexPath:indexPath];
-            return cell;
+            
+         TLDisplayBannerCell *cell  = [collectionView dequeueReusableCellWithReuseIdentifier:[TLDisplayBannerCell reuseId] forIndexPath:indexPath];
+         cell.bannerRoom = [CSWCityManager manager].bannerRoom;
+         return cell;
         
         }
-         break;
+        break;
+            
         case 1: {
+            
             TLFunc3Cell *cell  = [collectionView dequeueReusableCellWithReuseIdentifier:[TLFunc3Cell reuseId] forIndexPath:indexPath];
+            cell.funcModel = [CSWCityManager manager].func3Room[indexPath.row];
             return cell;
             
         }
-            break;
+        break;
+            
         case 2: {
+            
             TLFunc8Cell *cell  = [collectionView dequeueReusableCellWithReuseIdentifier:[TLFunc8Cell reuseId] forIndexPath:indexPath];
-
+            cell.funcModel = [CSWCityManager manager].func8Room[indexPath.row];
             return cell;
             
         }
-            break;
+        break;
+            
         default: {
             
             TLArticleCell *cell  = [collectionView dequeueReusableCellWithReuseIdentifier:[TLArticleCell reuseId] forIndexPath:indexPath];
@@ -296,8 +320,8 @@
     
     return self.groups[section].minimumLineSpacing;
     
-    
 }
+
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     
     return self.groups[section].minimumInteritemSpacing;

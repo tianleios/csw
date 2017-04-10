@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "TLBannerModel.h"
 @interface TLBannerView : UIView
 
 //- (instancetype)initWithFrame:(CGRect)frame urlString:(NSArray <NSString *>*)urls;
@@ -16,12 +16,16 @@
 
 @property (nonatomic,assign) BOOL isAuto;
 
-@property (nonatomic,copy) NSArray *imgUrls;
+//@property (nonatomic,copy) NSArray *imgUrls;
+@property (nonatomic, copy) NSArray<TLBannerModel *> *bannerRooms;
+
 
 //点击选中
 @property (nonatomic,copy) void(^selected) (NSInteger index);
 
 @property (nonatomic,weak)  NSTimer *timer;
+
+//@property (nonatomic, strong) UIPageControl *pageCtrl;
 
 @end
 

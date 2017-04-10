@@ -97,31 +97,38 @@
     //如果是尚未确定是否能访问相册将调用该方法
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
         
-        switch ([PHPhotoLibrary authorizationStatus]) {
-            case PHAuthorizationStatusNotDetermined: {
-                
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            switch ([PHPhotoLibrary authorizationStatus]) {
+                case PHAuthorizationStatusNotDetermined: {
+                    
+                }
+                    break;
+                    
+                case PHAuthorizationStatusRestricted: {
+                    
+                }
+                    
+                    break;
+                    
+                case PHAuthorizationStatusDenied: {
+                    
+                    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+                }
+                    break;
+                    
+                case PHAuthorizationStatusAuthorized: {
+                    
+                    //开始加载图片
+                    
+                    
+                    [self beginLoadPhoto];
+                }
+                    break;
             }
-                break;
-                
-            case PHAuthorizationStatusRestricted: {
-                
-            }
-                
-                break;
-                
-            case PHAuthorizationStatusDenied: {
-                
-                [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-            }
-                break;
-                
-            case PHAuthorizationStatusAuthorized: {
-                
-                //开始加载图片
-                [self beginLoadPhoto];
-            }
-                break;
-        }
+            
+        });
+       
         
     }];
     

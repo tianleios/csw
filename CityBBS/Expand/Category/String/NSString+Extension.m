@@ -8,6 +8,7 @@
 
 #import "NSString+Extension.h"
 #import <CommonCrypto/CommonDigest.h>
+#import "AppConfig.h"
 
 @implementation NSString (Extension)
 
@@ -66,7 +67,7 @@
         
     } else {
         
-        return [[@"http:/7xnuu2.com1.z0.glb.clouddn.com/" add:self] add:@"?imageMogr2/auto-orient/strip/thumbnail/300x300/quality/60!"];
+       return  [[NSString stringWithFormat:@"%@/%@?imageMogr2/auto-orient/strip/thumbnail/300x300/quality/60!",[AppConfig config].qiniuDomain,self] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
     
 }
@@ -124,17 +125,35 @@
 
     //auto-orient 根据原信息 旋转
     //strip 取出图片原信息
-    
-    if ([self hasPrefix:@"http"]) {
+  return  [self convertImageUrlWithScale:75];
+
+}
+
+- (NSString *)convertOriginalImgUrl {
+
+    if ([self hasPrefix:@"http"] || [self hasPrefix:@"https"]) {
         
         return self;
         
     } else {
-    
-        return [[@"http:/7xnuu2.com1.z0.glb.clouddn.com/" add:self] add:@"?imageMogr2/auto-orient/strip/quality/50!"];
         
+        return  [[NSString stringWithFormat:@"%@/%@?imageMogr2/auto-orient/strip",[AppConfig config].qiniuDomain,self] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
 
+}
+
+//scale 0-100
+- (NSString *)convertImageUrlWithScale:(NSInteger)scale {
+
+    if ([self hasPrefix:@"http"] || [self hasPrefix:@"https"]) {
+        
+        return self;
+        
+    } else {
+        
+//        return [[@"http:/7xnuu2.com1.z0.glb.clouddn.com/" add:self] add:@"?imageMogr2/auto-orient/strip/quality/50!"];
+     return  [[NSString stringWithFormat:@"%@/%@?imageMogr2/auto-orient/strip/quality/%ld!",[AppConfig config].qiniuDomain,self,scale] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    }
 
 }
 

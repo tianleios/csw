@@ -8,9 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@class CSWBannerModel;
 @interface TLDisplayBannerCell : UICollectionViewCell
 
+
 + (NSString *)reuseId;
+@property (nonatomic, copy) NSArray <CSWBannerModel *>*bannerRoom;
+
 
 @end
 
