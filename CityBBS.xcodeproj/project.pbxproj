@@ -58,6 +58,7 @@
 		2E0F0E3C1E9B7E8A00BF94F0 /* TLBannerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E3B1E9B7E8A00BF94F0 /* TLBannerModel.m */; };
 		2E0F0E3F1E9B7F8500BF94F0 /* TLBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E3E1E9B7F8500BF94F0 /* TLBannerView.m */; };
 		2E0F0E421E9B840300BF94F0 /* CSWSmallPlateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E411E9B840300BF94F0 /* CSWSmallPlateModel.m */; };
+		2E0F0E451E9BDF4C00BF94F0 /* UIImage+TLAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E441E9BDF4C00BF94F0 /* UIImage+TLAdd.m */; };
 		2E27E9F41E88C35D002A1821 /* SVProgressHUD+TLAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E27E9F31E88C35D002A1821 /* SVProgressHUD+TLAdd.m */; };
 		2E27E9F71E88CDE8002A1821 /* TLProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E27E9F61E88CDE8002A1821 /* TLProgressHUD.m */; };
 		2E45DA5D1E7EE4A000DD3532 /* TLTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E45DA5C1E7EE4A000DD3532 /* TLTabBar.m */; };
@@ -429,6 +430,8 @@
 		2E0F0E3E1E9B7F8500BF94F0 /* TLBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLBannerView.m; sourceTree = "<group>"; };
 		2E0F0E401E9B840300BF94F0 /* CSWSmallPlateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWSmallPlateModel.h; sourceTree = "<group>"; };
 		2E0F0E411E9B840300BF94F0 /* CSWSmallPlateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWSmallPlateModel.m; sourceTree = "<group>"; };
+		2E0F0E431E9BDF4C00BF94F0 /* UIImage+TLAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+TLAdd.h"; sourceTree = "<group>"; };
+		2E0F0E441E9BDF4C00BF94F0 /* UIImage+TLAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TLAdd.m"; sourceTree = "<group>"; };
 		2E27E9F21E88C35D002A1821 /* SVProgressHUD+TLAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SVProgressHUD+TLAdd.h"; sourceTree = "<group>"; };
 		2E27E9F31E88C35D002A1821 /* SVProgressHUD+TLAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SVProgressHUD+TLAdd.m"; sourceTree = "<group>"; };
 		2E27E9F51E88CDE8002A1821 /* TLProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLProgressHUD.h; sourceTree = "<group>"; };
@@ -1453,6 +1456,8 @@
 				2E9538721E6BE91300668E0F /* NSTimer+tlNoCycle.m */,
 				2E95387B1E6BE91300668E0F /* UIViewController+Extension.h */,
 				2E95387C1E6BE91300668E0F /* UIViewController+Extension.m */,
+				2E0F0E431E9BDF4C00BF94F0 /* UIImage+TLAdd.h */,
+				2E0F0E441E9BDF4C00BF94F0 /* UIImage+TLAdd.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -2960,6 +2965,7 @@
 				2E9539EA1E6BE91400668E0F /* EMAudioPlayerUtil.m in Sources */,
 				2E0F0E2F1E9B45E900BF94F0 /* AppConfig.m in Sources */,
 				2E953A091E6BE91400668E0F /* UIImage+EMGIF.m in Sources */,
+				2E0F0E451E9BDF4C00BF94F0 /* UIImage+TLAdd.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -22,6 +22,7 @@
 //#import "TZImagePickerController.h"
 #import "TLImagePickerController.h"
 #import "CSWSmallPlateModel.h"
+#import "QNUploadManager.h"
 
 #define TITLE_MARGIN 10
 #define TEXT_MARGIN 5
@@ -44,19 +45,20 @@
 @property (nonatomic, strong) TLPlateChooseView *plateChooseView;
 
 @property (nonatomic, copy) NSArray <TLPhotoChooseItem *>*replacePhotoItems;
-
 //数据
 @property (nonatomic, copy) NSArray <CSWSmallPlateModel *>*smallPlateModelRoom;
 
 @end
 
 @implementation TLComposeVC
+{
+    dispatch_group_t _uploadGroup;
 
-
+}
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
 
     [self.view endEditing:YES];
-
+    
 }
 
 - (void)dealloc {
@@ -74,6 +76,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillAppear:) name:UIKeyboardWillChangeFrameNotification object:nil];
     
     self.automaticallyAdjustsScrollViewInsets = NO;
+    _uploadGroup = dispatch_group_create();
     
     //
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"发布" style:UIBarButtonItemStylePlain target:self action:@selector(send)];
@@ -112,6 +115,7 @@
         make.height.mas_equalTo(1);
     }];
 
+    //-----//
     //内容栏
     self.composeTextView.y = self.titleTextView.yy + 1;
     self.composeTextView.font = FONT(15);
@@ -150,7 +154,6 @@
     [self.view addSubview:toolBar];
     self.toolBar  = toolBar;
 
-
 #pragma mark- 切换工具
     __weak typeof(self) weakself = self;
     toolBar.changeType = ^(ChangeType type){
@@ -170,7 +173,6 @@
                 [weakself.composeTextView becomeFirstResponder];
                 
             }
-            
             
         } else if (type == ChangeTypePhoto) {
             
@@ -211,7 +213,6 @@
     }];
 
     
-    
 }
 
 
@@ -223,13 +224,17 @@
 }
 
 
-
 - (void)imagePickerController:(TLImagePickerController *)picker didFinishPickingWithImages:(NSArray <UIImage *> *)imgs chooseItems:(NSArray<TLPhotoChooseItem *> *)items{
 
+    //再次点击 图片选择进行回传
     if (items) {
         self.replacePhotoItems = items;
     }
-    self.photoChooseView = 
+    
+    //图片展示
+    [self.photoChooseView finishChooseWithImgs:imgs];
+    
+    //
     [picker dismissViewControllerAnimated:YES completion:nil];
 
 }
@@ -325,11 +330,8 @@
 
 #pragma mark- 发布
 - (void)send {
-    
-//    if (![self.titleTextView.text valid]) {
-//        return;
-//    }
 
+    
     __block NSString *plateCode = nil;
     [self.smallPlateModelRoom enumerateObjectsUsingBlock:^(CSWSmallPlateModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (obj.isSelected) {
@@ -339,18 +341,15 @@
     
     if (![[self.composeTextView.attributedText string] valid]) {
         [TLProgressHUD showErrorWithStatus:@"帖子内容不能为空"];
-        return;
+        return ;
     }
     
     if (![plateCode valid]) {
         
         [TLProgressHUD showErrorWithStatus:@"请选择板块"];
-        return;
+        return ;
         
     }
-    
- 
-    
     
     NSMutableString *plainStr = [self.composeTextView.attributedText string].mutableCopy;
     
@@ -366,19 +365,94 @@
         
     }];
     
-    //--//
+    
+    if (self.photoChooseView.imgs.count > 0) {
+        //图片上传
+        //获取图片名称
+        NSMutableArray *imgNames = [[NSMutableArray alloc] initWithCapacity:self.photoChooseView.imgs.count];
+       __block NSInteger uploadSuccessCount = 0;
+        [self.photoChooseView.imgs enumerateObjectsUsingBlock:^(UIImage * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            [imgNames addObject:[obj getUploadImgName]];
+            
+        }];
+        
+        
+        //---//
+        [TLProgressHUD showWithStatus:@"图片上传中"];
+        TLNetworking *getUploadToken = [TLNetworking new];
+        getUploadToken.code = IMG_UPLOAD_CODE;
+        getUploadToken.parameters[@"token"] = [TLUser user].token;
+        [getUploadToken postWithSuccess:^(id responseObject) {
+            
+            //
+            NSString *token = responseObject[@"data"][@"uploadToken"];
+            //
+            QNUploadManager *qnUoloadManange = [[QNUploadManager alloc] init];
+            
+            //可直接上传PHAsset 以后优化
+            
+            [self.photoChooseView.imgs enumerateObjectsUsingBlock:^(UIImage * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                dispatch_group_enter(_uploadGroup);
+                [qnUoloadManange putData:UIImageJPEGRepresentation(obj, 1) key:imgNames[idx] token:token complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
+                    
+                dispatch_group_leave(_uploadGroup);
+                    
+                    if (key) {
+                        uploadSuccessCount ++;
+                    }
+                    
+                } option:nil];
+                
+            }];
+            
+            
+            dispatch_group_notify(_uploadGroup, dispatch_get_main_queue(), ^{
+                
+                [TLProgressHUD dismiss];
+                if (uploadSuccessCount) {
+                    //拼接图片
+                    NSString *pic = [imgNames componentsJoinedByString:@"||"];
+                    [self composeWithContentStr:plainStr picStr:pic plateCode:plateCode];
+                    
+                } else {
+                
+                    [TLAlert alertHUDWithMsg:@"图片上传失败"];
+
+                }
+                
+            });
+        
+            
+        } failure:^(NSError *error) {
+            
+            [TLProgressHUD dismiss];
+
+        }];
+
+
+    }
+    
+    
 //    _lbl.attributedText = [TLEmoticonHelper convertEmoticonStrToAttributedString:plainStr];
+
+
+    
+}
+
+- (void)composeWithContentStr:(NSString *)contentStr picStr:(NSString *)picStr plateCode:(NSString *)plateCode {
+
     TLNetworking *http = [TLNetworking new];
     http.showView = self.view;
     http.code = @"610110";
     http.parameters[@"title"] = self.titleTextView.text;
-    http.parameters[@"content"] = plainStr;
-    http.parameters[@"pic"] = @"dsfds";
+    http.parameters[@"content"] = contentStr;
+    http.parameters[@"pic"] = picStr;
     http.parameters[@"plateCode"] = plateCode;
     http.parameters[@"publisher"] = [TLUser user].userId;
     http.parameters[@"isPublish"] = @"1";
-
-
+    
     [http postWithSuccess:^(id responseObject) {
         
         if (self.composeSucces) {
@@ -393,7 +467,7 @@
         
     }];
 
-    
+
 }
 
 #pragma mark- 取消发布

@@ -12,8 +12,12 @@
 
 //@property (nonatomic, assign) UIEdgeInsets edgeInsets;
 
-//图片选择
+@property (nonatomic, copy, getter=getImgs) NSArray <UIImage *>*imgs;
+
+//单张选择，暂时弃用
 - (void)beginChooseWithImg:(UIImage *)img;
 
+//可传多张 【1,9】 闭区间
+- (void)finishChooseWithImgs:(NSArray <UIImage *>*)imgs;
 
 @end

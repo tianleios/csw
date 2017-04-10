@@ -13,7 +13,7 @@
 
 + (void)alertHUDWithMsg:(NSString *)msg {
 
-    [TLProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+//    [TLProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
     [TLProgressHUD showInfoWithStatus:msg];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         

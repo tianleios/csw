@@ -4,7 +4,8 @@
 //
 //  Created by  tianlei on 2017/3/21.
 //  Copyright © 2017年  tianlei. All rights reserved.
-//
+//  拍过照后，会把图片存在相册
+//  
 
 #import <UIKit/UIKit.h>
 

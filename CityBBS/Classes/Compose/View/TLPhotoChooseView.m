@@ -22,6 +22,20 @@
 
 @implementation TLPhotoChooseView
 
+- (NSArray *)getImgs {
+
+    NSMutableArray *imgs = [[NSMutableArray alloc] initWithCapacity:self.photoRooms.count];
+    
+    [self.photoRooms enumerateObjectsUsingBlock:^(TLPhotoItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (!obj.isAdd || obj.img) {
+            
+            [imgs addObject:obj.img];
+
+        }
+    }];
+    return imgs;
+
+}
 
 - (TLImagePicker *)imagePicker {
     
@@ -187,6 +201,39 @@
 
     }
     
+}
+
+- (void)finishChooseWithImgs:(NSArray <UIImage *>*)imgs {
+
+    if (!imgs || imgs.count > 9 || imgs.count <= 0) {
+        
+        NSLog(@"图片数组不符合要求");
+        return;
+    }
+    
+    [self.photoRooms removeAllObjects];
+    [imgs enumerateObjectsUsingBlock:^(UIImage * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        TLPhotoItem *item = [TLPhotoItem new];
+        item.isAdd = NO;
+        item.img = obj;
+        [self.photoRooms addObject:item];
+
+    }];
+    
+    if (imgs.count <=  8) {
+        
+        //8张一下
+        TLPhotoItem *addItem = [TLPhotoItem new];
+        addItem.isAdd = YES;
+        [self.photoRooms addObjectsFromArray:@[addItem]];
+        
+    } else {
+    //9 张
+    
+    }
+    
+    [self.photoChooseCollectionView  reloadData];
+
 }
 
 - (void)beginChooseWithImg:(UIImage *)img {
