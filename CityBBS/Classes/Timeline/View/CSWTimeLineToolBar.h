@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+@class CSWLayoutItem;
 
 @interface CSWTimeLineToolBar : UIView
+
+@property (nonatomic, strong) CSWLayoutItem *layoutItem;
 
 @end

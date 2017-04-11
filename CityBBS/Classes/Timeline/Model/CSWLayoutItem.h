@@ -27,7 +27,6 @@
 @property (nonatomic, assign) CGRect arrowFrame; //点赞聊天背景
 @property (nonatomic, assign) CGRect bottomBgFrame; //点赞聊天背景
 
-@property (nonatomic, assign) BOOL isHasLike;
 //@property (nonatomic, assign) CGRect likeFrame; //点赞lbl
 @property (nonatomic, assign) CGRect lineFrame; //下线
 
@@ -37,7 +36,7 @@
 
 @property (nonatomic, strong) NSMutableAttributedString *likeAttributedString;
 
-//评论的frame
+//评论的frame 和转换后的富文本字符串
 @property (nonatomic, strong) NSMutableArray <NSValue *> *commentFrames;
 @property (nonatomic, strong) NSMutableArray <NSAttributedString *> *attributedComments;
 
@@ -47,5 +46,9 @@
 
 @property (nonatomic, strong) CSWArticleModel *article;
 @property (nonatomic, strong) NSAttributedString *contentAttributedString;
+
+@property (nonatomic, assign) BOOL isHasLike;
+@property (nonatomic, assign) BOOL isHasPhoto;
+@property (nonatomic, assign) BOOL isHasComment;
 
 @end

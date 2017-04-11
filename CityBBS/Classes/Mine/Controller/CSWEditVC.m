@@ -49,7 +49,7 @@
     } else {
         
         if (![self.contentTf.text valid]) {
-            [TLAlert alertWithHUDText:@"请输入昵称"];
+            [TLAlert alertWithInfo:@"请输入昵称"];
             return;
         }
         
@@ -61,7 +61,7 @@
         http.parameters[@"nickname"] = self.contentTf.text;
         [http postWithSuccess:^(id responseObject) {
             
-            [TLAlert alertWithHUDText:@"修改成功"];
+            [TLAlert alertWithInfo:@"修改成功"];
             [TLUser user].nickname = self.contentTf.text;
         
             [[TLUser user] updateUserInfo];

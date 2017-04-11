@@ -48,7 +48,7 @@
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation {
     
     [MBProgressHUD hideHUDForView:self.view animated:YES];
-    [TLAlert alertWithHUDText:@"加载失败"];
+    [TLAlert alertWithInfo:@"加载失败"];
     
 }
 

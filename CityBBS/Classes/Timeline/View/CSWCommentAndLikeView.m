@@ -19,6 +19,8 @@
 @property (nonatomic, strong) MLLinkLabel *likeLabel;
 @property (nonatomic, strong) CALayer *line;
 @property (nonatomic, strong) UIButton *lookMoreCommentBtn;
+
+
 @property (nonatomic, strong) NSMutableArray <CSWClickLinkLabel *>*commentLblRooms;
 
 @end
@@ -119,73 +121,94 @@
 
     _layoutItem = layoutItem;
     
-    NSInteger currentCount = self.commentLblRooms.count;
-    NSInteger targetCount = layoutItem.commentFrames.count;
 
     
-    //先移除，视图
-    [self.commentLblRooms enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        if ([obj isKindOfClass:[CSWClickLinkLabel class]]) {
-            
-            [obj removeFromSuperview];
-            
-        }
-    }];
+    //
+    self.likeImageView.hidden = !_layoutItem.isHasLike;
+    self.likeCountLbl.hidden = !_layoutItem.isHasLike;
+    self.likeLabel.hidden = !_layoutItem.isHasLike;
+    self.line.hidden = !_layoutItem.isHasLike;
     
-    
-    //lbl复用
-    if (targetCount > currentCount ) {
+    //
+    if (_layoutItem.isHasLike) {
         
-        //创建,差值
-        for (NSInteger i = 0; i < targetCount - currentCount; i ++) {
-            CSWClickLinkLabel *linkLable = [[CSWClickLinkLabel alloc] init];
-            linkLable.textColor = [UIColor textColor];
-            linkLable.font = [CSWLayoutHelper helper].commentFont;
-            linkLable.numberOfLines = 0;
-            linkLable.textColor = [UIColor textColor];
-            [self.commentLblRooms addObject:linkLable];
-        }
-        
-    }
-    
-    //点赞
-    if (_layoutItem.isHasLike) { //有点赞
-        
+        //有点赞
         self.line.frame = _layoutItem.lineFrame;
         self.likeCountLbl.text = @"2121";
         self.likeLabel.attributedText = _layoutItem.likeAttributedString;
         
-    } else {
-        
-        self.likeLabel.hidden = YES;
-        self.line.hidden = YES;
-    }
-    
-    //评论, 创建Lbl -- 把lbl存储起来
-    [_layoutItem.commentFrames enumerateObjectsUsingBlock:^(NSValue * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        CSWClickLinkLabel *linkLable = self.commentLblRooms[idx];
-        linkLable.frame = [obj CGRectValue];
-        linkLable.attributedText = _layoutItem.attributedComments[idx];
-        [self addSubview:linkLable];
-        
-    }];
-    
-    
-    
-    if (_layoutItem.isShowLookMoreCommentBtn) {
-        
-        self.lookMoreCommentBtn.hidden = NO;
-        self.lookMoreCommentBtn.frame = _layoutItem.lookMoreCommentBtnFrame;
-    } else {
-        
-        self.lookMoreCommentBtn.hidden = YES;
-        
     }
     
     
+    if (_layoutItem.isHasComment) {//----------------------有评论--------------------------//
+        
+        
+        NSInteger currentCount = self.commentLblRooms.count;
+        NSInteger targetCount = layoutItem.commentFrames.count;
+        
+        
+        //先移除，视图
+        [self.commentLblRooms enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if ([obj isKindOfClass:[CSWClickLinkLabel class]]) {
+                
+                [obj removeFromSuperview];
+                
+            }
+        }];
+        
+        
+        //lbl复用
+        if (targetCount > currentCount ) {
+            
+            //创建,差值
+            for (NSInteger i = 0; i < targetCount - currentCount; i ++) {
+                CSWClickLinkLabel *linkLable = [[CSWClickLinkLabel alloc] init];
+                linkLable.textColor = [UIColor textColor];
+                linkLable.font = [CSWLayoutHelper helper].commentFont;
+                linkLable.numberOfLines = 0;
+                linkLable.textColor = [UIColor textColor];
+                [self.commentLblRooms addObject:linkLable];
+            }
+            
+        }
+        
+        //评论, 创建Lbl -- 把lbl存储起来
+        [_layoutItem.commentFrames enumerateObjectsUsingBlock:^(NSValue * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            CSWClickLinkLabel *linkLable = self.commentLblRooms[idx];
+            linkLable.frame = [obj CGRectValue];
+            linkLable.attributedText = _layoutItem.attributedComments[idx];
+            linkLable.hidden = NO;
+            [self addSubview:linkLable];
+            
+        }];
+        
+        
+        
+        if (_layoutItem.isShowLookMoreCommentBtn) {
+            
+            self.lookMoreCommentBtn.hidden = NO;
+            self.lookMoreCommentBtn.frame = _layoutItem.lookMoreCommentBtnFrame;
+        } else {
+            
+            self.lookMoreCommentBtn.hidden = YES;
+            
+        }
+        
+    } else { //-----------------------无评论--------------------------//
+    
+        [self.commentLblRooms enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if ([obj isKindOfClass:[CSWClickLinkLabel class]]) {
+                
+                obj.hidden = YES;
+                
+            }
+        }];
+    
+    }
+ 
+
 }
-
-
 @end

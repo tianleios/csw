@@ -11,6 +11,29 @@
 
 @implementation TLAlert
 
+//info
++ (void)alertWithInfo:(NSString *)msg {
+
+    [SVProgressHUD showWithStatus:msg];
+    [SVProgressHUD dismissWithDelay:2];
+}
+
+//error
++ (void)alertWithError:(NSString *)msg {
+
+    [SVProgressHUD showErrorWithStatus:msg];
+    [SVProgressHUD dismissWithDelay:2];
+
+}
+
+//success
++ (void)alertWithSucces:(NSString *)msg {
+
+    [SVProgressHUD showSuccessWithStatus:msg];
+    [SVProgressHUD dismissWithDelay:2];
+
+}
+
 + (void)alertHUDWithMsg:(NSString *)msg {
 
 //    [TLProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];

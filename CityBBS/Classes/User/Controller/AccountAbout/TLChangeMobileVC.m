@@ -93,7 +93,7 @@
 
     if (![self.phoneTf.text isPhoneNum]) {
         
-        [TLAlert alertWithHUDText:@"请输入正确的手机号"];
+        [TLAlert alertWithInfo:@"请输入正确的手机号"];
         
         return;
     }
@@ -121,12 +121,12 @@
     
     if (![self.phoneTf.text isPhoneNum]) {
         
-        [TLAlert alertWithHUDText:@"请输入正确的手机号"];
+        [TLAlert alertWithInfo:@"请输入正确的手机号"];
         return;
     }
     
     if (![self.captchaView.captchaTf.text valid] || self.captchaView.captchaTf.text.length < 4 ) {
-        [TLAlert alertWithHUDText:@"请输入正确的验证码"];
+        [TLAlert alertWithInfo:@"请输入正确的验证码"];
         return;
     }
     
@@ -149,7 +149,7 @@
 
     [http postWithSuccess:^(id responseObject) {
         
-        [TLAlert alertWithHUDText:@"修改成功"];
+        [TLAlert alertWithInfo:@"修改成功"];
         [TLUser user].mobile = self.phoneTf.text;
         if (self.changeMobileSuccess) {
             self.changeMobileSuccess(self.phoneTf.text);

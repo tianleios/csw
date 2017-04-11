@@ -169,7 +169,7 @@
         [self.homeCollectionView reloadData];
         
     };
-    
+    //--//
     TLNavigationController *nav = [[TLNavigationController alloc] initWithRootViewController:changeCityVC];
     nav.navigationBar.barTintColor = [UIColor whiteColor];
     nav.navigationBar.barStyle = 0;

@@ -8,6 +8,10 @@
 
 #import "TLBaseVC.h"
 
+@class CSWLayoutItem;
+
 @interface CSWArticleDetailVC : TLBaseVC
+
+@property (nonatomic, strong) CSWLayoutItem *layoutItem;
 
 @end

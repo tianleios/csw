@@ -77,14 +77,14 @@
     
     if (![self.phoneTf.text isPhoneNum]) {
         
-        [TLAlert alertWithHUDText:@"请输入正确的手机号"];
+        [TLAlert alertWithInfo:@"请输入正确的手机号"];
         
         return;
     }
 
     if (!(self.pwdTf.text &&self.pwdTf.text.length > 5)) {
         
-        [TLAlert alertWithHUDText:@"请输入6位以上密码"];
+        [TLAlert alertWithInfo:@"请输入6位以上密码"];
         return;
     }
 
@@ -121,7 +121,7 @@
                     
                 } else {
                     
-                    [TLAlert alertWithHUDText:@"登录失败"];
+                    [TLAlert alertWithInfo:@"登录失败"];
                     
                 }
                 

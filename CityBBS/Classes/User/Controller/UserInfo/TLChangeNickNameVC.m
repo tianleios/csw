@@ -37,7 +37,7 @@
 - (void)save {
     
     if (![self.nickNameTf.text valid]) {
-        [TLAlert alertWithHUDText:@"请输入昵称"];
+        [TLAlert alertWithInfo:@"请输入昵称"];
         return;
     }
 
@@ -49,7 +49,7 @@
     http.parameters[@"nickname"] = self.nickNameTf.text;
     [http postWithSuccess:^(id responseObject) {
         
-        [TLAlert alertWithHUDText:@"修改成功"];
+        [TLAlert alertWithInfo:@"修改成功"];
         [self.navigationController popViewControllerAnimated:YES];
         [TLUser user].nickname = self.nickNameTf.text;
         [[NSNotificationCenter defaultCenter] postNotificationName:kUserInfoChange object:nil];

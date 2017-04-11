@@ -35,7 +35,7 @@
 
 - (void)realName {
 
-    [TLAlert alertWithHUDText:@"实名认证成功"];
+    [TLAlert alertWithInfo:@"实名认证成功"];
     [self.navigationController popViewControllerAnimated:YES];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kUserInfoChange object:nil];
@@ -75,13 +75,13 @@
     
     
     if (![self.realNameTf.text isChinese]) {
-        [TLAlert alertWithHUDText:@"请输入正确的中文名称"];
+        [TLAlert alertWithInfo:@"请输入正确的中文名称"];
         return;
     }
     
     if (![self.idNoTf.text valid] || self.idNoTf.text.length != 18) {
         
-        [TLAlert alertWithHUDText:@"请输入身份证号码"];
+        [TLAlert alertWithInfo:@"请输入身份证号码"];
         return;
         
     }
@@ -98,7 +98,7 @@
         
         if ([responseObject[@"data"][@"isSuccess"] isEqual:@1]) {
             
-            [TLAlert alertWithHUDText:@"实名认证成功"];
+            [TLAlert alertWithInfo:@"实名认证成功"];
             [self.navigationController popViewControllerAnimated:YES];
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kUserInfoChange object:nil];

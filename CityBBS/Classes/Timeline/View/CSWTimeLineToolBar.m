@@ -7,6 +7,7 @@
 //
 
 #import "CSWTimeLineToolBar.h"
+#import "CSWLayoutItem.h"
 
 @interface CSWTimeLineToolBar()
 
@@ -23,6 +24,16 @@
 @end
 
 @implementation CSWTimeLineToolBar
+
+
+- (void)setLayoutItem:(CSWLayoutItem *)layoutItem {
+
+    _layoutItem = layoutItem;
+    
+    self.dzCountLbl.text = [NSString stringWithFormat:@"%@",_layoutItem.article.sumLike];
+    self.commentCountLbl.text = [NSString stringWithFormat:@"%@",_layoutItem.article.sumRead];
+
+}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -102,8 +113,6 @@
         [self.dzBtn setBackgroundImage:[UIImage imageNamed:@"time_line_dz"] forState:UIControlStateNormal];
         
         //--//
-        self.dzCountLbl.text = @"100";
-        self.commentCountLbl.text = @"10000";
         
     }
     return self;

@@ -172,7 +172,7 @@
        
        if (self.isShowMsg) {
            
-           [TLAlert alertWithHUDText:@"网络异常"];
+           [TLAlert alertWithInfo:@"网络异常"];
 
        }
        

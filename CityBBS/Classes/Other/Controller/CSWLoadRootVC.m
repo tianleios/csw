@@ -28,7 +28,19 @@
     //定位
     self.isFirst = YES;
     
-    
+//    [SVProgressHUD showErrorWithStatus:@"出现错误"];
+//    [SVProgressHUD dismissWithDelay:3 completion:^{
+//        
+//    }];
+//    
+//    [TLAlert alertWithMsg:@"msg"];
+//    
+//    [TLAlert alertWithInfo:@"info"];
+//    [TLAlert alertWithError:@"error"];
+//    [TLAlert alertWithSucces:@"success"];
+//
+//    
+//    return;
     //
     UIImageView *bgImageView = [[UIImageView alloc] init];
     [self.view addSubview:bgImageView];
@@ -40,15 +52,38 @@
     bgImageView.image = [UIImage imageNamed:@"lanuch"];
     
     //根据定位加载城市
-    _locationManager = [[CLLocationManager alloc] init];
-    [_locationManager requestWhenInUseAuthorization];
-    _locationManager.delegate = self;
-    [_locationManager startUpdatingLocation];
+    [TLProgressHUD showWithStatus:@"努力加载站点中"];
+//    if(![TLUser user].userId) {
+//    
+//        CSWCity *city = [CSWCity new];
+//        city.code = [TLUser user].companyCode;
+//        [[CSWCityManager manager] getCityDetailBy:city success:^{
+//            
+//            [UIApplication sharedApplication].keyWindow.rootViewController = [[TLTabBarController alloc] init];
+//            
+//        } failure:^{
+//            
+//            [TLProgressHUD showErrorWithStatus:@"获取站点失败"];
+//
+//        }];
+//        
+//    } else {
+    
+        _locationManager = [[CLLocationManager alloc] init];
+        [_locationManager requestWhenInUseAuthorization];
+        _locationManager.delegate = self;
+        [_locationManager startUpdatingLocation];
+        
+//    }
+ 
 }
 
 #pragma locaiton-delegate
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
     
+    //定位失败加载默认站点
+    [TLProgressHUD dismiss];
+    [TLAlert alertWithError:@"定位失败"];
     
 }
 
@@ -62,7 +97,6 @@
     //停止定位
     [manager stopUpdatingLocation];
     
-    
     CLGeocoder *gecoder = [[CLGeocoder alloc] init];
     CLLocation *location = manager.location;
     [gecoder reverseGeocodeLocation:location completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
@@ -70,10 +104,13 @@
         CLPlacemark *placemark = [placemarks lastObject];
         
         if (error) {
+            
+            [TLProgressHUD dismiss];
+            [TLAlert alertWithError:@"获取站点失败"];
             return ;
         }
         
-        [TLProgressHUD showWithStatus:@"努力加载站点中"];
+//        [TLProgressHUD showWithStatus:@"努力加载站点中"];
         TLNetworking *http = [TLNetworking new];
         http.code = @"806012";
         http.parameters[@"province"] = placemark.administrativeArea ? : @"";
@@ -86,14 +123,20 @@
             
             //获取站点详情
             [[CSWCityManager manager] getCityDetailBy:[CSWCityManager manager].currentCity success:^{
+                
                 [TLProgressHUD dismiss];
 
                    [UIApplication sharedApplication].keyWindow.rootViewController = [[TLTabBarController alloc] init];
                 
             } failure:^{
+                
                 [TLProgressHUD dismiss];
-                [TLProgressHUD showErrorWithStatus:@"获取站点失败"];
 
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    
+                    
+                    
+                });
                 
             }];
 
@@ -102,7 +145,7 @@
         } failure:^(NSError *error) {
             
             [TLProgressHUD dismiss];
-            [TLProgressHUD showErrorWithStatus:@"获取站点失败"];
+            [TLAlert alertWithError:@"获取站点失败"];
 
         }];
         

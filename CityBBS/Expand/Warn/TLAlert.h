@@ -16,14 +16,17 @@
 //SVProgressHUD新版
 + (void)alertHUDWithMsg:(NSString *)msg;
 
+//info
++ (void)alertWithInfo:(NSString *)msg;
+//error
++ (void)alertWithError:(NSString *)msg;
+//success
++ (void)alertWithSucces:(NSString *)msg;
+
+
 
 //设置延迟时间
 + (void)alertWithHUDText:(NSString *)text duration:(NSTimeInterval)sec complection:(void(^)())complection;
-
-
-
-+ (void)alertWithHUDText:(NSString *)text;
-
 
 //--//基于系统的alertController
 + (void)alertWithMsg:(NSString * )message;

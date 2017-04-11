@@ -103,7 +103,7 @@
                 http.parameters[@"token"] = [TLUser user].token;
                 [http postWithSuccess:^(id responseObject) {
                     
-                    [TLAlert alertWithHUDText:@"修改头像成功"];
+                    [TLAlert alertWithInfo:@"修改头像成功"];
                     [TLUser user].userExt.photo = key;
                     
                      weakSelf.models[0].img = img;

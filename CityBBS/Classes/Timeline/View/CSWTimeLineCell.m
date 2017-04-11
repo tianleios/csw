@@ -26,20 +26,12 @@
 @property (nonatomic, strong) MLLinkLabel *contentLbl; //内容lbl
 @property (nonatomic, strong) PYPhotosView *photosView; //内容lbl
 
+//工具栏
 @property (nonatomic, strong) CSWTimeLineToolBar *toolBar;
 
-//底部评论背景
+//底部评论背景 + 箭头
 @property (nonatomic, strong) UIImageView *arrowImageView;
-
-
-//@property (nonatomic, strong) UIView *bottomBgView;
 @property (nonatomic, strong) CSWCommentAndLikeView *commentAndLikeView;
-
-//@property (nonatomic, strong) UIImageView *likeImageView;
-//@property (nonatomic, strong) UILabel *likeCountLbl;
-//@property (nonatomic, strong) MLLinkLabel *likeLabel;
-//@property (nonatomic, strong) CALayer *line;
-//@property (nonatomic, strong) UIButton *lookMoreCommentBtn;
 
 @end
 
@@ -54,8 +46,8 @@
         //
         self.photoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 15, 50, 50)];
         [self.contentView addSubview:self.photoImageView];
-//        self.photoImageView.layer.cornerRadius = 25;
-//        self.photoImageView.layer.masksToBounds = YES;
+        self.photoImageView.layer.cornerRadius = 25;
+        self.photoImageView.layer.masksToBounds = YES;
         self.photoImageView.backgroundColor = [UIColor orangeColor];
         
         //名称
@@ -134,7 +126,7 @@
         self.photosView.photoHeight = layout.photoWidth;
         self.photosView.photoWidth = layout.photoWidth;
        
-        //---//分享 --- 点赞 -- 评论
+        //分享 --- 点赞 -- 评论
         self.toolBar = [[CSWTimeLineToolBar alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.toolBar];
         
@@ -147,11 +139,7 @@
         self.commentAndLikeView = [[CSWCommentAndLikeView alloc] init];
         [self.contentView addSubview:self.commentAndLikeView];
         
-        //点赞和评论
-
-        
-        //评论
-        //-----底线
+        //底线
         UIView *line = [[UIView alloc] init];
         line.backgroundColor = [UIColor lineColor];
         [self addSubview:line];
@@ -178,36 +166,52 @@
 - (void)setLayoutItem:(CSWLayoutItem *)layoutItem {
 
     _layoutItem = layoutItem;
-    self.photoImageView.image = [UIImage new];
-    self.nameLbl.text= @"天下";
+    [self.photoImageView sd_setImageWithURL:[NSURL URLWithString:[_layoutItem.article.photo convertImageUrl]]];
+    self.nameLbl.text= _layoutItem.article.nickname;
     
-    NSMutableAttributedString *plateStr = [[NSMutableAttributedString alloc] initWithString:@"来自 游戏模块" ];
+    NSMutableAttributedString *plateStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"来自%@",_layoutItem.article.plateName]];
     [plateStr addAttribute:NSForegroundColorAttributeName value:[UIColor textColor] range:NSMakeRange(0, 2)];
-    
     self.plateLbl.attributedText = plateStr;
-    self.timeLbl.text = @"一小时前";
+    self.timeLbl.text = [_layoutItem.article.publishDatetime convertToDetailDate];
     
-    //
+    //1.title
     self.titleLbl.frame = _layoutItem.titleFrame;
-    self.contentLbl.frame = _layoutItem.contentFrame;
-    
     self.titleLbl.text = _layoutItem.article.title;
-    self.contentLbl.text = _layoutItem.article.content;
+
+    //2.cocntent
+    self.contentLbl.frame = _layoutItem.contentFrame;
     self.contentLbl.attributedText = _layoutItem.contentAttributedString;
     
     
-    //图片浏览
-    self.photosView.frame = _layoutItem.phototsFrame;
-    self.photosView.thumbnailUrls = _layoutItem.article.photos;
-    self.photosView.originalUrls = _layoutItem.article.photos;
+    //3.图片浏览
+    if (_layoutItem.isHasPhoto) {
+        
+        self.photosView.hidden = NO;
+        self.photosView.frame = _layoutItem.phototsFrame;
+        self.photosView.thumbnailUrls = _layoutItem.article.thumbnailUrls;
+        self.photosView.originalUrls = _layoutItem.article.originalUrls;
+        
+    } else {
     
-    //背景
+        self.photosView.hidden = YES;
+    
+    }
+    
+    //工具栏----重要节点，分割作用
     self.toolBar.frame = _layoutItem.toolBarFrame;
+    self.toolBar.layoutItem = _layoutItem;
+ 
+    //先整体判断隐藏与否
+    self.arrowImageView.hidden = !_layoutItem.isHasComment && !_layoutItem.isHasLike;
+    self.commentAndLikeView.hidden = !_layoutItem.isHasComment && !_layoutItem.isHasLike;
+    
+    if (!_layoutItem.isHasLike && !_layoutItem.isHasComment) {
+        
+        return;
+    }
+    
+
     self.arrowImageView.frame = _layoutItem.arrowFrame;
-    
-    
-#pragma mark - //底部点赞和评论的背景
-//    self.bottomBgView.frame = _layoutItem.bottomBgFrame;
     self.commentAndLikeView.frame= _layoutItem.bottomBgFrame;
     self.commentAndLikeView.layoutItem = _layoutItem;
     

@@ -152,7 +152,7 @@
 
     if (![self.phoneTf.text isPhoneNum]) {
         
-        [TLAlert alertWithHUDText:@"请输入正确的手机号"];
+        [TLAlert alertWithInfo:@"请输入正确的手机号"];
         
         return;
     }
@@ -178,19 +178,19 @@
 
     if (![self.phoneTf.text isPhoneNum]) {
         
-        [TLAlert alertWithHUDText:@"请输入正确的手机号"];
+        [TLAlert alertWithInfo:@"请输入正确的手机号"];
         
         return;
     }
     
     if (!(self.captchaView.captchaTf.text && self.captchaView.captchaTf.text.length > 3)) {
-        [TLAlert alertWithHUDText:@"请输入正确的验证码"];
+        [TLAlert alertWithInfo:@"请输入正确的验证码"];
 
         return;
     }
     
     if (!(self.captchaView.captchaTf.text && self.captchaView.captchaTf.text.length > 3)) {
-        [TLAlert alertWithHUDText:@"请输入正确的验证码"];
+        [TLAlert alertWithInfo:@"请输入正确的验证码"];
         
         return;
     }
@@ -198,13 +198,13 @@
     
     if (!(self.pwdTf.text &&self.pwdTf.text.length > 5)) {
         
-        [TLAlert alertWithHUDText:@"请输入6位以上密码"];
+        [TLAlert alertWithInfo:@"请输入6位以上密码"];
         return;
     }
     
     if (!(self.province && self.city && self.area)) {
         
-        [TLAlert alertWithHUDText:@"请选择省市区"];
+        [TLAlert alertWithInfo:@"请选择省市区"];
         return;
     }
     
@@ -225,7 +225,7 @@
     
     [http postWithSuccess:^(id responseObject) {
        
-        [TLAlert alertWithHUDText:@"注册成功"];
+        [TLAlert alertWithInfo:@"注册成功"];
         NSString *tokenId = responseObject[@"data"][@"token"];
         NSString *userId = responseObject[@"data"][@"userId"];
         
@@ -253,7 +253,7 @@
                 } else {
                     
                     [MBProgressHUD hideHUDForView:self.view animated:YES];
-                    [TLAlert alertWithHUDText:@"登录失败"];
+                    [TLAlert alertWithInfo:@"登录失败"];
                     
                 }
                 

@@ -97,26 +97,26 @@
     
     if (![self.phoneTf.text isPhoneNum]) {
         
-        [TLAlert alertWithHUDText:@"请输入正确的手机号"];
+        [TLAlert alertWithInfo:@"请输入正确的手机号"];
         
         return;
     }
     
     if (!(self.captchaView.captchaTf.text && self.captchaView.captchaTf.text.length > 3)) {
-        [TLAlert alertWithHUDText:@"请输入正确的验证码"];
+        [TLAlert alertWithInfo:@"请输入正确的验证码"];
         
         return;
     }
     
     if (!(self.pwdTf.text &&self.pwdTf.text.length > 5)) {
         
-        [TLAlert alertWithHUDText:@"请输入6位以上密码"];
+        [TLAlert alertWithInfo:@"请输入6位以上密码"];
         return;
     }
     
     if (![self.pwdTf.text isEqualToString:self.rePwdTf.text]) {
         
-        [TLAlert alertWithHUDText:@"输入的密码不一致"];
+        [TLAlert alertWithInfo:@"输入的密码不一致"];
         return;
         
     }
@@ -148,7 +148,7 @@
     
     [http postWithSuccess:^(id responseObject) {
         
-        [TLAlert alertWithHUDText:@"修改成功"];
+        [TLAlert alertWithInfo:@"修改成功"];
         [self.navigationController popViewControllerAnimated:YES];
         if (self.success) {
             self.success();

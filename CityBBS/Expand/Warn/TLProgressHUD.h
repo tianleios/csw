@@ -7,8 +7,10 @@
 #import <SVProgressHUD/SVProgressHUD.h>
 @interface TLProgressHUD : SVProgressHUD
 
-//show
+//加载进度-eg: 网路请求，进度提示
 + (void)showWithStatus:(NSString *)msg;
+
+//
 + (void)showInfoWithStatus:(NSString *)status;
 + (void)showSuccessWithStatus:(NSString *)status;
 + (void)showErrorWithStatus:(NSString *)status;

@@ -10,4 +10,25 @@
 
 @implementation CSWCommentModel
 
+- (NSString *)commentUserId {
+
+    return self.commer;
+}
+
+- (NSString *)commentUserNickname {
+
+    return self.nickname;
+
+}
+
+- (NSString *)commentContent{
+
+    return self.content;
+}
+
+- (NSString *)commentDatetime {
+
+    return self.commentDatetime;
+}
+
 @end
