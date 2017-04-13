@@ -21,6 +21,9 @@
 
 - (NSArray *)thumbnailUrls {
 
+    if (self.picArr.count > 9) {
+        self.picArr = [self.picArr subarrayWithRange:NSMakeRange(0, 9)];
+    }
     NSMutableArray *arr = [[NSMutableArray alloc] initWithCapacity:self.picArr.count];
     [self.picArr enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
@@ -32,7 +35,9 @@
 
 - (NSArray *)originalUrls {
 
-    
+    if (self.picArr.count > 9) {
+        self.picArr = [self.picArr subarrayWithRange:NSMakeRange(0, 9)];
+    }
     NSMutableArray *arr = [[NSMutableArray alloc] initWithCapacity:self.picArr.count];
     [self.picArr enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
     

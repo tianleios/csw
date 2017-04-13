@@ -472,8 +472,10 @@
 
 #pragma mark- 取消发布
 - (void)cancle {
+    
     [self.plateChooseView dismiss];
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    
 }
 
 
@@ -511,7 +513,6 @@
 
 - (void)keyboardWillAppear:(NSNotification *)notification {
     
-   
     //获取键盘高度
     CGFloat duration =  [notification.userInfo[@"UIKeyboardAnimationDurationUserInfoKey"] floatValue];
     CGRect keyBoardFrame = [notification.userInfo[@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];

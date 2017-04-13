@@ -23,7 +23,7 @@
 @property (nonatomic, strong) CSWSwitchView *switchView;
 
 @property (nonatomic, assign) BOOL switchBySwitchView;
-@property (nonatomic, strong) NSMutableArray <CSWLayoutItem *>*timeLineLayoutItemRooom;
+@property (nonatomic, strong) NSMutableArray <CSWLayoutItem *>*timeLineLayoutItemRoom;
 
 @property (nonatomic, assign) BOOL isFirst;
 @property (nonatomic, strong) TLNetworking *timelinHttp;
@@ -43,14 +43,14 @@
 
 }
 
-- (NSMutableArray<CSWLayoutItem *> *)timeLineLayoutItemRooom {
+- (NSMutableArray<CSWLayoutItem *> *)timeLineLayoutItemRoom {
 
-    if (!_timeLineLayoutItemRooom) {
+    if (!_timeLineLayoutItemRoom) {
         
-        _timeLineLayoutItemRooom = [NSMutableArray new];
+        _timeLineLayoutItemRoom = [NSMutableArray new];
     }
     
-    return _timeLineLayoutItemRooom;
+    return _timeLineLayoutItemRoom;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -129,8 +129,9 @@
         
         weakSelf.timelinHttp = [TLNetworking new];
         weakSelf.timelinHttp.code = @"610130";
-        weakSelf.timelinHttp.parameters[@"companyCode"] =  @"GS2017041117035605752";
-//        [CSWCityManager manager].currentCity.code;
+        weakSelf.timelinHttp.parameters[@"companyCode"] = @"GS2017041310540585087";
+//        [CSWCityManager manager].currentCity.code;;
+//
         weakSelf.timelinHttp.parameters[@"start"] = @"1";
         weakSelf.timelinHttp.parameters[@"limit"] = @"10";
         
@@ -141,8 +142,9 @@
                 
               CSWArticleModel *model =  [CSWArticleModel tl_objectWithDictionary:obj];
                 CSWLayoutItem *layoutItem = [CSWLayoutItem new];
+              layoutItem.type = CSWArticleLayoutTypeDefault;
               layoutItem.article = model;
-              [weakSelf.timeLineLayoutItemRooom addObject:layoutItem];
+              [weakSelf.timeLineLayoutItemRoom addObject:layoutItem];
                 
             }];
             
@@ -195,16 +197,23 @@
 
     //计算
 //    return  self.layoutItem.cellHeight;
-    return self.timeLineLayoutItemRooom[indexPath.row].cellHeight;
+    return self.timeLineLayoutItemRoom[indexPath.row].cellHeight;
 
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
     CSWArticleDetailVC *detailVC = [[CSWArticleDetailVC alloc] init];
-    detailVC.layoutItem = self.timeLineLayoutItemRooom[indexPath.row];
-    [self.navigationController pushViewController:detailVC animated:YES];
     
+    CSWLayoutItem *layoutItem =  [CSWLayoutItem new];
+    
+    layoutItem.type = CSWArticleLayoutTypeArticleDetail;
+    
+    layoutItem.article = self.timeLineLayoutItemRoom[indexPath.row].article;
+    //
+    detailVC.layoutItem = layoutItem;
+    //
+    [self.navigationController pushViewController:detailVC animated:YES];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
 }
@@ -212,7 +221,7 @@
 #pragma dataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
-    return self.timeLineLayoutItemRooom.count;
+    return self.timeLineLayoutItemRoom.count;
 
 }
 
@@ -228,7 +237,7 @@
         
         
         //    cell.layoutItem = self.layoutItem;
-        cell.layoutItem = self.timeLineLayoutItemRooom[indexPath.row];
+        cell.layoutItem = self.timeLineLayoutItemRoom[indexPath.row];
         return cell;
 
   

@@ -36,19 +36,19 @@
     self.lastSelectd = btn;
     
     [self.swithcLine layoutIfNeeded];
-    [UIView animateWithDuration:2 animations:^{
-        
-        [self.swithcLine mas_remakeConstraints:^(MASConstraintMaker *make) {
-            
-            make.height.mas_equalTo(3);
-            make.width.mas_equalTo(20);
-            make.centerX.equalTo(btn.mas_centerX);
-            make.bottom.equalTo(self.mas_bottom).offset(-3);
-            
-        }];
-        
-        [self.swithcLine layoutIfNeeded];
-    }];
+//    [UIView animateWithDuration:2 animations:^{
+//        
+//        [self.swithcLine mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            
+//            make.height.mas_equalTo(3);
+//            make.width.mas_equalTo(20);
+//            make.centerX.equalTo(btn.mas_centerX);
+//            make.bottom.equalTo(self.mas_bottom).offset(-3);
+//            
+//        }];
+//        
+//        [self.swithcLine layoutIfNeeded];
+//    }];
     
 
     

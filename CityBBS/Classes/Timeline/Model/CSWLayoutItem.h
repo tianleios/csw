@@ -10,7 +10,17 @@
 #import "CSWArticleModel.h"
 #import "CSWLayoutHelper.h"
 
+
+typedef NS_ENUM(NSUInteger, CSWArticleLayoutType) {
+    CSWArticleLayoutTypeDefault = 0,
+    CSWArticleLayoutTypeArticleDetail
+    
+};
+
 @interface CSWLayoutItem : NSObject
+
+
+@property (nonatomic, assign) CSWArticleLayoutType type;
 
 @property (nonatomic, assign) CGRect titleFrame; //帖子标题
 
@@ -47,6 +57,8 @@
 @property (nonatomic, strong) CSWArticleModel *article;
 @property (nonatomic, strong) NSAttributedString *contentAttributedString;
 
+//@property (nonatomic, assign) BOOL isHiddenTooBar;
+@property (nonatomic, assign) BOOL isHasLikeAndComment;
 @property (nonatomic, assign) BOOL isHasLike;
 @property (nonatomic, assign) BOOL isHasPhoto;
 @property (nonatomic, assign) BOOL isHasComment;

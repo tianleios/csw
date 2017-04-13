@@ -117,6 +117,7 @@
         self.contentLbl.delegate = self;
         self.contentLbl.textColor = [UIColor textColor];
         self.contentLbl.numberOfLines = 0;
+        self.contentLbl.lineHeightMultiple = 1.2;
         [self.contentView addSubview:self.contentLbl];
         
         //图片浏览--可能无
@@ -197,10 +198,22 @@
     
     }
     
+    //
+    if (_layoutItem.type == CSWArticleLayoutTypeArticleDetail) {
+        self.toolBar.hidden = YES;
+        self.arrowImageView.hidden = YES;
+        self.commentAndLikeView.hidden = YES;
+        return;
+    }
+    
+    self.toolBar.hidden = NO;
+    self.arrowImageView.hidden = NO;
+    self.commentAndLikeView.hidden = NO;
+    
     //工具栏----重要节点，分割作用
     self.toolBar.frame = _layoutItem.toolBarFrame;
     self.toolBar.layoutItem = _layoutItem;
- 
+    
     //先整体判断隐藏与否
     self.arrowImageView.hidden = !_layoutItem.isHasComment && !_layoutItem.isHasLike;
     self.commentAndLikeView.hidden = !_layoutItem.isHasComment && !_layoutItem.isHasLike;

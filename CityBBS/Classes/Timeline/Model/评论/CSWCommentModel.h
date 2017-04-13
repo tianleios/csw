@@ -11,16 +11,19 @@
 @interface CSWCommentModel : TLBaseModel
 //B 已发布 C2 被举报待审批 D 审批通过 E 待回收 F 被过滤
 
-@property (nonatomic, copy, readonly) NSString *commentUserId;
-@property (nonatomic, copy, readonly) NSString *commentUserNickname;
-@property (nonatomic, copy, readonly) NSString *commentContent;
+//构造数据
+@property (nonatomic, copy) NSString *commentUserId;
+@property (nonatomic, copy) NSString *commentUserNickname;
+@property (nonatomic, copy) NSString *commentContent;
 
-@property (nonatomic, copy, readonly) NSString *replyCommentUserId;
-@property (nonatomic, copy, readonly) NSString *replyCommentUserNickname;
+//互访数据
+@property (nonatomic, copy) NSString *parentCommentUserId;
+@property (nonatomic, copy) NSString *parentCommentUserNickname;
+@property (nonatomic, copy) NSString *commentDatetime;
 
-@property (nonatomic, copy, readonly) NSString *commentDatetime;
 
 
+//原生数据
 @property (nonatomic, copy) NSString *code;
 
 @property (nonatomic, copy) NSString *status;
@@ -33,6 +36,25 @@
 @property (nonatomic, copy) NSString *postCode;
 @property (nonatomic, copy) NSString *nickname;
 
+@property (nonatomic, strong) NSMutableDictionary *parentComment;
+
+
+- (instancetype)initWithCommentUserId:(NSString *)commentUserId
+                  commentUserNickname:(NSString *)commentUserNickname
+                       commentContent:(NSString *)commentContent
+            parentCommentUserNickname:(NSString *)parentCommentUserNickname commentDatetime:(NSString *)commentDatetime;
+//parentComment =                 {
+//    code = PL20170410311154162;
+//    commDatetime = "Apr 13, 2017 11:15:41 AM";
+//    commer = U2017041311023219056;
+//    content = "\U4e0d\U9519 \U8c01\U56de\U590d\U6211\U4e0b";
+//    loginName = CSW15122223333;
+//    nickname = 1512233;
+//    parentCode = TZ20170410311121858;
+//    photo = "c7d27b24-d1d7-45f0-ba19-3ae7433e215e.JPG";
+//    postCode = TZ20170410311121858;
+//    status = B;
+//};
 
 //@property (nonatomic, copy) NSString *userId;
 //@property (nonatomic, strong) NSString *commentText;

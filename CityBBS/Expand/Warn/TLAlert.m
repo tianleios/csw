@@ -14,7 +14,7 @@
 //info
 + (void)alertWithInfo:(NSString *)msg {
 
-    [SVProgressHUD showWithStatus:msg];
+    [SVProgressHUD showInfoWithStatus:msg];
     [SVProgressHUD dismissWithDelay:2];
 }
 

@@ -21,7 +21,7 @@ static MLLinkLabel * kProtypeLabel() {
         _protypeLabel.numberOfLines = 0;
         
 //        _protypeLabel.textInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-//        _protypeLabel.lineHeightMultiple = 1.1f;
+        _protypeLabel.lineHeightMultiple = 1.2f;
     });
     return _protypeLabel;
 }
@@ -66,6 +66,17 @@ static MLLinkLabel * kProtypeLabel() {
         CGFloat photosHeight = [CSWLayoutHelper helper].photoWidth * hang + [CSWLayoutHelper helper].photoMargin * (hang - 1);
         self.phototsFrame = CGRectMake(leftMargin, CGRectGetMaxY(self.contentFrame) + 8, contentW, photosHeight);
 
+    }
+    
+    
+    //判断是否为详情
+    if (self.type == CSWArticleLayoutTypeArticleDetail) {
+        
+        self.isHasLike = NO;
+        self.isHasLikeAndComment = NO;
+        self.cellHeight = self.isHasPhoto ? ( CGRectGetMaxY(self.phototsFrame) + 10) : (CGRectGetMaxY(self.contentFrame) + 10);
+        
+        return;
     }
 
     //4.工具栏

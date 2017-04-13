@@ -16,6 +16,8 @@
 #import "TLComposeArticleItem.h"
 #import "CSWLoadRootVC.h"
 #import "CSWArticleDetailVC.h"
+#import "CSWSendCommentVC.h"
+#import "ChatManager.h"
 
 @interface AppDelegate ()
 
@@ -33,6 +35,8 @@
     [IQKeyboardManager sharedManager].enable = YES;
     [[IQKeyboardManager sharedManager].disabledToolbarClasses addObject:[TLComposeVC class]];
     [[IQKeyboardManager sharedManager].disabledToolbarClasses addObject:[CSWArticleDetailVC class]];
+    [[IQKeyboardManager sharedManager].disabledToolbarClasses addObject:[CSWSendCommentVC class]];
+    
      [[IQKeyboardManager sharedManager].disabledDistanceHandlingClasses addObject:[CSWArticleDetailVC class]];
 
     //ProgressHUD
@@ -70,6 +74,7 @@
 - (void)userLoginOut {
 
     [[TLUser user] loginOut];
+    [[ChatManager defaultManager] chatLoginOut];
 
 }
 

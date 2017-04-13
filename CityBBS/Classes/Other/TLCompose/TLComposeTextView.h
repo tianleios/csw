@@ -10,7 +10,7 @@
 #import "TLEmoticon.h"
 #import "TLTextAttachment.h"
 
-#define COMPOSE_ORG_HEIGHT 120
+#define COMPOSE_ORG_HEIGHT 200
 @interface TLComposeTextView : UITextView
 
 - (void)appendEmoticon:(TLEmoticon *)emoticon;

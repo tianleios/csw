@@ -10,19 +10,25 @@
 #import "CSWTimeLineCell.h"
 #import "CSWDaShangCell.h"
 #import "CSWUserActionSwitchView.h"
-#import "CSWCommentInputView.h"
 #import "CSWCommentCell.h"
 #import "CSWCommentLayoutItem.h"
 #import "CSWDZCell.h"
+#import "CSWArticleDetailToolBarView.h"
+#import "CSWSendCommentVC.h"
+#import "TLUserLoginVC.h"
+#import "CSWArticleApi.h"
+#import "CSWReportVC.h"
 
 #define USER_ACTION_SWITCH_HEIGHT 40
 #define SJ_CELL_HEIGHT 80
 #define COMMENT_INPUT_VIEW_HEIGHT 49
 
 
-@interface CSWArticleDetailVC ()<UITableViewDelegate,UITableViewDataSource,CSWUserActionSwitchDelegate>
+@interface CSWArticleDetailVC ()<UITableViewDelegate,UITableViewDataSource,CSWUserActionSwitchDelegate,ArticleDetailToolBarViewDelegate>
 
-@property (nonatomic, strong) CSWCommentInputView *commentInputView;
+//@property (nonatomic, strong) CSWCommentInputView *commentInputView;
+@property (nonatomic, strong) CSWArticleDetailToolBarView *toolBarView;
+
 
 @property (nonatomic, strong) NSMutableArray <CSWCommentLayoutItem *> *commentLayoutItems;
 @property (nonatomic, strong) NSMutableArray <CSWLikeModel *>*dzModels;
@@ -42,6 +48,8 @@
 @property (nonatomic, assign) CGFloat articleDetailTableViewHeigth;
 @property (nonatomic, strong) UIView *commentHeaderView;
 @property (nonatomic, strong) UIView *dzHeaderView;
+
+@property (nonatomic, strong) CSWCommentModel *currentOperationComment;
 
 @end
 
@@ -86,7 +94,8 @@
 //    http.showView = self.view;
     http.code = @"610133";
     http.parameters[@"start"] = @"1";
-    http.parameters[@"limit"] = @"10";
+    http.parameters[@"limit"] = @"100";
+//    http.parameters[@"status"] = @"D";
     http.parameters[@"postCode"] = self.layoutItem.article.code;
     [http postWithSuccess:^(id responseObject) {
         
@@ -129,6 +138,180 @@
 
 
 
+}
+
+
+#pragma mark- 底部工具栏代理
+- (void)didSelectedAction:(CSWArticleDetailToolBarView *)toolBarView action:(CSWArticleDetailToolBarActionType) actionType {
+
+    if (![TLUser user].userId) {
+        
+        TLUserLoginVC *loginVC = [[TLUserLoginVC alloc] init];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginVC];
+        [self presentViewController:nav animated:YES completion:nil];
+    
+        return;
+    }
+    
+    switch (actionType) {
+            case  CSWArticleDetailToolBarActionTypeSendCompose : {
+            
+                //对帖子进行评论
+                CSWSendCommentVC *sendCommentVC = [[CSWSendCommentVC alloc] init];
+                sendCommentVC.type =  CSWSendCommentActionTypeToArticle;
+                sendCommentVC.toObjCode = self.layoutItem.article.code;
+                [sendCommentVC setCommentSuccess:^(CSWCommentModel *model){
+                    
+                    CSWCommentLayoutItem *layoutItem = [[CSWCommentLayoutItem alloc] init];
+                    layoutItem.commentModel = model;
+                    
+                    [self.commentLayoutItems insertObject:layoutItem atIndex:0];
+                    [self.commentTableView reloadData_tl];
+                    
+                }];
+                //
+                UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:sendCommentVC];
+                [self presentViewController:nav animated:YES completion:nil];
+            }
+            break;
+            
+            case  CSWArticleDetailToolBarActionTypeDZ : {//点赞
+                
+                //是否已经点赞
+                //取消和点赞
+                [toolBarView dzSuccess];
+                
+                [CSWArticleApi dzArticleWithCode:self.layoutItem.article.code
+                                        user:[TLUser user].userId
+                                         success:^{
+                                             
+                                         }
+                                         failure:^{
+                                             
+                                             [toolBarView dzFailure];
+                                             
+                                         }];
+                
+            }
+            break;
+            
+            case  CSWArticleDetailToolBarActionTypeCollection : {//收藏
+                
+                [CSWArticleApi collectionArticleWithCode:self.layoutItem.article.code
+                                            user:[TLUser user].userId
+                                         success:^{
+                                             [TLAlert alertWithSucces:@"收藏成功"];
+                                         }
+                                         failure:^{
+                                             
+                                         }];
+                
+                
+            }
+            break;
+            
+            case  CSWArticleDetailToolBarActionTypeReport: {//举报
+                
+                CSWReportVC *vc = [CSWReportVC new];
+                vc.reportObjCode = self.layoutItem.article.code;
+                [self.navigationController pushViewController:vc animated:YES];
+             
+                
+            }
+            break;
+
+    }
+
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    
+    if (![TLUser user].userId) {
+        
+        TLUserLoginVC *loginVC = [[TLUserLoginVC alloc] init];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginVC];
+        [self presentViewController:nav animated:YES completion:nil];
+        
+        return;
+    }
+
+    if (![tableView isEqual:self.commentTableView]) {
+        return;
+    }
+    
+    self.currentOperationComment = self.commentLayoutItems[indexPath.row].commentModel;
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    [self becomeFirstResponder];
+    
+    UIMenuController *mentCtrl = [UIMenuController sharedMenuController];
+    UIMenuItem *item1 = [[UIMenuItem alloc] initWithTitle:@"评论" action:@selector(comment:)];
+    UIMenuItem *item2 = [[UIMenuItem alloc] initWithTitle:@"举报" action:@selector(report:)];
+
+    mentCtrl.menuItems = @[item1,item2];
+    [mentCtrl setTargetRect:CGRectInset(cell.frame, 0, 40) inView:cell.superview];
+    [mentCtrl setMenuVisible:YES animated:YES];
+
+
+}
+
+-(BOOL)canPerformAction:(SEL)action withSender:(id)sender{
+    if(action == @selector(comment:)){
+        
+        
+        return YES;
+    }else if (action==@selector(report:)){
+        
+        
+        return YES;
+    }
+    return [super canPerformAction:action withSender:sender];
+}
+
+#pragma mark- 评论 评论
+- (void)comment:(id)sender {
+
+    
+            CSWCommentModel *model =  self.currentOperationComment;
+    
+            //对帖子进行评论
+            CSWSendCommentVC *sendCommentVC = [[CSWSendCommentVC alloc] init];
+            sendCommentVC.type =  CSWSendCommentActionTypeToComment;
+            sendCommentVC.toObjCode = model.code
+            ;
+            sendCommentVC.toObjNickName = model.commentUserNickname;
+    
+            [sendCommentVC setCommentSuccess:^(CSWCommentModel *model){
+    
+                CSWCommentLayoutItem *layoutItem = [[CSWCommentLayoutItem alloc] init];
+                layoutItem.commentModel = model;
+    
+                [self.commentLayoutItems insertObject:layoutItem atIndex:0];
+                [self.commentTableView reloadData_tl];
+    
+            }];
+            //
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:sendCommentVC];
+            [self presentViewController:nav animated:YES completion:nil];
+    
+}
+
+#pragma mark- 举报 评论
+- (void)report:(id)sender {
+
+    CSWReportVC *vc = [CSWReportVC new];
+    vc.isReportComment = YES;
+    vc.reportObjCode = self.currentOperationComment.code;
+    [self.navigationController pushViewController:vc animated:YES];
+  
+}
+
+
+//必须要有，如果要UIMenuController显示
+-(BOOL)canBecomeFirstResponder
+{
+    return YES;
 }
 
 
@@ -184,38 +367,34 @@
         }
     }
     
-   
 
 }
 
 - (void)setUpUI {
 
 
-    CGFloat articleDetailTableViewHeight = _layoutItem.cellHeight + SJ_CELL_HEIGHT;
+    CGFloat articleDetailTableViewHeight = _layoutItem.cellHeight + SJ_CELL_HEIGHT + 20;
     self.articleDetailTableViewHeigth = articleDetailTableViewHeight;
     
     
     //1.背景
     self.bgScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64 - COMMENT_INPUT_VIEW_HEIGHT)];
-    self.bgScrollView.backgroundColor = [UIColor orangeColor];
+    self.bgScrollView.backgroundColor = [UIColor backgroundColor];
     [self.view addSubview:self.bgScrollView];
     self.bgScrollView.delegate = self;
     
-    self.commentInputView = [[CSWCommentInputView alloc] initWithFrame:CGRectMake(0, self.bgScrollView.yy, SCREEN_WIDTH, COMMENT_INPUT_VIEW_HEIGHT)];
-    self.commentInputView.backgroundColor = [UIColor orangeColor];
-    [self.view addSubview:self.commentInputView];
+    self.toolBarView = [[CSWArticleDetailToolBarView alloc] initWithFrame:CGRectMake(0, self.bgScrollView.yy, SCREEN_WIDTH, COMMENT_INPUT_VIEW_HEIGHT)];
+    self.toolBarView.delegate = self;
+    [self.view addSubview:self.toolBarView];
 
     
 
     
     
-    //假header
+//    //假header
     UIView *falseHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, articleDetailTableViewHeight + USER_ACTION_SWITCH_HEIGHT)];
     
  
-    
-    
-    
     //6.帖子详情 + 赏金
     self.articleDetailTableView = [TLTableView  groupTableViewWithframe:CGRectMake(0, 0, SCREEN_WIDTH, articleDetailTableViewHeight) delegate:self dataSource:self];
     self.articleDetailTableView.scrollEnabled = NO;
@@ -237,7 +416,7 @@
     
     
     UIView *falseHeaderView1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, articleDetailTableViewHeight + USER_ACTION_SWITCH_HEIGHT)];
-    falseHeaderView1.backgroundColor = [UIColor redColor];
+    falseHeaderView1.backgroundColor = [UIColor backgroundColor];
     [falseHeaderView1 addSubview:self.articleDetailTableView];
     [falseHeaderView1 addSubview:self.userActionSwitchView];
     self.commentHeaderView = falseHeaderView1;
@@ -266,6 +445,10 @@
 //    self.commentTableView.scrollEnabled = NO;
 //    self.dzTableView.scrollEnabled = NO;
 
+    self.commentTableView.contentSize = CGSizeMake
+    (SCREEN_WIDTH, self.bgScrollView.height + self.articleDetailTableViewHeigth);
+    self.dzTableView.contentSize = self.commentTableView.contentSize;
+    
 }
 
 
@@ -278,11 +461,11 @@
     CGRect keyBoardFrame = [notification.userInfo[@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
     
     
-    [UIView animateWithDuration:duration animations:^{
-        
-        self.commentInputView.y = CGRectGetMinY(keyBoardFrame) - 49 - 64;
-
-    }];
+//    [UIView animateWithDuration:duration animations:^{
+//        
+//        self.toolBarView.y = CGRectGetMinY(keyBoardFrame) - 49 - 64;
+//
+//    }];
     
 }
 
@@ -427,11 +610,10 @@
             
             cell = [[CSWCommentCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CSWCommentCellId"];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            cell.commentLayoutItem = self.commentLayoutItems[indexPath.row];
         }
-        
        
-        
+        cell.commentLayoutItem = self.commentLayoutItems[indexPath.row];
+
         return cell;
     } else {
         
@@ -448,10 +630,14 @@
             
             cell = [[CSWDZCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CSWDZCellID"];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            cell.dzModel = self.dzModels[indexPath.row];
         }
         
+        //--//
+        
+        cell.dzModel = self.dzModels[indexPath.row];
+        
         return cell;
+        
     }
  
     
@@ -490,12 +676,17 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     
+    
     return 0.01;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     
+    if ([tableView isEqual:self.articleDetailTableView]) {
+        return 10;
+    }
     return 0.01;
+ 
 }
 
 @end
