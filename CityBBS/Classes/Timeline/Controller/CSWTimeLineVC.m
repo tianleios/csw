@@ -56,11 +56,11 @@
 - (void)viewWillAppear:(BOOL)animated {
 
     [super viewWillAppear:animated];
+
     if (self.isFirst) {
         [self.timeLineTableView beginRefreshing];
         self.isFirst = NO;
     }
-    self.timelinHttp.parameters[@"companyCode"] = [CSWCityManager manager].currentCity.code;
 
     
 }
@@ -129,7 +129,8 @@
         
         weakSelf.timelinHttp = [TLNetworking new];
         weakSelf.timelinHttp.code = @"610130";
-        weakSelf.timelinHttp.parameters[@"companyCode"] = [CSWCityManager manager].currentCity.code;
+        weakSelf.timelinHttp.parameters[@"companyCode"] =  @"GS2017041117035605752";
+//        [CSWCityManager manager].currentCity.code;
         weakSelf.timelinHttp.parameters[@"start"] = @"1";
         weakSelf.timelinHttp.parameters[@"limit"] = @"10";
         

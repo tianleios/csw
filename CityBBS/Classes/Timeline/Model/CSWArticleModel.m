@@ -13,7 +13,9 @@
 
 + (NSDictionary *)mj_objectClassInArray {
 
-    return @{@"commentList" : [CSWCommentModel class]};
+    return @{@"commentList" : [CSWCommentModel class],
+             @"likeList" : [CSWLikeModel class],
+             };
 
 }
 

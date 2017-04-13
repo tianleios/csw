@@ -10,74 +10,62 @@
 
 @interface CSWUserActionSwitchView()
 
-@property (nonatomic, strong) UILabel *leftLbl1;
-@property (nonatomic, strong) UILabel *leftLbl2;
+//@property (nonatomic, strong) UILabel *leftLbl1;
+//@property (nonatomic, strong) UILabel *leftLbl2;
+
+@property (nonatomic, strong) UIButton *leftBtn1;
+@property (nonatomic, strong) UIButton *leftBtn2;
 @property (nonatomic, strong) UIView  *swithcLine;
 
-@property (nonatomic, strong) id lastSelectd;
+@property (nonatomic, strong) UIButton * lastSelectd;
 
 @end
 
 @implementation CSWUserActionSwitchView
 
-- (void)left1Action {
-    
-    self.swithcLine.translatesAutoresizingMaskIntoConstraints = YES;
 
-    if ([self.lastSelectd isEqual:self.leftLbl1]) {
+- (void)typeSwitch:(UIButton *)btn {
+
+    if ([btn isEqual:self.lastSelectd]) {
+        
         return;
     }
     
-    self.leftLbl1.textColor = [UIColor textColor];
-    self.leftLbl2.textColor = [UIColor textColor2];
-    self.lastSelectd = self.leftLbl1;
+    self.lastSelectd.selected = NO;
+    btn.selected = YES;
+    self.lastSelectd = btn;
     
-    self.swithcLine.centerX = self.leftLbl1.centerX;
-//    [UIView animateWithDuration:0.25 animations:^{
-//        
-//      
-//    }];
-//    [self.swithcLine mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.centerX.equalTo(self.leftLbl1.mas_centerX);
-//    }];
-   
-//    [self.swithcLine mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.height.mas_equalTo(3);
-//        make.width.mas_equalTo(20);
-//        make.centerX.equalTo(self.leftLbl1.mas_centerX);
-//        make.bottom.equalTo(self.mas_bottom).offset(-3);
-//    }];
+    [self.swithcLine layoutIfNeeded];
+    [UIView animateWithDuration:2 animations:^{
+        
+        [self.swithcLine mas_remakeConstraints:^(MASConstraintMaker *make) {
+            
+            make.height.mas_equalTo(3);
+            make.width.mas_equalTo(20);
+            make.centerX.equalTo(btn.mas_centerX);
+            make.bottom.equalTo(self.mas_bottom).offset(-3);
+            
+        }];
+        
+        [self.swithcLine layoutIfNeeded];
+    }];
+    
+
+    
+    if ([self.delegate respondsToSelector:@selector(didSwitch:)]) {
+        [self.delegate didSwitch:[btn isEqual:self.leftBtn1] ? 0 : 1];
+    }
     
 }
 
+- (UIButton *)getBtn {
 
-- (void)left2Action {
+    UIButton *btn = [[UIButton alloc] init];
+    btn.titleLabel.font = FONT(15);
+    [btn setTitleColor:[UIColor textColor] forState:UIControlStateSelected];
+    [btn setTitleColor:[UIColor textColor2] forState:UIControlStateNormal];
 
-
-    if ([self.lastSelectd isEqual:self.leftLbl2]) {
-        return;
-    }
-    
-    self.leftLbl2.textColor = [UIColor textColor];
-    self.leftLbl1.textColor = [UIColor textColor2];
-    self.lastSelectd = self.leftLbl2;
-    
-    self.swithcLine.centerX = self.leftLbl1.centerX;
-
-//    [self.swithcLine mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.height.mas_equalTo(3);
-//        make.width.mas_equalTo(20);
-//        make.centerX.equalTo(self.leftLbl2.mas_centerX);
-//        make.bottom.equalTo(self.mas_bottom).offset(-3);
-//    }];
-    
-    [self.swithcLine mas_updateConstraints:^(MASConstraintMaker *make) {
-        
-        make.width.mas_equalTo(40);
-        
-    }];
-
-
+    return btn;
 }
 
 - (instancetype)init
@@ -88,58 +76,52 @@
         self.backgroundColor = [UIColor whiteColor];
         
         CGFloat margin = 15;
-        self.leftLbl1 = [UILabel labelWithFrame:CGRectZero
-                                   textAligment:NSTextAlignmentCenter
-                                backgroundColor:[UIColor whiteColor]
-                                           font:FONT(15)
-                                      textColor:[UIColor textColor]];
-        [self addSubview:self.leftLbl1];
-        self.leftLbl1.userInteractionEnabled = YES;
-        UITapGestureRecognizer *left1Tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(left1Action)];
-        [self.leftLbl1 addGestureRecognizer:left1Tap];
+
+        self.leftBtn1 = [self getBtn];
+        [self addSubview:self.leftBtn1];
+        [self.leftBtn1 addTarget:self action:@selector(typeSwitch:) forControlEvents:UIControlEventTouchUpInside];
+        
+        self.leftBtn2 = [self getBtn];
+        [self addSubview:self.leftBtn2];
+        [self.leftBtn2 addTarget:self action:@selector(typeSwitch:) forControlEvents:UIControlEventTouchUpInside];
         
         
-        self.leftLbl2 = [UILabel labelWithFrame:CGRectZero
-                                   textAligment:NSTextAlignmentCenter
-                                backgroundColor:[UIColor whiteColor]
-                                           font:FONT(15)
-                                      textColor:[UIColor textColor2]];
-        [self addSubview:self.leftLbl2];
-        self.leftLbl2.userInteractionEnabled = YES;
-        UITapGestureRecognizer *left2Tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(left2Action)];
-        [self.leftLbl2 addGestureRecognizer:left2Tap];
-        
+        //--//
         self.swithcLine = [[UIView alloc] init];
         [self addSubview:self.swithcLine];
         self.swithcLine.backgroundColor = [UIColor themeColor];
         self.swithcLine.layer.cornerRadius = 1.5;
         self.swithcLine.layer.masksToBounds = YES;
         
-        [self.leftLbl1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.leftBtn1 mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.mas_left).offset(margin);
             make.top.equalTo(self.mas_top);
             make.bottom.equalTo(self.mas_bottom).offset(-2);
         }];
         
-        [self.leftLbl2 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.leftLbl1.mas_top);
-            make.left.equalTo(self.leftLbl1.mas_right).offset(margin);
-            make.bottom.equalTo(self.leftLbl1.mas_bottom);
+        [self.leftBtn2 mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.leftBtn1.mas_top);
+            make.left.equalTo(self.leftBtn1.mas_right).offset(margin);
+            make.bottom.equalTo(self.leftBtn1.mas_bottom);
         }];
         
+        //
         [self.swithcLine mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(3);
             make.width.mas_equalTo(20);
-            make.centerX.equalTo(self.leftLbl1.mas_centerX);
+            make.centerX.equalTo(self.leftBtn1.mas_centerX);
             make.bottom.equalTo(self.mas_bottom).offset(-3);
         }];
         
-        
-        self.lastSelectd = self.leftLbl1;
-        self.leftLbl1.text = @"评论500";
-        self.leftLbl2.text = @"点赞100";
-        
-        
+        UIView *topline = [[UIView alloc] init];
+        topline.backgroundColor = [UIColor lineColor];
+        [self addSubview:topline];
+        [topline mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.mas_left);
+            make.width.equalTo(self.mas_width);
+            make.height.mas_equalTo(LINE_HEIGHT);
+            make.top.equalTo(self.mas_top);
+        }];
         
         UIView *line = [[UIView alloc] init];
         line.backgroundColor = [UIColor lineColor];
@@ -150,8 +132,24 @@
             make.height.mas_equalTo(LINE_HEIGHT);
             make.bottom.equalTo(self.mas_bottom);
         }];
+        
+        self.lastSelectd = self.leftBtn1;
+        self.lastSelectd.selected = YES;
+        
+ 
+ 
+        
     }
     return self;
 }
+- (void)setCountStrRoom:(NSArray<NSString *> *)countStrRoom{
 
+    _countStrRoom = [countStrRoom copy];
+    if (_countStrRoom.count < 2) {
+        return;
+    }
+    
+    [self.leftBtn1 setTitle:[NSString stringWithFormat:@"评论%@",_countStrRoom[0]] forState:UIControlStateNormal];
+    [self.leftBtn2 setTitle:[NSString stringWithFormat:@"点赞%@",_countStrRoom[1]] forState:UIControlStateNormal];
+}
 @end

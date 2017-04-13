@@ -28,7 +28,7 @@
 
 - (NSString *)commentDatetime {
 
-    return self.commentDatetime;
+    return self.commDatetime;
 }
 
 @end

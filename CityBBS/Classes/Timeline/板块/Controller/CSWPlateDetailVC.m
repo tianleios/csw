@@ -15,15 +15,15 @@
 @interface CSWPlateDetailVC ()<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic, strong) UIScrollView *switchScrollView;
+
 @property (nonatomic, strong) TLTableView *allTableView;
 @property (nonatomic, strong) TLTableView *lastTableView;
 @property (nonatomic, strong) TLTableView *essenceTableView;
+
 @property (nonatomic, strong) CSWPlateHeaderView *falseHeaderView;
 @property (nonatomic, strong) CSWArticleTypeSwitchView *switchView;
 
-
 @property (nonatomic, assign) BOOL switchBySwitchView;
-
 
 @end
 

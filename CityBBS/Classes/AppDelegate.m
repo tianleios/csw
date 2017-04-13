@@ -15,6 +15,7 @@
 #import "SVProgressHUD.h"
 #import "TLComposeArticleItem.h"
 #import "CSWLoadRootVC.h"
+#import "CSWArticleDetailVC.h"
 
 @interface AppDelegate ()
 
@@ -26,12 +27,14 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     //2.应用环境
-    [AppConfig config].runEnv = RunEnvDev;
+    [AppConfig config].runEnv = RunEnvTest;
     
     //
     [IQKeyboardManager sharedManager].enable = YES;
     [[IQKeyboardManager sharedManager].disabledToolbarClasses addObject:[TLComposeVC class]];
-    
+    [[IQKeyboardManager sharedManager].disabledToolbarClasses addObject:[CSWArticleDetailVC class]];
+     [[IQKeyboardManager sharedManager].disabledDistanceHandlingClasses addObject:[CSWArticleDetailVC class]];
+
     //ProgressHUD
     [SVProgressHUD setMaximumDismissTimeInterval:7];
     [SVProgressHUD setMinimumDismissTimeInterval:3];

@@ -8,8 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol CSWUserActionSwitchDelegate <NSObject>
+
+- (void)didSwitch:(NSInteger)idx;
+
+@end
+
 @interface CSWUserActionSwitchView : UIView
 
 - (instancetype)init;
+
+@property (nonatomic, weak) id<CSWUserActionSwitchDelegate> delegate;
+@property (nonatomic, copy) NSArray <NSString *>*countStrRoom;
+
 
 @end

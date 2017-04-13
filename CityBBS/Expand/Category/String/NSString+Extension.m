@@ -343,6 +343,13 @@
     long long money = (long long)t0;
     return [NSString stringWithFormat:@"%lld",money];
 }
+
+- (NSString *)convertToTimelineDate {
+
+    return  [self convertToDetailDate];
+
+}
+
 - (NSString *)convertToDetailDate {
 
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];

@@ -31,7 +31,7 @@
     self.contentFont = FONT(14);
     
     //
-    self.contentLeftMargin = 65;
+    self.contentLeftMargin = 75;
     self.contentRightMargin = 15;
     
     self.contentWidth = SCREEN_WIDTH - self.contentLeftMargin - self.contentRightMargin;

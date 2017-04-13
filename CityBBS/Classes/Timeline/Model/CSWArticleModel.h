@@ -8,6 +8,7 @@
 
 #import "TLBaseModel.h"
 #import "CSWCommentModel.h"
+#import "CSWLikeModel.h"
 
 @interface CSWArticleModel : TLBaseModel
 
@@ -30,7 +31,7 @@
 
 
 @property (nonatomic, copy) NSArray <CSWCommentModel *>*commentList;
-@property (nonatomic, copy) NSArray *likeList;
+@property (nonatomic, copy) NSArray <CSWLikeModel *>*likeList;
 
 @property (nonatomic, copy) NSString *plateName;
 
@@ -38,6 +39,7 @@
 @property (nonatomic, copy) NSString *nickname;
 @property (nonatomic, copy) NSString *publishDatetime;
 @property (nonatomic, copy) NSString *photo;
+@property (nonatomic, copy) NSString *publisher;
 
 //统计
 @property (nonatomic, strong) NSNumber *sumComment;

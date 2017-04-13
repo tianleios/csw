@@ -114,19 +114,23 @@
         TLNetworking *http = [TLNetworking new];
         http.code = @"806012";
         http.parameters[@"province"] = placemark.administrativeArea ? : @"";
-        http.parameters[@"city"] = placemark.locality ? : placemark.administrativeArea;
+        
+        NSString *city = placemark.locality ? : placemark.administrativeArea;
+        http.parameters[@"city"] = city;
+//        [city substringWithRange:NSMakeRange(0, city.length - 1)];
         http.parameters[@"area"] = placemark.subLocality;
         [http postWithSuccess:^(id responseObject) {
             
             //当前站点
             [CSWCityManager manager].currentCity = [CSWCity tl_objectWithDictionary:responseObject[@"data"]];
+        
+            
             
             //获取站点详情
             [[CSWCityManager manager] getCityDetailBy:[CSWCityManager manager].currentCity success:^{
                 
                 [TLProgressHUD dismiss];
-
-                   [UIApplication sharedApplication].keyWindow.rootViewController = [[TLTabBarController alloc] init];
+                [UIApplication sharedApplication].keyWindow.rootViewController = [[TLTabBarController alloc] init];
                 
             } failure:^{
                 

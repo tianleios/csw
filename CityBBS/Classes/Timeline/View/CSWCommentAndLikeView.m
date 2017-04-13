@@ -42,8 +42,8 @@
     if (self) {
         
         self.backgroundColor = [UIColor colorWithHexString:@"#f5f5f5"];
-        //        self.bottomBgView.layer.cornerRadius = 8;
-        //        self.bottomBgView.layer.masksToBounds = YES;
+                self.layer.cornerRadius = 8;
+                self.layer.masksToBounds = YES;
         
         
         CSWLayoutHelper *layout = [CSWLayoutHelper helper];
@@ -62,7 +62,8 @@
         
         //点赞人数
         self.likeCountLbl = [UILabel labelWithFrame:CGRectZero
-                                       textAligment:NSTextAlignmentCenter backgroundColor:[UIColor clearColor]
+                                       textAligment:NSTextAlignmentCenter
+                                    backgroundColor:[UIColor clearColor]
                                                font:layout.likeFont
                                           textColor:[UIColor textColor]];
         
@@ -83,8 +84,9 @@
         
         
         [self.likeCountLbl mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.likeImageView.mas_right).offset(8);
+            
             make.top.equalTo(self.mas_top);
+            make.left.equalTo(self.likeImageView.mas_right).offset(8);
             make.height.mas_equalTo(layout.likeHeight);
             //            make.right.lessThanOrEqualTo();
 //            make.right.lessThanOrEqualTo(self.likeLabel.mas_left).priorityHigh();
@@ -92,11 +94,11 @@
         
         
         [self.likeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            
             make.top.equalTo(self.mas_top);
-            make.height.mas_equalTo(layout.likeHeight);
             make.left.equalTo(self.likeCountLbl.mas_right).offset(9);
-            make.right.equalTo(self.mas_right);
-            //            make.right.equalTo(self.bottomBgView.mas_right).offset(-layout.commentMargin);
+            make.height.mas_equalTo(layout.likeHeight);
+            make.right.lessThanOrEqualTo(self.mas_right);;
             
         }];
         
@@ -134,7 +136,7 @@
         
         //有点赞
         self.line.frame = _layoutItem.lineFrame;
-        self.likeCountLbl.text = @"2121";
+        self.likeCountLbl.text = [NSString stringWithFormat:@"%@",_layoutItem.article.sumLike];
         self.likeLabel.attributedText = _layoutItem.likeAttributedString;
         
     }

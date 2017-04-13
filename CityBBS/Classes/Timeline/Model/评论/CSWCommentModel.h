@@ -6,9 +6,10 @@
 //  Copyright © 2017年  tianlei. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "TLBaseModel.h"
 
-@interface CSWCommentModel : NSObject
+@interface CSWCommentModel : TLBaseModel
+//B 已发布 C2 被举报待审批 D 审批通过 E 待回收 F 被过滤
 
 @property (nonatomic, copy, readonly) NSString *commentUserId;
 @property (nonatomic, copy, readonly) NSString *commentUserNickname;
@@ -21,6 +22,8 @@
 
 
 @property (nonatomic, copy) NSString *code;
+
+@property (nonatomic, copy) NSString *status;
 
 //评论时间
 @property (nonatomic, copy) NSString *commDatetime;

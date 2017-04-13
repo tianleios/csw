@@ -67,7 +67,10 @@
 
 //时间转换  Jan 5, 2017 12:00:00 AM -> 2016-02-02
 - (NSString *)convertToDetailDate; //带有时分秒
-- (NSString *)converDate;
+
+//时间线的时间，一周， 1小时后，
+- (NSString *)convertToTimelineDate;
+//- (NSString *)converDate;
 - (NSString *)convertDate;
 
 @end

@@ -22,7 +22,7 @@
 + (void)alertWithError:(NSString *)msg {
 
     [SVProgressHUD showErrorWithStatus:msg];
-    [SVProgressHUD dismissWithDelay:2];
+    [SVProgressHUD dismissWithDelay:3];
 
 }
 
