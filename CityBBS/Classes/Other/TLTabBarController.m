@@ -60,6 +60,30 @@
     tabBar.backgroundColor = [UIColor orangeColor];
     [self setValue:tabBar forKey:@"tabBar"];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange) name:kCityChangeNotification object:nil];
+
+}
+
+#pragma mark- cityChange
+- (void)cityChange {
+
+    TLTabBar *tabbar = (TLTabBar *)self.tabBar;
+//    tabbar.tabNames = @[@"头条",@"有料",@"DIY",@"我的"];
+    
+    NSMutableArray *arr = [[NSMutableArray alloc] init];
+    //
+    [[CSWCityManager manager].tabBarRoom enumerateObjectsUsingBlock:^(CSWTabBarModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        TLTabBarItem *tabBarItem = [TLTabBarItem new];
+        tabBarItem.title = obj.name;
+        tabBarItem.selectedImgUrl = [obj.selectedImageUrl convertImageUrlWithScale:100];
+        tabBarItem.unSelectedImgUrl = [obj.unSelectedImageUrl convertImageUrlWithScale:100];
+        [arr addObject:tabBarItem];
+        
+    }];
+    
+    //
+    tabbar.tabBarItems = arr;
 
 }
 
@@ -67,8 +91,7 @@
 
     [super viewDidAppear:animated];
 
-    TLTabBar *tabbar = (TLTabBar *)self.tabBar;
-    tabbar.tabNames = @[@"头条",@"有料",@"DIY",@"我的"];
+    [self cityChange];
     
 }
 

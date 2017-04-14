@@ -15,6 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         
+        //--//
         //按钮
         self.iconImageView = [[UIImageView alloc] init];
         [self addSubview:self.iconImageView];
@@ -27,6 +28,7 @@
             
         }];
         
+        //--//
         //文字
         self.titleLbl = [UILabel labelWithFrame:CGRectZero
                                    textAligment:NSTextAlignmentCenter

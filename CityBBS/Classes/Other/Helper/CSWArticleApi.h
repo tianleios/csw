@@ -45,4 +45,13 @@
                   success:(void(^)())success
                   failure:(void(^)())failure;
 
+/**
+ 打赏帖子
+ */
++ (void)dsArticleWithCode:(NSString *)code
+                     user:(NSString *)userId
+                    money:(CGFloat)money
+                  success:(void(^)())success
+                  failure:(void(^)())failure;
+
 @end

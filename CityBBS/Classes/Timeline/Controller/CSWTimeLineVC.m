@@ -129,8 +129,7 @@
         
         weakSelf.timelinHttp = [TLNetworking new];
         weakSelf.timelinHttp.code = @"610130";
-        weakSelf.timelinHttp.parameters[@"companyCode"] = @"GS2017041310540585087";
-//        [CSWCityManager manager].currentCity.code;;
+        weakSelf.timelinHttp.parameters[@"companyCode"] =[CSWCityManager manager].currentCity.code;;
 //
         weakSelf.timelinHttp.parameters[@"start"] = @"1";
         weakSelf.timelinHttp.parameters[@"limit"] = @"10";

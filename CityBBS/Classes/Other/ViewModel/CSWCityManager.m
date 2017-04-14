@@ -11,6 +11,9 @@
 #define CSW_RECOMMEND_CITY @"推荐"
 #define CSW_CURRENT_CITY @"当前"
 
+
+ NSString * const kCityChangeNotification = @"cswCityChangeNotification";
+
 @implementation CSWCityManager
 {
     dispatch_group_t _inGroup;
@@ -185,6 +188,21 @@
     [http postWithSuccess:^(id responseObject) {
         
         tabBarRoom = [CSWTabBarModel tl_objectArrayWithDictionaryArray:responseObject[@"data"]];
+        
+        //根据orderNo排序
+     tabBarRoom = [tabBarRoom sortedArrayUsingComparator:^NSComparisonResult(CSWTabBarModel *obj1, CSWTabBarModel *obj2) {
+            
+            if ([obj1.orderNo integerValue] > [obj2.orderNo integerValue]) {
+                
+                return NSOrderedDescending;
+                
+            } else {
+            
+                return NSOrderedAscending;
+                
+            }
+            
+        }];
         succesCount ++;
 
         dispatch_group_leave(_inGroup);
@@ -206,8 +224,8 @@
            self.func3Room = [funcRoom subarrayWithRange:NSMakeRange(0, 3)];
            self.func8Room = [funcRoom subarrayWithRange:NSMakeRange(3, 8)];
            
-           self.tabBarRoom = [tabBarRoom subarrayWithRange:NSMakeRange(0, 4)];
-           self.xiaoMiModel = tabBarRoom[4];
+           self.xiaoMiModel = tabBarRoom[2];
+           self.tabBarRoom = @[tabBarRoom[0],tabBarRoom[1],tabBarRoom[3],tabBarRoom[4]];
            
            if (success) {
                success();

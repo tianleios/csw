@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TLTabBarItem.h"
 
 @class TLTabBar;
 
@@ -23,7 +24,9 @@
 
 @property (nonatomic, weak) id<TLTabBarDelegate> tl_delegate;
 
-@property (nonatomic, strong) NSArray *tabNames;
+@property (nonatomic, copy) NSArray *tabNames;
+
+@property (nonatomic, copy) NSArray <TLTabBarItem *>*tabBarItems;
 
 @end
 

@@ -129,6 +129,7 @@
         if (self.changeCity) {
             self.changeCity(city);
         }
+        [[NSNotificationCenter defaultCenter] postNotificationName:kCityChangeNotification object:nil];
         [self.navigationController dismissViewControllerAnimated:YES completion:nil];
    
     } failure:^{

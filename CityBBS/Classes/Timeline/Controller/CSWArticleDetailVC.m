@@ -18,6 +18,8 @@
 #import "TLUserLoginVC.h"
 #import "CSWArticleApi.h"
 #import "CSWReportVC.h"
+#import "CSWDSRecord.h"
+#import "CSWDaShangRecordListVC.h"
 
 #define USER_ACTION_SWITCH_HEIGHT 40
 #define SJ_CELL_HEIGHT 80
@@ -51,6 +53,8 @@
 
 @property (nonatomic, strong) CSWCommentModel *currentOperationComment;
 
+@property (nonatomic, strong) NSMutableArray <CSWDSRecord *>*dsRecordRoom;
+
 @end
 
 @implementation CSWArticleDetailVC
@@ -60,6 +64,15 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (NSMutableArray<CSWDSRecord *> *)dsRecordRoom {
+
+    if (!_dsRecordRoom) {
+        
+        _dsRecordRoom = [NSMutableArray array];
+    }
+    return _dsRecordRoom;
+
+}
 
 - (NSMutableArray<CSWCommentLayoutItem *> *)commentLayoutItems {
 
@@ -133,10 +146,25 @@
     } failure:^(NSError *error) {
         
     }];
-
     
-
-
+    //打赏
+    TLNetworking *dsRecordHttp = [TLNetworking new];
+    dsRecordHttp.showView = self.view;
+    dsRecordHttp.code = @"610142";
+    dsRecordHttp.parameters[@"postCode"] = self.layoutItem.article.code;
+    dsRecordHttp.parameters[@"start"] = @"1";
+    dsRecordHttp.parameters[@"limit"] = @"20";
+    [dsRecordHttp postWithSuccess:^(id responseObject) {
+        
+      //
+      self.dsRecordRoom = [CSWDSRecord tl_objectArrayWithDictionaryArray:responseObject[@"data"][@"list"]];
+      //
+      [self.articleDetailTableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:0];
+      //
+        
+    } failure:^(NSError *error) {
+        
+    }];
 
 }
 
@@ -233,6 +261,67 @@
         TLUserLoginVC *loginVC = [[TLUserLoginVC alloc] init];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginVC];
         [self presentViewController:nav animated:YES completion:nil];
+        
+        
+        return;
+    }
+    
+    //打赏
+    if ([tableView isEqual:self.articleDetailTableView] && indexPath.section == 1) {
+    
+        
+        
+        //打赏行为
+        UIAlertController *alertCtrl = [UIAlertController alertControllerWithTitle:nil message:@"请输入打赏金额" preferredStyle:UIAlertControllerStyleAlert];
+        [alertCtrl addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+            
+            textField.keyboardType = UIKeyboardTypeDecimalPad;
+            
+        }];
+        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"打赏" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+            if (![alertCtrl.textFields[0].text valid]) {
+                
+                [TLAlert alertWithInfo:@"请输入打赏金额"];
+                return ;
+            }
+          
+            [TLProgressHUD showWithStatus:nil];
+            [CSWArticleApi dsArticleWithCode:self.layoutItem.article.code
+                                        user:[TLUser user].userId
+                                       money:10
+                                     success:^{
+                                         
+                                         [alertCtrl dismissViewControllerAnimated:YES completion:nil];
+                                         [TLProgressHUD dismiss];
+                                         [TLAlert alertWithSucces:@"打赏成功"];
+                                         
+                                         //刷新界面
+                                         CSWDSRecord *recoerd = [[CSWDSRecord alloc] init];
+                                         recoerd.nickname = [TLUser user].nickname;
+                                         recoerd.photo = [TLUser user].userExt.photo;
+                                         
+                                         [self.dsRecordRoom insertObject:recoerd atIndex:0];
+                                         [self.articleDetailTableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:0];
+
+                                     } failure:^{
+                                         [TLProgressHUD dismiss];
+
+                                     }];
+            
+            
+        }];
+        
+        
+        UIAlertAction *cancleAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        
+        [alertCtrl addAction:cancleAction];
+        [alertCtrl addAction:confirmAction];
+    
+        
+        [self presentViewController:alertCtrl animated:YES completion:nil];
         
         return;
     }
@@ -561,8 +650,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    
-    
     if ([tableView isEqual:self.articleDetailTableView]) {
         
         if (indexPath.section == 0) {
@@ -574,7 +661,6 @@
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 
             }
-            
             
             //cell.layoutItem = self.layoutItem;
             cell.layoutItem = self.layoutItem;
@@ -589,8 +675,9 @@
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 
                 
+                
             }
-            
+            cell.recordRoom = self.dsRecordRoom;
             return cell;
             
         }

@@ -198,6 +198,9 @@
 //        [self addSubview:_placeholderV];
         
         [self addSubview:self.placeHolderView];
+        self.placeHolderView.width = self.width;
+        self.placeHolderView.centerX = self.width/2.0;
+
         
     }else{
         

@@ -14,12 +14,14 @@
 @property (nonatomic, copy) NSString *pic;
 
 //未选中的图片
-@property (nonatomic, copy) NSString *selectedImageName;
+@property (nonatomic, copy) NSString *selectedImageUrl;
 //选中的图片
-@property (nonatomic, copy) NSString *unSelectedImageName;
+@property (nonatomic, copy) NSString *unSelectedImageUrl;
 
 @property (nonatomic, copy) NSString *code;
 @property (nonatomic, strong) NSNumber *belong;
+@property (nonatomic, strong) NSNumber *orderNo;
+
 @property (nonatomic, copy) NSString *companyCode;
 
 @end

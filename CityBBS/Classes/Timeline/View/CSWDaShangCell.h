@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+@class CSWDSRecord;
 
 @interface CSWDaShangCell : UITableViewCell
+
+@property (nonatomic, copy) NSArray <CSWDSRecord *>*recordRoom;
 
 @end

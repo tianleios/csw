@@ -11,23 +11,45 @@
 #import "CSWForumGeneraCell.h"
 #import "CSWSubClassCell.h"
 #import "CSWPlateDetailVC.h"
+#import "CSWBigPlateModel.h"
+#import "CSWSmallPlateModel.h"
 
 @interface CSWForumVC ()<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic, strong) UITableView *leftTableView;
-@property (nonatomic, strong) UITableView *rightTableView;
+@property (nonatomic, strong) TLTableView *rightTableView;
+
+@property (nonatomic, copy) NSArray <CSWBigPlateModel *>*bigPlateRoom;
+@property (nonatomic, copy) NSArray <CSWSmallPlateModel *>*smallPlateRoom;
+
+@property (nonatomic, strong) TLPageDataHelper *rightPageDateHelper;
+@property (nonatomic, assign) BOOL isFirst;
 
 @end
 
 @implementation CSWForumVC
 
+- (void)viewWillAppear:(BOOL)animated {
+
+    [super viewWillAppear:animated];
+    self.rightPageDateHelper.parameters[@"companyCode"] = [CSWCityManager manager].currentCity.code;
+    
+    if (self.isFirst) {
+        
+        [self.leftTableView.mj_header beginRefreshing];
+        self.isFirst = NO;
+    }
+
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.isFirst = YES;
     //leftTa
-    self.leftTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 100, 100) style:UITableViewStylePlain];
-    [self.view addSubview:self.leftTableView];
-    self.leftTableView.dataSource = self;
+    self.leftTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.leftTableView.delegate = self;
+    self.leftTableView.dataSource = self;
+    [self.view addSubview:self.leftTableView];
     self.leftTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     [self.leftTableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -39,11 +61,12 @@
     self.leftTableView.backgroundColor = [UIColor colorWithHexString:@"#f0f0f0"];
     self.rightTableView.backgroundColor = [UIColor whiteColor];
 
+    
     //右边
-    self.rightTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.rightTableView = [TLTableView tableViewWithframe:CGRectZero delegate:self dataSource:self];
     [self.view addSubview:self.rightTableView];
-    self.rightTableView.dataSource = self;
-    self.rightTableView.delegate = self;
+    self.rightTableView.placeHolderView = [TLPlaceholderView placeholderViewWithText:@"暂无板块"];
+    self.rightTableView.backgroundColor = [UIColor whiteColor];
     
     self.rightTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.rightTableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -54,13 +77,71 @@
     }];
     
     
+    __weak typeof(self) weakSelf = self;
     self.leftTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        
+        TLNetworking *http = [TLNetworking new];
+        http.code = @"610027";
+        http.parameters[@"status"] = @"1";
+        http.parameters[@"companyCode"] = [CSWCityManager manager].currentCity.code;
+        [http postWithSuccess:^(id responseObject) {
+            
+            weakSelf.bigPlateRoom  =  [CSWBigPlateModel tl_objectArrayWithDictionaryArray:responseObject[@"data"]];
+            [weakSelf.leftTableView reloadData];
+            [weakSelf.leftTableView.mj_header endRefreshing];
+            [weakSelf.leftTableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
+            
+            //刷新右测
+            weakSelf.rightPageDateHelper.parameters[@"parentCode"] = self.bigPlateRoom.count > 0 ? self.bigPlateRoom[0].code : @"xxxxxx";
+            
+            [weakSelf.rightTableView beginRefreshing];
+            
+        } failure:^(NSError *error) {
+            
+            [weakSelf.leftTableView.mj_header endRefreshing];
+
+        }];
+
+    }];
+    
+    
+    //右侧 小版块 刷新---事件
+    //parentCode  和 companyCode 在合适的时候改变
+    TLPageDataHelper *helper = [[TLPageDataHelper alloc] init];
+    helper.code = @"610045";
+    helper.parameters[@"status"] = @"1";
+    helper.tableView = self.rightTableView;
+    self.rightPageDateHelper = helper;
+    [helper modelClass:[CSWSmallPlateModel class]];
+    
+    //
+    [self.rightTableView addRefreshAction:^{
+        
+        [helper refresh:^(NSMutableArray *objs, BOOL stillHave) {
+            
+            weakSelf.smallPlateRoom = objs;
+            [weakSelf.rightTableView reloadData_tl];
+            
+        } failure:^(NSError *error) {
+            
+        }];
+        
+    }];
+   
+    [self.rightTableView addLoadMoreAction:^{
+        
+        [helper loadMore:^(NSMutableArray *objs, BOOL stillHave) {
+            
+            weakSelf.smallPlateRoom = objs;
+            [weakSelf.rightTableView reloadData_tl];
+            
+        } failure:^(NSError *error) {
+            
+        }];
         
     }];
     
-    self.rightTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-        
-    }];
+    
 }
 
 
@@ -78,7 +159,11 @@
         
         return;
     }
-    //
+    //left
+    
+    self.rightPageDateHelper.parameters[@"parentCode"] = self.bigPlateRoom[indexPath.row].code;
+    [self.rightTableView beginRefreshing];
+    
 
 }
 
@@ -99,11 +184,11 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
     if ([tableView isEqual:self.leftTableView]) {
-        return 10;
+        return self.bigPlateRoom.count;
 
     } else {
     
-        return 10;
+        return self.smallPlateRoom.count;
     }
 }
 
@@ -114,17 +199,23 @@
         
         CSWForumGeneraCell *cell = [CSWForumGeneraCell cellWithTableView:tableView indexPath:indexPath];
         cell.selectedBackgroundView = [[UIImageView alloc] initWithImage:[[UIColor whiteColor] convertToImage]];
-        if (indexPath.row == 9) {
-//            cell.selected = YES;
-//            [cell setSelected:YES animated:YES];
-              [tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
-        }
+//        if (indexPath.row == 9) {
+////            cell.selected = YES;
+////            [cell setSelected:YES animated:YES];
+//           
+//        }
+        
+        cell.nameLbl.text = self.bigPlateRoom[indexPath.row].name;
         return cell;
         
     } else {
     
         CSWSubClassCell *cell = [CSWSubClassCell cellWithTableView:tableView indexPath:indexPath];
         
+        CSWSmallPlateModel *small = self.smallPlateRoom[indexPath.row];
+        
+        [cell.subClassImageView sd_setImageWithURL:[NSURL URLWithString:[small.pic convertImageUrl]] placeholderImage:nil];
+        cell.nameLbl.text = small.name;
         return cell;
     
     }

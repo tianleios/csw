@@ -432,6 +432,12 @@
         }];
 
 
+    } else {
+    
+        
+        [self composeWithContentStr:plainStr picStr:nil plateCode:plateCode];
+
+    
     }
     
     

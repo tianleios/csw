@@ -44,3 +44,6 @@
 + (void)jumpWithUrl:(NSString *)url navCtrl:(UINavigationController *)nacCtrl parameters:(id)parameters;
 
 @end
+
+
+FOUNDATION_EXTERN NSString * const kCityChangeNotification;

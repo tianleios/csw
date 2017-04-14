@@ -56,6 +56,9 @@
 		2E0F0E3F1E9B7F8500BF94F0 /* TLBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E3E1E9B7F8500BF94F0 /* TLBannerView.m */; };
 		2E0F0E421E9B840300BF94F0 /* CSWSmallPlateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E411E9B840300BF94F0 /* CSWSmallPlateModel.m */; };
 		2E0F0E451E9BDF4C00BF94F0 /* UIImage+TLAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F0E441E9BDF4C00BF94F0 /* UIImage+TLAdd.m */; };
+		2E1F34051EA07E5B001CF385 /* CSWDSRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F34041EA07E5B001CF385 /* CSWDSRecord.m */; };
+		2E1F34081EA09C92001CF385 /* CSWDaShangRecordListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F34071EA09C92001CF385 /* CSWDaShangRecordListVC.m */; };
+		2E1F340B1EA0A94E001CF385 /* UIResponder+TLAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1F340A1EA0A94E001CF385 /* UIResponder+TLAdd.m */; };
 		2E27E9F41E88C35D002A1821 /* SVProgressHUD+TLAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E27E9F31E88C35D002A1821 /* SVProgressHUD+TLAdd.m */; };
 		2E27E9F71E88CDE8002A1821 /* TLProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E27E9F61E88CDE8002A1821 /* TLProgressHUD.m */; };
 		2E37A9F61E9CAAEC00D8B7F2 /* CSWForumVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E37A9F51E9CAAEC00D8B7F2 /* CSWForumVC.m */; };
@@ -437,6 +440,12 @@
 		2E0F0E411E9B840300BF94F0 /* CSWSmallPlateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWSmallPlateModel.m; sourceTree = "<group>"; };
 		2E0F0E431E9BDF4C00BF94F0 /* UIImage+TLAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+TLAdd.h"; sourceTree = "<group>"; };
 		2E0F0E441E9BDF4C00BF94F0 /* UIImage+TLAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TLAdd.m"; sourceTree = "<group>"; };
+		2E1F34031EA07E5B001CF385 /* CSWDSRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWDSRecord.h; sourceTree = "<group>"; };
+		2E1F34041EA07E5B001CF385 /* CSWDSRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWDSRecord.m; sourceTree = "<group>"; };
+		2E1F34061EA09C92001CF385 /* CSWDaShangRecordListVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWDaShangRecordListVC.h; sourceTree = "<group>"; };
+		2E1F34071EA09C92001CF385 /* CSWDaShangRecordListVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWDaShangRecordListVC.m; sourceTree = "<group>"; };
+		2E1F34091EA0A94E001CF385 /* UIResponder+TLAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIResponder+TLAdd.h"; sourceTree = "<group>"; };
+		2E1F340A1EA0A94E001CF385 /* UIResponder+TLAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIResponder+TLAdd.m"; sourceTree = "<group>"; };
 		2E27E9F21E88C35D002A1821 /* SVProgressHUD+TLAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SVProgressHUD+TLAdd.h"; sourceTree = "<group>"; };
 		2E27E9F31E88C35D002A1821 /* SVProgressHUD+TLAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SVProgressHUD+TLAdd.m"; sourceTree = "<group>"; };
 		2E27E9F51E88CDE8002A1821 /* TLProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLProgressHUD.h; sourceTree = "<group>"; };
@@ -1508,6 +1517,8 @@
 				2E95387C1E6BE91300668E0F /* UIViewController+Extension.m */,
 				2E0F0E431E9BDF4C00BF94F0 /* UIImage+TLAdd.h */,
 				2E0F0E441E9BDF4C00BF94F0 /* UIImage+TLAdd.m */,
+				2E1F34091EA0A94E001CF385 /* UIResponder+TLAdd.h */,
+				2E1F340A1EA0A94E001CF385 /* UIResponder+TLAdd.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -2395,6 +2406,8 @@
 				2E42ADFE1E9F69DA00C69CF5 /* CSWSendCommentVC.m */,
 				2E42AE071E9FBE6300C69CF5 /* CSWReportVC.h */,
 				2E42AE081E9FBE6300C69CF5 /* CSWReportVC.m */,
+				2E1F34061EA09C92001CF385 /* CSWDaShangRecordListVC.h */,
+				2E1F34071EA09C92001CF385 /* CSWDaShangRecordListVC.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2411,6 +2424,8 @@
 				2EABB1621E77CF7C00FD2A68 /* CSWLayoutHelper.m */,
 				2E37AA161E9DFAB300D8B7F2 /* CSWLikeModel.h */,
 				2E37AA171E9DFAB300D8B7F2 /* CSWLikeModel.m */,
+				2E1F34031EA07E5B001CF385 /* CSWDSRecord.h */,
+				2E1F34041EA07E5B001CF385 /* CSWDSRecord.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2856,6 +2871,7 @@
 				2E45DA8A1E80D13600DD3532 /* CSWSearchVC.m in Sources */,
 				2EB0216D1E83C62700991F78 /* CSWCommentAndLikeView.m in Sources */,
 				2EABB1201E72454A00FD2A68 /* TLGroupItem.m in Sources */,
+				2E1F34051EA07E5B001CF385 /* CSWDSRecord.m in Sources */,
 				2EABB0F01E715A7D00FD2A68 /* TLComposeToolBar.m in Sources */,
 				2E953A3B1E6BE91400668E0F /* EaseBubbleView+Image.m in Sources */,
 				2EB40D631E79429C00608195 /* CSWArticleDetailVC.m in Sources */,
@@ -2970,6 +2986,7 @@
 				2E953A5A1E6BE91400668E0F /* TLBannerCell.m in Sources */,
 				2E9539E91E6BE91400668E0F /* EaseUI.m in Sources */,
 				2E42AE061E9FBC3200C69CF5 /* CSWArticleApi.m in Sources */,
+				2E1F340B1EA0A94E001CF385 /* UIResponder+TLAdd.m in Sources */,
 				2EABB1061E715A7E00FD2A68 /* TLEmoticonGroup.m in Sources */,
 				2E45DA761E80C4C800DD3532 /* CSWFansVC.m in Sources */,
 				2E45DA691E7FD9A600DD3532 /* TLTabBarItem.m in Sources */,
@@ -2998,6 +3015,7 @@
 				2E42AE021E9F6B9E00C69CF5 /* CSWArticleDetailToolBarView.m in Sources */,
 				2E0E18811E7A69D600079648 /* TLSettingModel.m in Sources */,
 				2E45DABE1E8122A700DD3532 /* TLDisplayPhotoVC.m in Sources */,
+				2E1F34081EA09C92001CF385 /* CSWDaShangRecordListVC.m in Sources */,
 				2EABB1331E727C0700FD2A68 /* TLChangeCityVC.m in Sources */,
 				2E45DAB91E81215B00DD3532 /* TLImagePickerController.m in Sources */,
 				2E37AA081E9CF9DA00D8B7F2 /* CSWUserActionSwitchView.m in Sources */,

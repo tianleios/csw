@@ -16,6 +16,9 @@
 //#import <UIKit/UIKit.h>
 #import "CSWCityManager.h"
 
+#define USER_PLACEHOLDER_BIG [UIImage imageNamed:@"avatar_default_big"]
+#define USER_PLACEHOLDER_SMALL [UIImage imageNamed:@"avatar_default_small"]
+
 #endif /* BBS_pch */
 
 #endif

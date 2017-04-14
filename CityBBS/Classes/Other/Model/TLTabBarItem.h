@@ -13,5 +13,6 @@
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *selectedImgUrl;
 @property (nonatomic, copy) NSString *unSelectedImgUrl;
+@property (nonatomic, assign) BOOL isSelected;
 
 @end

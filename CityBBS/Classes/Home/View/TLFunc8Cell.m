@@ -40,6 +40,7 @@
         self.typeImageView = [[UIImageView alloc] init];
         self.typeImageView.contentMode = UIViewContentModeScaleAspectFit;
         [self.contentView addSubview:self.typeImageView];
+//        self.typeImageView.clipsToBounds = YES;
         [self.typeImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             
             make.centerX.equalTo(self.contentView.mas_centerX);

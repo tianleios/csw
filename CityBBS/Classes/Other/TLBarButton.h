@@ -14,7 +14,7 @@
 @property (nonatomic, strong) UIImageView *iconImageView;
 @property (nonatomic, strong) UILabel *titleLbl;
 
-//@property (nonatomic, assign) BOOL isSelected;
+@property (nonatomic, assign) BOOL isCurrentSelected;
 
 
 @end

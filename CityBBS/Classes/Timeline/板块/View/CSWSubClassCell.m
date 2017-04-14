@@ -11,8 +11,7 @@
 
 @interface CSWSubClassCell()
 
-@property (nonatomic, strong) UIImageView *subClassImageView;
-@property (nonatomic, strong) UILabel *nameLbl;
+
 
 @end
 
@@ -40,6 +39,8 @@
         //
         self.subClassImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:self.subClassImageView];
+        self.subClassImageView.contentMode = UIViewContentModeScaleAspectFill;
+        self.subClassImageView.clipsToBounds = YES;
         [self.subClassImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             
             make.left.equalTo(self.contentView.mas_left).offset(10);

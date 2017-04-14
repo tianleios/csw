@@ -11,4 +11,8 @@
 @interface CSWSubClassCell : UITableViewCell
 
 + (CSWSubClassCell *)cellWithTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath;
+
+@property (nonatomic, strong) UIImageView *subClassImageView;
+@property (nonatomic, strong) UILabel *nameLbl;
+
 @end

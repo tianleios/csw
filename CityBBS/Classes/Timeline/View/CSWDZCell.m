@@ -89,7 +89,7 @@
     _dzModel = dzModel;
     
     //
-    [self.photoImageView sd_setImageWithURL:[NSURL URLWithString:[_dzModel.photo convertThumbnailImageUrl]] placeholderImage:[UIImage new]];
+    [self.photoImageView sd_setImageWithURL:[NSURL URLWithString:[_dzModel.photo convertThumbnailImageUrl]] placeholderImage:USER_PLACEHOLDER_SMALL];
     
     //
     self.nameLbl.text = _dzModel.nickname;

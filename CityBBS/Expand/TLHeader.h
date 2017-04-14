@@ -50,13 +50,14 @@
 #import "NSDate+TLAdd.h"
 #import "UIFont+UI.h"
 #import "UIImage+TLAdd.h"
+#import "UIResponder+TLAdd.h"
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
 #define SCREEN_SCALE (([UIScreen mainScreen].bounds.size.width)/375.0)
 #define FONT(x)    [UIFont systemFontOfSize:x]
 #define LEFT_MARGIN 15
-#define LINE_HEIGHT 0.7
+#define LINE_HEIGHT 0.5
 
 
 #endif /* TLHeader_h */

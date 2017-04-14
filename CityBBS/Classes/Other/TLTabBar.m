@@ -32,6 +32,49 @@
 }
 */
 
+
+- (void)setTabBarItems:(NSArray<TLTabBarItem *> *)tabBarItems {
+
+    _tabBarItems = [tabBarItems copy];
+    
+    //
+    if (_tabBarItems && (_tabBarItems.count == self.btns.count)) {
+        
+        [_tabBarItems enumerateObjectsUsingBlock:^(TLTabBarItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            TLBarButton *barBtn = self.btns[idx];
+            barBtn.titleLbl.text = obj.title;
+            
+            //图片
+            if (barBtn.isCurrentSelected) {
+                
+                [barBtn.iconImageView sd_setImageWithURL:[NSURL URLWithString:obj.selectedImgUrl]];
+            } else {
+                
+                [barBtn.iconImageView sd_setImageWithURL:[NSURL URLWithString:obj.unSelectedImgUrl ]];
+            
+            }
+            
+            
+        }];
+        
+    }
+
+}
+
+//- (void)setTabNames:(NSArray *)tabNames {
+//    
+//    _tabNames = tabNames;
+//    
+//    [self.btns enumerateObjectsUsingBlock:^(TLBarButton * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        
+//        obj.titleLbl.text = _tabNames[idx];
+//        
+//    }];
+//    
+//    
+//}
+
 - (UIView *)falseTabBar {
 
     if (!_falseTabBar) {
@@ -54,7 +97,7 @@
             }
             TLBarButton *btn = [[TLBarButton alloc] initWithFrame:CGRectMake(i*w, 0, w, _falseTabBar.height)];
             [_falseTabBar addSubview:btn];
-            btn.iconImageView.image = [UIImage imageNamed:@"有料_un"];
+//            btn.iconImageView.image = [UIImage imageNamed:@"有料_un"];
 //            btn.titleLbl.text = @"有料";
             btn.titleLbl.textColor = [UIColor colorWithHexString:@"#484848"];
             [btn addTarget:self action:@selector(hasChoose:) forControlEvents:UIControlEventTouchUpInside];
@@ -63,8 +106,9 @@
             
             if (i == 0) {
                 _lastTabBarBtn = btn;
-                _lastTabBarBtn.iconImageView.image = [UIImage imageNamed:@"有料"];
+//                _lastTabBarBtn.iconImageView.image = [UIImage imageNamed:@"有料"];
                 _lastTabBarBtn.selected = YES;
+                btn.isCurrentSelected = YES;
                 _lastTabBarBtn.titleLbl.textColor = [UIColor themeColor];
                 
             }
@@ -89,18 +133,7 @@
     return _falseTabBar;
 }
 
-- (void)setTabNames:(NSArray *)tabNames {
 
-    _tabNames = tabNames;
-    
-    [self.btns enumerateObjectsUsingBlock:^(TLBarButton * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        obj.titleLbl.text = _tabNames[idx];
-        
-    }];
-    
-
-}
 
 - (void)layoutSubviews {
 
@@ -132,17 +165,26 @@
         return;
     }
     
-
+    _lastTabBarBtn.isCurrentSelected = NO;
+    btn.isCurrentSelected = YES;
+    
+    NSInteger lastIdx = _lastTabBarBtn.tag - 100;
     NSInteger idx = btn.tag - 100;
 
     if (self.tl_delegate && [self.tl_delegate respondsToSelector:@selector(didSelected:tabBar:)]) {
         
         if([self.tl_delegate didSelected:idx tabBar:self]) {
         
-            _lastTabBarBtn.iconImageView.image = [UIImage imageNamed:@"有料_un"];
+            //上次选中改变图片
+            NSString *unselectedStr = self.tabBarItems[lastIdx].unSelectedImgUrl ;
+            
+            [_lastTabBarBtn.iconImageView sd_setImageWithURL:[NSURL URLWithString:unselectedStr] placeholderImage:nil];
+            
             _lastTabBarBtn.titleLbl.textColor = [UIColor textColor];
             
-            btn.iconImageView.image = [UIImage imageNamed:@"有料"];
+            //当前选中改变图片
+             NSString *selectedStr = self.tabBarItems[idx].selectedImgUrl;
+            [btn.iconImageView sd_setImageWithURL:[NSURL URLWithString:selectedStr] placeholderImage:nil];
             btn.titleLbl.textColor = [UIColor themeColor];
             
             btn.selected = NO;

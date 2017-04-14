@@ -10,7 +10,6 @@
 
 @interface CSWForumGeneraCell()
 
-@property (nonatomic, strong) UILabel *nameLbl;
 
 
 @end

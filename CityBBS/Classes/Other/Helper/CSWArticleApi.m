@@ -118,4 +118,32 @@
     
 }
 
+
++ (void)dsArticleWithCode:(NSString *)code
+                     user:(NSString *)userId
+                    money:(CGFloat)money
+                  success:(void(^)())success
+                  failure:(void(^)())failure {
+    
+    TLNetworking *http = [TLNetworking new];
+    http.code = @"610122";
+    http.parameters[@"postCode"] = code;
+    http.parameters[@"userId"] = userId;
+    http.parameters[@"amount"] = [[NSString stringWithFormat:@"%f",money] convertToSysMoney];
+    [http postWithSuccess:^(id responseObject) {
+        
+        if (success) {
+            success();
+        }
+    } failure:^(NSError *error) {
+        
+        if (failure) {
+            failure();
+        }
+        
+    }];
+    
+    
+}
+
 @end

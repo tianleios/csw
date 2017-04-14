@@ -17,8 +17,8 @@
     
     if (imgs.count > 1) {
         
-        self.unSelectedImageName = imgs[0];
-        self.unSelectedImageName = imgs[1];
+        self.unSelectedImageUrl = imgs[0];
+        self.selectedImageUrl = imgs[1];
         
     }
     

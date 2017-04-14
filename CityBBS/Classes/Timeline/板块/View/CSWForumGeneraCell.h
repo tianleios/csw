@@ -12,4 +12,7 @@
 
 + (CSWForumGeneraCell *)cellWithTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath;
 
+@property (nonatomic, strong) UILabel *nameLbl;
+
+
 @end
