@@ -72,7 +72,7 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    NSLog(@"内存警告 …%@",[self class]);
 }
 
 /*

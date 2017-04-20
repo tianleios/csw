@@ -18,6 +18,7 @@
 @property (nonatomic, strong) UIView  *swithcLine;
 
 @property (nonatomic, strong) UIButton * lastSelectd;
+@property (nonatomic, assign) BOOL isFirst;
 
 @end
 
@@ -32,29 +33,28 @@
     }
     
     self.lastSelectd.selected = NO;
+    self.lastSelectd.titleLabel.font = FONT(15);
+    
     btn.selected = YES;
+    btn.titleLabel.font = FONT(15);
     self.lastSelectd = btn;
     
-    [self.swithcLine layoutIfNeeded];
-//    [UIView animateWithDuration:2 animations:^{
-//        
-//        [self.swithcLine mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            
-//            make.height.mas_equalTo(3);
-//            make.width.mas_equalTo(20);
-//            make.centerX.equalTo(btn.mas_centerX);
-//            make.bottom.equalTo(self.mas_bottom).offset(-3);
-//            
-//        }];
-//        
-//        [self.swithcLine layoutIfNeeded];
-//    }];
+//    [self.swithcLine layoutIfNeeded];
+    [UIView animateWithDuration:0.25 animations:^{
+        
+        self.swithcLine.centerX = btn.centerX;
+        
+    }];
     
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.26 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        if ([self.delegate respondsToSelector:@selector(didSwitch:)]) {
+            [self.delegate didSwitch:[btn isEqual:self.leftBtn1] ? 0 : 1];
+        }
+        
+    });
 
-    
-    if ([self.delegate respondsToSelector:@selector(didSwitch:)]) {
-        [self.delegate didSwitch:[btn isEqual:self.leftBtn1] ? 0 : 1];
-    }
+
     
 }
 
@@ -73,11 +73,14 @@
     self = [super init];
     if (self) {
         
+        self.isFirst = YES;
+        //
         self.backgroundColor = [UIColor whiteColor];
         
         CGFloat margin = 15;
 
         self.leftBtn1 = [self getBtn];
+        self.leftBtn1.titleLabel.font = FONT(15);
         [self addSubview:self.leftBtn1];
         [self.leftBtn1 addTarget:self action:@selector(typeSwitch:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -87,11 +90,7 @@
         
         
         //--//
-        self.swithcLine = [[UIView alloc] init];
-        [self addSubview:self.swithcLine];
-        self.swithcLine.backgroundColor = [UIColor themeColor];
-        self.swithcLine.layer.cornerRadius = 1.5;
-        self.swithcLine.layer.masksToBounds = YES;
+
         
         [self.leftBtn1 mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.mas_left).offset(margin);
@@ -101,17 +100,12 @@
         
         [self.leftBtn2 mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.leftBtn1.mas_top);
-            make.left.equalTo(self.leftBtn1.mas_right).offset(margin);
+            make.left.equalTo(self.leftBtn1.mas_right).offset(margin + 5);
             make.bottom.equalTo(self.leftBtn1.mas_bottom);
         }];
         
         //
-        [self.swithcLine mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(3);
-            make.width.mas_equalTo(20);
-            make.centerX.equalTo(self.leftBtn1.mas_centerX);
-            make.bottom.equalTo(self.mas_bottom).offset(-3);
-        }];
+    
         
         UIView *topline = [[UIView alloc] init];
         topline.backgroundColor = [UIColor lineColor];
@@ -151,5 +145,35 @@
     
     [self.leftBtn1 setTitle:[NSString stringWithFormat:@"评论%@",_countStrRoom[0]] forState:UIControlStateNormal];
     [self.leftBtn2 setTitle:[NSString stringWithFormat:@"点赞%@",_countStrRoom[1]] forState:UIControlStateNormal];
+}
+
+- (void)layoutSubviews {
+
+    [super layoutSubviews];
+    
+    if (self.isFirst) {
+       
+        self.swithcLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 3)];
+        [self addSubview:self.swithcLine];
+        self.swithcLine.backgroundColor = [UIColor themeColor];
+        self.swithcLine.layer.cornerRadius = 1.5;
+        self.swithcLine.layer.masksToBounds = YES;
+        
+        self.isFirst = NO;
+        self.swithcLine.y = self.height - 7;
+        self.swithcLine.centerX = self.leftBtn1.centerX;
+        
+    }
+  
+
+    
+    
+//    [self.swithcLine mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.height.mas_equalTo(3);
+//        make.width.mas_equalTo(20);
+//        make.centerX.equalTo(self.leftBtn1.mas_centerX);
+//        make.bottom.equalTo(self.mas_bottom).offset(-3);
+//    }];
+    
 }
 @end
