@@ -95,9 +95,12 @@
 - (void)setUpUI {
 
     [self.view addSubview:self.homeCollectionView];
-    [self.homeCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
-    }];
+    
+    self.homeCollectionView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 49 -64);
+    
+//    [self.homeCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
+//    }];
     
     //注册cell
     [self.homeCollectionView registerClass:[TLDisplayBannerCell class] forCellWithReuseIdentifier:[TLDisplayBannerCell reuseId]];

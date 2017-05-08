@@ -12,6 +12,9 @@
 
 @interface CSWArticleDetailVC : TLBaseVC
 
-@property (nonatomic, strong) CSWLayoutItem *layoutItem;
+
+
+@property (nonatomic, copy) NSString *articleCode;
+
 
 @end

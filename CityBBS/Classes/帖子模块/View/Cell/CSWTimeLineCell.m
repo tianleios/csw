@@ -13,10 +13,12 @@
 #import "CSWTimeLineToolBar.h"
 #import "CSWClickLinkLabel.h"
 #import "CSWCommentAndLikeView.h"
+#import "CSWUserPhotoView.h"
 
 @interface CSWTimeLineCell()<MLLinkLabelDelegate>
 
-@property (nonatomic, strong) UIImageView *photoImageView;
+@property (nonatomic, strong) CSWUserPhotoView *photoImageView;
+
 @property (nonatomic, strong) UILabel *nameLbl;
 @property (nonatomic, strong) UILabel *timeLbl;
 @property (nonatomic, strong) UILabel *plateLbl;
@@ -44,7 +46,7 @@
         
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         //
-        self.photoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 15, 50, 50)];
+        self.photoImageView = [[CSWUserPhotoView alloc] initWithFrame:CGRectMake(15, 15, 50, 50)];
         [self.contentView addSubview:self.photoImageView];
         self.photoImageView.layer.cornerRadius = 25;
         self.photoImageView.layer.masksToBounds = YES;
@@ -167,9 +169,14 @@
 - (void)setLayoutItem:(CSWLayoutItem *)layoutItem {
 
     _layoutItem = layoutItem;
-    [self.photoImageView sd_setImageWithURL:[NSURL URLWithString:[_layoutItem.article.photo convertImageUrl]]];
-    self.nameLbl.text= _layoutItem.article.nickname;
     
+    //--//
+    [self.photoImageView sd_setImageWithURL:[NSURL URLWithString:[_layoutItem.article.photo convertImageUrl]] placeholderImage:USER_PLACEHOLDER_SMALL];
+    self.nameLbl.text= _layoutItem.article.nickname;
+    self.photoImageView.userId = _layoutItem.article.publisher;
+    
+    
+    //--//
     NSMutableAttributedString *plateStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"来自%@",_layoutItem.article.plateName]];
     [plateStr addAttribute:NSForegroundColorAttributeName value:[UIColor textColor] range:NSMakeRange(0, 2)];
     self.plateLbl.attributedText = plateStr;

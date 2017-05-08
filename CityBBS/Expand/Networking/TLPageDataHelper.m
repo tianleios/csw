@@ -48,7 +48,24 @@
     [http postWithSuccess:^(id responseObject) {
         
         NSArray *newObjs = responseObject[@"data"][@"list"];
-        self.objs = [_className mj_objectArrayWithKeyValuesArray:newObjs];
+        NSMutableArray *objs = [_className mj_objectArrayWithKeyValuesArray:newObjs];
+        
+        if (self.dealWithPerModel) {
+            
+            NSMutableArray *newModels = [[NSMutableArray alloc] initWithCapacity:newObjs.count];
+            [objs enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                [newModels addObject:self.dealWithPerModel(obj)];
+                
+            }];
+            
+            self.objs = newModels;
+            
+        } else {
+        
+            self.objs = objs;
+
+        }
         
         //防止刚进入没刷新，就上拉
         self.refreshed = YES;
@@ -122,7 +139,27 @@
         //拼接数据
         NSArray *newObjs = responseObject[@"data"][@"list"];
         if (newObjs.count) {
-            [self.objs addObjectsFromArray:[_className mj_objectArrayWithKeyValuesArray:newObjs]];
+            
+            NSArray *lastArrays = [_className mj_objectArrayWithKeyValuesArray:newObjs];
+            
+            if (self.dealWithPerModel) {
+                
+                NSMutableArray *newModels = [[NSMutableArray alloc] initWithCapacity:newObjs.count];
+                
+                [lastArrays enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    [newModels addObject:self.dealWithPerModel(obj)];
+                    
+                }];
+                
+                [self.objs addObjectsFromArray:newModels];
+                
+            } else {
+                
+                [self.objs addObjectsFromArray:lastArrays];
+
+            }
+            
         }
         
         BOOL stillHave = YES;

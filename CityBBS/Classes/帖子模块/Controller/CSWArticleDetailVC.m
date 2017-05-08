@@ -13,6 +13,7 @@
 #import "CSWCommentCell.h"
 #import "CSWCommentLayoutItem.h"
 #import "CSWDZCell.h"
+
 #import "CSWArticleDetailToolBarView.h"
 #import "CSWSendCommentVC.h"
 #import "TLUserLoginVC.h"
@@ -46,6 +47,9 @@
 
 @property (nonatomic, strong) TLTableView *commentTableView; //评论
 @property (nonatomic, strong) TLTableView *dzTableView; //点赞
+
+
+@property (nonatomic, strong) CSWLayoutItem *layoutItem;
 
 @property (nonatomic, assign) CGFloat articleDetailTableViewHeigth;
 @property (nonatomic, strong) UIView *commentHeaderView;
@@ -91,36 +95,77 @@
     
     self.isComment = YES;
     
-    //UI
-    [self setUpUI];
+    if (!self.articleCode) {
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        return;
+    }
     
-    //评论点赞数据
-    self.userActionSwitchView.countStrRoom = @[[self.layoutItem.article.sumComment stringValue],[self.layoutItem.article.sumLike stringValue]];
     
+    //1.根据code获取帖子信息
+    [TLProgressHUD showWithStatus:@"加载中...."];
+    TLNetworking *getArticleHttp = [TLNetworking new];
+    getArticleHttp.code = @"610132";
+    getArticleHttp.parameters[@"code"] = self.articleCode;
+
+    [getArticleHttp postWithSuccess:^(id responseObject) {
+        
+        CSWArticleModel *articleModel = [CSWArticleModel tl_objectWithDictionary:responseObject[@"data"]];
+        self.layoutItem = [[CSWLayoutItem alloc] init];
+        self.layoutItem.type = CSWArticleLayoutTypeArticleDetail;
+        self.layoutItem.article = articleModel;
+        
+        //UI
+        [self setUpUI];
+        
+        //评论点赞数据
+        self.userActionSwitchView.countStrRoom = @[[self.layoutItem.article.sumComment stringValue],[self.layoutItem.article.sumLike stringValue]];
+        
+        [TLProgressHUD dismiss];
+        
+        //获取打赏，评论 ，点在数据
+        [self getData];
+
+    } failure:^(NSError *error) {
+        
+        [TLProgressHUD dismiss];
+        [TLAlert alertWithError:@"加载失败"];
+        
+    }];
+
+    
+    
+    
+    return;
     //keyboard
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillAppear:) name:UIKeyboardWillChangeFrameNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillAppear:) name:UIKeyboardWillChangeFrameNotification object:nil];
     
     
-    
+    //1.
+}
+
+
+- (void)getData {
+
     //获取评论
     TLNetworking *http = [TLNetworking new];
-//    http.showView = self.view;
+    //    http.showView = self.view;
     http.code = @"610133";
     http.parameters[@"start"] = @"1";
     http.parameters[@"limit"] = @"100";
-//    http.parameters[@"status"] = @"D";
+    //    http.parameters[@"status"] = @"D";
     http.parameters[@"postCode"] = self.layoutItem.article.code;
     [http postWithSuccess:^(id responseObject) {
         
         NSArray *arr =  responseObject[@"data"][@"list"];
         [arr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-           CSWCommentModel *commentModel = [CSWCommentModel tl_objectWithDictionary:obj];
-           CSWCommentLayoutItem *layoutItem = [CSWCommentLayoutItem new];
-           layoutItem.commentModel = commentModel;
-          //
+            CSWCommentModel *commentModel = [CSWCommentModel tl_objectWithDictionary:obj];
+            CSWCommentLayoutItem *layoutItem = [CSWCommentLayoutItem new];
+            layoutItem.commentModel = commentModel;
+            //
             [self.commentLayoutItems addObject:layoutItem];
-//            [self.articleDetailTableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];
+            //            [self.articleDetailTableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];
             [self.commentTableView reloadData];
             
         }];
@@ -131,7 +176,7 @@
     
     //获取点赞
     TLNetworking *dzHttp = [TLNetworking new];
-//    dzHttp.showView = self.view;
+    //    dzHttp.showView = self.view;
     dzHttp.code = @"610141";
     dzHttp.parameters[@"start"] = @"1";
     dzHttp.parameters[@"limit"] = @"10";
@@ -142,7 +187,7 @@
         self.dzModels = [CSWLikeModel tl_objectArrayWithDictionaryArray:responseObject[@"data"][@"list"]];
         
         [self.dzTableView reloadData];
-
+        
     } failure:^(NSError *error) {
         
     }];
@@ -156,18 +201,16 @@
     dsRecordHttp.parameters[@"limit"] = @"20";
     [dsRecordHttp postWithSuccess:^(id responseObject) {
         
-      //
-      self.dsRecordRoom = [CSWDSRecord tl_objectArrayWithDictionaryArray:responseObject[@"data"][@"list"]];
-      //
-      [self.articleDetailTableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:0];
-      //
+        //
+        self.dsRecordRoom = [CSWDSRecord tl_objectArrayWithDictionaryArray:responseObject[@"data"][@"list"]];
+        //
+        [self.articleDetailTableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:0];
+        //
         
     } failure:^(NSError *error) {
         
     }];
-
 }
-
 
 #pragma mark- 底部工具栏代理
 - (void)didSelectedAction:(CSWArticleDetailToolBarView *)toolBarView action:(CSWArticleDetailToolBarActionType) actionType {
@@ -187,7 +230,7 @@
                 //对帖子进行评论
                 CSWSendCommentVC *sendCommentVC = [[CSWSendCommentVC alloc] init];
                 sendCommentVC.type =  CSWSendCommentActionTypeToArticle;
-                sendCommentVC.toObjCode = self.layoutItem.article.code;
+                sendCommentVC.toObjCode = self.articleCode;
                 [sendCommentVC setCommentSuccess:^(CSWCommentModel *model){
                     
                     CSWCommentLayoutItem *layoutItem = [[CSWCommentLayoutItem alloc] init];
@@ -209,7 +252,7 @@
                 //取消和点赞
                 [toolBarView dzSuccess];
                 
-                [CSWArticleApi dzArticleWithCode:self.layoutItem.article.code
+                [CSWArticleApi dzArticleWithCode:self.articleCode
                                         user:[TLUser user].userId
                                          success:^{
                                              
@@ -225,7 +268,7 @@
             
             case  CSWArticleDetailToolBarActionTypeCollection : {//收藏
                 
-                [CSWArticleApi collectionArticleWithCode:self.layoutItem.article.code
+                [CSWArticleApi collectionArticleWithCode:self.articleCode
                                             user:[TLUser user].userId
                                          success:^{
                                              [TLAlert alertWithSucces:@"收藏成功"];
@@ -241,7 +284,7 @@
             case  CSWArticleDetailToolBarActionTypeReport: {//举报
                 
                 CSWReportVC *vc = [CSWReportVC new];
-                vc.reportObjCode = self.layoutItem.article.code;
+                vc.reportObjCode = self.articleCode;
                 [self.navigationController pushViewController:vc animated:YES];
              
                 
@@ -287,7 +330,7 @@
             }
           
             [TLProgressHUD showWithStatus:nil];
-            [CSWArticleApi dsArticleWithCode:self.layoutItem.article.code
+            [CSWArticleApi dsArticleWithCode:self.articleCode
                                         user:[TLUser user].userId
                                        money:10
                                      success:^{
@@ -463,6 +506,8 @@
 
 
     CGFloat articleDetailTableViewHeight = _layoutItem.cellHeight + SJ_CELL_HEIGHT + 20;
+    
+    
     self.articleDetailTableViewHeigth = articleDetailTableViewHeight;
     
     
@@ -542,21 +587,21 @@
 
 
 
-#pragma mark- 键盘通知监测
-- (void)keyboardWillAppear:(NSNotification *)notification {
-    
-    //获取键盘高度
-    CGFloat duration =  [notification.userInfo[@"UIKeyboardAnimationDurationUserInfoKey"] floatValue];
-    CGRect keyBoardFrame = [notification.userInfo[@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
-    
-    
-//    [UIView animateWithDuration:duration animations:^{
-//        
-//        self.toolBarView.y = CGRectGetMinY(keyBoardFrame) - 49 - 64;
-//
-//    }];
-    
-}
+//#pragma mark- 键盘通知监测
+//- (void)keyboardWillAppear:(NSNotification *)notification {
+//    
+//    //获取键盘高度
+//    CGFloat duration =  [notification.userInfo[@"UIKeyboardAnimationDurationUserInfoKey"] floatValue];
+//    CGRect keyBoardFrame = [notification.userInfo[@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
+//    
+//    
+////    [UIView animateWithDuration:duration animations:^{
+////        
+////        self.toolBarView.y = CGRectGetMinY(keyBoardFrame) - 49 - 64;
+////
+////    }];
+//    
+//}
 
 - (CSWUserActionSwitchView *)userActionSwitchView {
 

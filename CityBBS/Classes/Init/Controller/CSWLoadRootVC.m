@@ -53,6 +53,7 @@
     
     //根据定位加载城市
     [TLProgressHUD showWithStatus:@"努力加载站点中"];
+    
 //    if(![TLUser user].userId) {
 //    
 //        CSWCity *city = [CSWCity new];
@@ -83,7 +84,9 @@
     
     //定位失败加载默认站点
     [TLProgressHUD dismiss];
-    [TLAlert alertWithError:@"定位失败"];
+    [TLAlert alertWithError:@"定位失败，将加载默认站点"];
+    
+    [self goWithProvience:@"未知" city:@"未知" area:@"未知"];
     
 }
 
@@ -110,52 +113,94 @@
             return ;
         }
         
-//        [TLProgressHUD showWithStatus:@"努力加载站点中"];
-        TLNetworking *http = [TLNetworking new];
-        http.code = @"806012";
-        http.parameters[@"province"] = placemark.administrativeArea ? : @"";
         
-        NSString *city = placemark.locality ? : placemark.administrativeArea;
-        http.parameters[@"city"] = city;
-//        [city substringWithRange:NSMakeRange(0, city.length - 1)];
-        http.parameters[@"area"] = placemark.subLocality;
-        [http postWithSuccess:^(id responseObject) {
-            
-            //当前站点
-            [CSWCityManager manager].currentCity = [CSWCity tl_objectWithDictionary:responseObject[@"data"]];
+        [self goWithProvience:placemark.administrativeArea ? : @"" city:placemark.locality ? : placemark.administrativeArea area:placemark.subLocality];
         
-            
-            
-            //获取站点详情
-            [[CSWCityManager manager] getCityDetailBy:[CSWCityManager manager].currentCity success:^{
-                
-                [TLProgressHUD dismiss];
-                [UIApplication sharedApplication].keyWindow.rootViewController = [[TLTabBarController alloc] init];
-                
-            } failure:^{
-                
-                [TLProgressHUD dismiss];
-
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    
-                    
-                    
-                });
-                
-            }];
-
-         
-            
-        } failure:^(NSError *error) {
-            
-            [TLProgressHUD dismiss];
-            [TLAlert alertWithError:@"获取站点失败"];
-
-        }];
+////        [TLProgressHUD showWithStatus:@"努力加载站点中"];
+//        TLNetworking *http = [TLNetworking new];
+//        http.code = @"806012";
+//        http.parameters[@"province"] = placemark.administrativeArea ? : @"";
+//        
+//        NSString *city = placemark.locality ? : placemark.administrativeArea;
+//        http.parameters[@"city"] = city;
+////        [city substringWithRange:NSMakeRange(0, city.length - 1)];
+//        http.parameters[@"area"] = placemark.subLocality;
+//        
+//        
+//        [http postWithSuccess:^(id responseObject) {
+//            
+//            //当前站点
+//            [CSWCityManager manager].currentCity = [CSWCity tl_objectWithDictionary:responseObject[@"data"]];
+//        
+//            
+//            //获取站点详情
+//            [[CSWCityManager manager] getCityDetailBy:[CSWCityManager manager].currentCity success:^{
+//                
+//                [TLProgressHUD dismiss];
+//                [UIApplication sharedApplication].keyWindow.rootViewController = [[TLTabBarController alloc] init];
+//                
+//            } failure:^{
+//                
+//                [TLProgressHUD dismiss];
+//                
+//            }];
+//
+//         
+//            
+//        } failure:^(NSError *error) {
+//            
+//            [TLProgressHUD dismiss];
+//            [TLAlert alertWithError:@"获取站点失败"];
+//
+//        }];
+        
         
     }];
     
 }
 
+
+
+- (void)goWithProvience:(NSString *)province city:(NSString *)city area:(NSString *)area {
+
+    //        [TLProgressHUD showWithStatus:@"努力加载站点中"];
+    TLNetworking *http = [TLNetworking new];
+    http.code = @"806012";
+    http.parameters[@"province"] = province;
+    
+    http.parameters[@"city"] = city;
+    //        [city substringWithRange:NSMakeRange(0, city.length - 1)];
+    http.parameters[@"area"] = area;
+    
+    
+    [http postWithSuccess:^(id responseObject) {
+        
+        //当前站点
+        [CSWCityManager manager].currentCity = [CSWCity tl_objectWithDictionary:responseObject[@"data"]];
+        
+        
+        //获取站点详情
+        [[CSWCityManager manager] getCityDetailBy:[CSWCityManager manager].currentCity success:^{
+            
+            [TLProgressHUD dismiss];
+            [UIApplication sharedApplication].keyWindow.rootViewController = [[TLTabBarController alloc] init];
+            
+        } failure:^{
+            
+            [TLProgressHUD dismiss];
+            
+        }];
+        
+        
+        
+    } failure:^(NSError *error) {
+        
+        [TLProgressHUD dismiss];
+        [TLAlert alertWithError:@"获取站点失败"];
+        
+    }];
+
+
+}
 
 @end

@@ -17,5 +17,7 @@ typedef  NS_ENUM(NSInteger,CSWUserDetailVCType){
 @interface CSWUserDetailVC : TLBaseVC
 
 @property (nonatomic, assign) CSWUserDetailVCType type;
+@property (nonatomic, copy) NSString *userId;
+
 
 @end

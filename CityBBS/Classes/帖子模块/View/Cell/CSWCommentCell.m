@@ -104,7 +104,7 @@
     _commentLayoutItem = commentLayoutItem;
     
     //
-    [self.photoImageView sd_setImageWithURL:[NSURL URLWithString:[_commentLayoutItem.commentModel.photo convertThumbnailImageUrl]] placeholderImage:[UIImage new]];
+    [self.photoImageView sd_setImageWithURL:[NSURL URLWithString:[_commentLayoutItem.commentModel.photo convertThumbnailImageUrl]] placeholderImage:USER_PLACEHOLDER_SMALL];
     
     //
     self.nameLbl.text = _commentLayoutItem.commentModel.commentUserNickname;

@@ -43,13 +43,11 @@ void TLLog(NSString *format, ...) {
             
         case RunEnvRelease: {
         
-           self.qiniuDomain = @"http://omxvtiss6.bkt.clouddn.com";
-           self.chatKey = @"1139170317178872#zhpay";
-            
-           self.addr = @"http://139.224.200.54:5601"; //test
-           //分享的基础连接
-//          http://121.43.101.148:5603/share/share-receive.html?code=xxx&userReferee=xxx
-            self.shareBaseUrl = @"http://m.zhenghuijituan.com";
+            self.qiniuDomain = @"http://oigx51fc5.bkt.clouddn.com";
+            self.chatKey = @"tianleios#cd-test";
+            self.systemCode = @"CD-CCSW000008";
+            self.addr = @"http://121.43.101.148:8901";
+            self.shareBaseUrl = @"http://121.43.101.148:5603";
 
         }break;
             
@@ -61,8 +59,6 @@ void TLLog(NSString *format, ...) {
             self.addr = @"http://106.15.103.7:5401";
             self.shareBaseUrl = @"http://121.43.101.148:5603";
             
-            
-//
         }break;
             
             

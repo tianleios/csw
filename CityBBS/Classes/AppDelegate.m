@@ -29,7 +29,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     //2.应用环境
-    [AppConfig config].runEnv = RunEnvTest;
+    [AppConfig config].runEnv = RunEnvDev;
     
     //
     [IQKeyboardManager sharedManager].enable = YES;
@@ -56,6 +56,8 @@
 
     //取出用户信息
     [TLUser user].isLogin;
+    
+    //
     return YES;
     
 }

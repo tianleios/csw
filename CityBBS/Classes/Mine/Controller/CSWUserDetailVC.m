@@ -73,13 +73,30 @@
     
 //    self.navigationController.navigationBar.hidden = YES;
 //    self.edgesForExtendedLayout = UIRectEdgeAll;
-    
     self.lastAlpha = 0;
     self.view.backgroundColor = [UIColor orangeColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"更多"] style:UIBarButtonItemStylePlain target:self action:@selector(goMore)];
     
+    
+    //1.根据userId 获取用户信息
+    TLNetworking *http = [TLNetworking new];
+    http.showView = self.view;
+    http.code = @"";
+    http.parameters[@"userId"] = self.userId;
+
+    [http postWithSuccess:^(id responseObject) {
+        
+        
+    } failure:^(NSError *error) {
+        
+    }];
+
+    
+    
+    
+    return;
+
     //
     TLTableView *tableView = [TLTableView tableViewWithframe:CGRectZero delegate:self dataSource:self];
     [self.view addSubview:tableView];

@@ -23,6 +23,10 @@
 @property (nonatomic,strong) NSMutableDictionary *parameters;
 - (void)modelClass:(Class)className;
 
+//对得到的每个数据进行加工
+@property (nonatomic, copy) id(^dealWithPerModel)(id model);
+
+
 
 - (void)refresh:(void(^)(NSMutableArray *objs,BOOL stillHave))refresh failure:(void(^)(NSError *error))failure;
 

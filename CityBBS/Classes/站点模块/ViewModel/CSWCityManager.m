@@ -138,10 +138,12 @@
     
     //banner
     dispatch_group_enter(_inGroup);
-    TLNetworking *tabBarHttp = [TLNetworking new];
-    tabBarHttp.code = @"610107";
-    tabBarHttp.parameters[@"companyCode"] = city.code;
-    [tabBarHttp postWithSuccess:^(id responseObject) {
+    TLNetworking *bannerHttp = [TLNetworking new];
+    bannerHttp.code = @"610107";
+    bannerHttp.parameters[@"companyCode"] = city.code;
+    bannerHttp.parameters[@"location"] = city.code;
+    
+    [bannerHttp postWithSuccess:^(id responseObject) {
         
         dispatch_group_leave(_inGroup);
         succesCount ++;

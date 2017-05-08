@@ -79,8 +79,6 @@
     headerView.centerX = [UIScreen mainScreen].bounds.size.width/2.0;
 //    headerView.backgroundColor = [UIColor orangeColor];
    
-
-    
     //背景
     UIScrollView *bgScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64 - 49)];
     bgScrollView.contentSize = CGSizeMake(SCREEN_WIDTH*2, bgScrollView.height);
@@ -88,7 +86,6 @@
     bgScrollView.pagingEnabled = YES;
     bgScrollView.delegate = self;
     bgScrollView.showsHorizontalScrollIndicator = NO;
-    
     
     //时间线table
     self.timeLineTableView = [TLTableView tableViewWithframe:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64 - 49) delegate:self dataSource:self];
@@ -123,32 +120,31 @@
         
     };
     
-    
 #pragma mark- 时间线刷新时间
+    TLPageDataHelper *timeLinePageData = [[TLPageDataHelper alloc] init];
+    timeLinePageData.code = @"610130";
+    timeLinePageData.parameters[@"companyCode"] =[CSWCityManager manager].currentCity.code;
+    timeLinePageData.tableView = self.timeLineTableView;
+    [timeLinePageData modelClass:[CSWArticleModel class]];
+    
+    //数据转换
+    [timeLinePageData setDealWithPerModel:^(id model){
+        
+        CSWLayoutItem *layoutItem = [CSWLayoutItem new];
+        layoutItem.type = CSWArticleLayoutTypeDefault;
+        layoutItem.article = model;
+        return layoutItem;
+        
+    }];
+    
+    
+    //
     [self.timeLineTableView addRefreshAction:^{
         
-        weakSelf.timelinHttp = [TLNetworking new];
-        weakSelf.timelinHttp.code = @"610130";
-        weakSelf.timelinHttp.parameters[@"companyCode"] =[CSWCityManager manager].currentCity.code;;
-//
-        weakSelf.timelinHttp.parameters[@"start"] = @"1";
-        weakSelf.timelinHttp.parameters[@"limit"] = @"10";
-        
-        [weakSelf.timelinHttp postWithSuccess:^(id responseObject) {
+        [timeLinePageData refresh:^(NSMutableArray *objs, BOOL stillHave) {
             
-            NSArray *arrticleArr =  responseObject[@"data"][@"list"];
-            [arrticleArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-              CSWArticleModel *model =  [CSWArticleModel tl_objectWithDictionary:obj];
-                CSWLayoutItem *layoutItem = [CSWLayoutItem new];
-              layoutItem.type = CSWArticleLayoutTypeDefault;
-              layoutItem.article = model;
-              [weakSelf.timeLineLayoutItemRoom addObject:layoutItem];
-                
-            }];
-            
+            weakSelf.timeLineLayoutItemRoom = objs;
             [weakSelf.timeLineTableView reloadData_tl];
-            [weakSelf.timeLineTableView endRefreshHeader];
             
         } failure:^(NSError *error) {
             
@@ -156,9 +152,56 @@
         }];
         
     }];
-
-
     
+    [self.timeLineTableView addRefreshAction:^{
+        
+        [timeLinePageData refresh:^(NSMutableArray *objs, BOOL stillHave) {
+            
+            weakSelf.timeLineLayoutItemRoom = objs;
+            [weakSelf.timeLineTableView reloadData_tl];
+            
+        } failure:^(NSError *error) {
+            
+            
+        }];
+        
+    }];
+  
+    
+    
+//    [self.timeLineTableView addRefreshAction:^{
+//        
+//        weakSelf.timelinHttp = [TLNetworking new];
+//        weakSelf.timelinHttp.code = @"610130";
+//        weakSelf.timelinHttp.parameters[@"companyCode"] =[CSWCityManager manager].currentCity.code;;
+////
+//        weakSelf.timelinHttp.parameters[@"start"] = @"1";
+//        weakSelf.timelinHttp.parameters[@"limit"] = @"10";
+//        
+//        [weakSelf.timelinHttp postWithSuccess:^(id responseObject) {
+//            
+//            NSArray *arrticleArr =  responseObject[@"data"][@"list"];
+//            [arrticleArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//                
+//              CSWArticleModel *model =  [CSWArticleModel tl_objectWithDictionary:obj];
+//                CSWLayoutItem *layoutItem = [CSWLayoutItem new];
+//              layoutItem.type = CSWArticleLayoutTypeDefault;
+//              layoutItem.article = model;
+//              [weakSelf.timeLineLayoutItemRoom addObject:layoutItem];
+//                
+//            }];
+//            
+//            [weakSelf.timeLineTableView reloadData_tl];
+//            [weakSelf.timeLineTableView endRefreshHeader];
+//            
+//        } failure:^(NSError *error) {
+//            
+//            
+//        }];
+//        
+//    }];
+    
+
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -210,7 +253,8 @@
     
     layoutItem.article = self.timeLineLayoutItemRoom[indexPath.row].article;
     //
-    detailVC.layoutItem = layoutItem;
+//    detailVC.layoutItem = layoutItem;
+    detailVC.articleCode = layoutItem.article.code;
     //
     [self.navigationController pushViewController:detailVC animated:YES];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
