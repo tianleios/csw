@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+@class CSWArticleModel;
 
 @interface TLArticleCell : UICollectionViewCell
 
 + (NSString *)reuseId;
+@property (nonatomic, strong) CSWArticleModel *articleModel;
 
 @end

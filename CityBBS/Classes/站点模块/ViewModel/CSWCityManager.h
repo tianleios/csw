@@ -21,7 +21,7 @@
  */
 @property (nonatomic, strong) CSWCity *currentCity;
 
-// "A" : [city,city]
+// "A" : [city1,city2,city3]
 @property (nonatomic, strong) NSMutableDictionary <NSString * ,NSArray<CSWCity *>*>* cityDict;
 
 //城市列表
@@ -41,7 +41,7 @@
  */
 - (void)getCityDetailBy:(CSWCity *)city success:(void(^)())success failure:(void(^)())failure;
 
-+ (void)jumpWithUrl:(NSString *)url navCtrl:(UINavigationController *)nacCtrl parameters:(id)parameters;
++ (void)jumpWithUrl:(NSString *)url navCtrl:(UINavigationController *)nacCtrl parameters:(id)parameters signin:(void(^)())signinBlock;
 
 @end
 

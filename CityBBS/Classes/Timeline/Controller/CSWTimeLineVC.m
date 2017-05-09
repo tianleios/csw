@@ -15,6 +15,7 @@
 #import "CSWSwitchView.h"
 #import "CSWForumVC.h"
 #import "CSWArticleModel.h"
+#import "TLUserLoginVC.h"
 
 @interface CSWTimeLineVC ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -227,6 +228,15 @@
 
 #pragma mark- 发布帖子
 - (void)compose {
+    
+    
+    if (![TLUser user].userId) {
+        
+        TLNavigationController *navCtrl = [[TLNavigationController alloc] initWithRootViewController:[[TLUserLoginVC alloc] init]];
+        [self presentViewController:navCtrl animated:YES completion:nil];
+        return;
+    }
+    
     
     TLComposeVC *composeVC = [[TLComposeVC alloc] init];
     

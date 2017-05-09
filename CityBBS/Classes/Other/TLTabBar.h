@@ -13,6 +13,14 @@
 
 @protocol TLTabBarDelegate <NSObject>
 
+
+/**
+ 点击tabbarbutton 会先调用此方法，返回yes 正常切换，NO不进行切换
+
+ @param idx
+ @param tabBar
+ @return 是否切换
+ */
 - (BOOL)didSelected:(NSInteger)idx tabBar:(TLTabBar *)tabBar;
 - (BOOL)didSelectedMiddleItemTabBar:(TLTabBar *)tabBar;
 
@@ -30,12 +38,3 @@
 
 @end
 
-//@interface TLImageView : UIImageView
-//
-//
-//@end
-//
-//@interface TLBGView : UIView
-//
-//
-//@end

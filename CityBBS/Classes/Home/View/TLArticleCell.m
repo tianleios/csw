@@ -7,6 +7,8 @@
 //
 
 #import "TLArticleCell.h"
+#import "CSWArticleModel.h"
+
 @interface TLArticleCell()
 
 @property (nonatomic, strong) UIImageView *contentImg;
@@ -39,8 +41,9 @@
         
         //
         self.contentImg = [[UIImageView alloc] init];
-        self.contentImg.contentMode = UIViewContentModeScaleAspectFit;
+        self.contentImg.contentMode = UIViewContentModeScaleAspectFill;
         [self.contentView addSubview:self.contentImg];
+        self.contentImg.clipsToBounds = YES;
         self.contentImg.backgroundColor = RANDOM_COLOR;
         [self.contentImg mas_makeConstraints:^(MASConstraintMaker *make) {
             
@@ -101,28 +104,73 @@
             
         }];
         
-        
-        
-        [self data];
-        
     }
     return self;
 }
 
-- (void)data {
+- (void)setArticleModel:(CSWArticleModel *)articleModel {
 
-    self.contentImg.image = [UIImage imageNamed:@"二手"];
-    self.textLbl.text = @"简单来说，就是设置显示电池电量、时间、网络部分标示的颜色， 这里只能设置两种颜色";
-    self.timeLbl.text = @"2019-32-32";
+    _articleModel = articleModel;
+    
+    if (_articleModel.picArr.count > 0 ) {
+        
+        [self.contentImg sd_setImageWithURL:[NSURL URLWithString:[_articleModel.picArr[0] convertThumbnailImageUrl]] placeholderImage:nil];
+        self.contentImg.hidden = NO;
+        [self.contentImg mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(94);
+        }];
+   
+
+        [self.textLbl mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.contentImg.mas_right).offset(10);
+     
+        }];
+        
+    } else {
+    
+        [self.textLbl mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.contentImg.mas_right);
+            
+        }];
+        [self.contentImg mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(0.01);
+        }];    }
+    
+    
+    //---//
+    
+    //内容
+    self.textLbl.text = _articleModel.title ? : _articleModel.content;
+    
+    //时间
+    self.timeLbl.text = [_articleModel.publishDatetime convertToTimelineDate];
+    
+    
     
     static  NSAttributedString *attr;
     attr   = attr ? : [NSAttributedString convertImg:[UIImage imageNamed:@"阅读量"] bounds:CGRectMake(0, -1, 15, 8)];
     
     NSMutableAttributedString *mutableAttr = [[NSMutableAttributedString alloc] initWithAttributedString:attr];
-    [mutableAttr appendAttributedString:[[NSAttributedString alloc] initWithString:@" 1000"] ];
+    [mutableAttr appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",_articleModel.sumRead]]];
     self.readNumLbl.attributedText = mutableAttr;
 
 }
+
+
+//- (void)data {
+//
+//    self.contentImg.image = [UIImage imageNamed:@"二手"];
+//    self.textLbl.text = @"简单来说，就是设置显示电池电量、时间、网络部分标示的颜色， 这里只能设置两种颜色";
+//    self.timeLbl.text = @"2019-32-32";
+//    
+//    static  NSAttributedString *attr;
+//    attr   = attr ? : [NSAttributedString convertImg:[UIImage imageNamed:@"阅读量"] bounds:CGRectMake(0, -1, 15, 8)];
+//    
+//    NSMutableAttributedString *mutableAttr = [[NSMutableAttributedString alloc] initWithAttributedString:attr];
+//    [mutableAttr appendAttributedString:[[NSAttributedString alloc] initWithString:@" 1000"] ];
+//    self.readNumLbl.attributedText = mutableAttr;
+//
+//}
 
 + (NSString *)reuseId {
     

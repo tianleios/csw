@@ -9,6 +9,8 @@
 #import "CSWDIYVC.h"
 #import "CSWDIYOverAllVC.h"
 #import "CSWDIYPartVC.h"
+#import "CSWCityManager.h"
+#import "CSWVideoModel.h"
 
 
 @interface CSWDIYVC ()
@@ -46,35 +48,69 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+
+    [super viewWillAppear:animated];
+    
+    self.title = [CSWCityManager manager].tabBarRoom[2].name;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"DIY";
+//    self.title = @"DIY";
     
-    if (0) { //整体
-        
-        [self addChildViewController:self.overAllVC];
-        [self.view addSubview:self.overAllVC.view];
-        [self.overAllVC.view mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsZero);
-        }];
-        
-    } else { //局部
+    //1.判断有一个视频还是很多视频
+    TLNetworking *http = [TLNetworking new];
+    http.showView = self.view;
+    http.code = @"610055";
+    http.parameters[@"companyCode"] = [CSWCityManager manager].currentCity.code;
+    //1 可见 0 不可见
+    http.parameters[@"status"] = @"1";
+    http.parameters[@"start"] = @"1";
+    http.parameters[@"limit"] = @"20";
+
     
-        [self addChildViewController:self.partVC];
+    [http postWithSuccess:^(id responseObject) {
         
-//        self.partVC.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        [self.view addSubview:self.partVC.view];
-        [self.partVC.view mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsZero);
-        }];
+        //一个视频
+        NSArray <CSWVideoModel *>*arr = [CSWVideoModel tl_objectArrayWithDictionaryArray:responseObject[@"data"][@"list"]];
         
-    }
+        if (arr.count > 1) {
+            
+            [self addChildViewController:self.partVC];
+            
+            //        self.partVC.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            [self.view addSubview:self.partVC.view];
+            [self.partVC.view mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.edges.mas_equalTo(UIEdgeInsetsZero);
+            }];
+            
+        } else if(arr.count == 1) {
+            
+            self.overAllVC.url = arr[0].url;
+            [self addChildViewController:self.overAllVC];
+            [self.view addSubview:self.overAllVC.view];
+            
+
+            self.overAllVC.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64 - 49);
+        
+        } else { //无视频
+        
+        }
+        
+    } failure:^(NSError *error) {
+        
+    }];
+    
+    //城市切换
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange) name:kCityChangeNotification object:nil];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
+- (void)cityChange {
 
+    
+
+
+}
 
 @end

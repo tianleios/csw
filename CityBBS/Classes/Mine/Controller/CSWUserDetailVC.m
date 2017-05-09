@@ -27,6 +27,8 @@
 //
 @property (nonatomic, assign) CGFloat lastAlpha;
 
+@property (nonatomic, strong) TLUser *currentUser;
+
 @end
 
 @implementation CSWUserDetailVC
@@ -74,7 +76,7 @@
 //    self.navigationController.navigationBar.hidden = YES;
 //    self.edgesForExtendedLayout = UIRectEdgeAll;
     self.lastAlpha = 0;
-    self.view.backgroundColor = [UIColor orangeColor];
+//    self.view.backgroundColor = [UIColor orangeColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"更多"] style:UIBarButtonItemStylePlain target:self action:@selector(goMore)];
     
@@ -82,61 +84,68 @@
     //1.根据userId 获取用户信息
     TLNetworking *http = [TLNetworking new];
     http.showView = self.view;
-    http.code = @"";
+    http.code = @"805256";
     http.parameters[@"userId"] = self.userId;
 
     [http postWithSuccess:^(id responseObject) {
+        
+        //
+        self.currentUser = [TLUser tl_objectWithDictionary:responseObject[@"data"]];
+        
+        //
+        TLTableView *tableView = [TLTableView tableViewWithframe:CGRectZero delegate:self dataSource:self];
+        [self.view addSubview:tableView];
+        //    tableView.backgroundColor = [UIColor cyanColor];
+        [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsMake(-64, 0, -45, 0));
+        }];
+        
+        //headerView
+        tableView.tableHeaderView = [self headerView];
+        CGFloat h=  [self.nickNameLbl.font lineHeight];
+        NSAttributedString *femaleString = [NSAttributedString convertImg:[UIImage imageNamed:@"女"] bounds:CGRectMake(0, -3, h - 2, h - 2)];
+        
+        
+        NSMutableAttributedString *nickAttrStr = [[NSMutableAttributedString alloc] initWithString:self.currentUser.nickname ];
+        [nickAttrStr appendAttributedString:femaleString];
+        
+        [self.userPhoto sd_setImageWithURL:[NSURL URLWithString:[self.currentUser.userExt.photo convertImageUrl]] placeholderImage:USER_PLACEHOLDER_SMALL];
+        
+        //
+        self.nickNameLbl.attributedText = nickAttrStr;
+        
+        self.focusLbl.text = [NSString stringWithFormat:@"关注 %@",self.currentUser.totalFollowNum];
+        
+        
+        self.fansLbl.text = [NSString stringWithFormat:@"粉丝 %@",self.currentUser.totalFansNum];
+        
+        self.userIntroduceLbl.text = @"自我介绍";
+        
+        //底部工具栏--我的直接编写资料
+        [self.view addSubview:self.bootoomTooBar];
+        self.bootoomTooBar.y = SCREEN_HEIGHT - 64 - 45;
+        
+        self.navBarImageView=(UIImageView *)self.navigationController.navigationBar.subviews.firstObject;
+        self.navBarImageView.alpha = 0;
+        
         
         
     } failure:^(NSError *error) {
         
     }];
 
-    
-    
-    
+
     return;
 
-    //
-    TLTableView *tableView = [TLTableView tableViewWithframe:CGRectZero delegate:self dataSource:self];
-    [self.view addSubview:tableView];
-//    tableView.backgroundColor = [UIColor cyanColor];
-    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsMake(-64, 0, -45, 0));
-    }];
-    
-    //headerView
-    tableView.tableHeaderView = [self headerView];
-    CGFloat h=  [self.nickNameLbl.font lineHeight];
-    NSAttributedString *femaleString = [NSAttributedString convertImg:[UIImage imageNamed:@"女"] bounds:CGRectMake(0, -3, h - 2, h - 2)];
-    NSMutableAttributedString *nickAttrStr = [[NSMutableAttributedString alloc] initWithString:@"doman" ];
-    [nickAttrStr appendAttributedString:femaleString];
-    //
-    self.nickNameLbl.attributedText = nickAttrStr;
-    self.focusLbl.text = @"关注 580";
-    self.fansLbl.text = @"粉丝 580";
-    self.userIntroduceLbl.text = @"自我介绍";
-
-    
-    //底部工具栏--我的直接编写资料
-    //
-    [self.view addSubview:self.bootoomTooBar];
-    self.bootoomTooBar.y = SCREEN_HEIGHT - 64 - 45;
-    
-    
-    self.navBarImageView=(UIImageView *)self.navigationController.navigationBar.subviews.firstObject;
-    self.navBarImageView.alpha = 0;
-    
-    
-    //初始化数据
-    if (self.type == CSWUserDetailVCTypeMine) { //我的
-        
-
-        [self userInfoChange];
-    } else { //其它用户
-        
-    
-    }
+//    //初始化数据
+//    if (self.type == CSWUserDetailVCTypeMine) { //我的
+//        
+//
+//        [self userInfoChange];
+//    } else { //其它用户
+//        
+//    
+//    }
     
 
     
@@ -178,8 +187,10 @@
         _bootoomTooBar.backgroundColor = [UIColor whiteColor];
         _bootoomTooBar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin;
         
+        //1.用户为登录
         
-        if (self.type == CSWUserDetailVCTypeOther) {
+        
+        if (![TLUser user].userId || ![[TLUser user].userId isEqualToString:self.userId]) {
             
         //关注
         UIButton *fouseBtn = [self btnWithFrame:CGRectMake(0, 0, _bootoomTooBar.width/2.0, _bootoomTooBar.height) title:@"关注" imgName:@"关注"];
@@ -255,7 +266,6 @@
     self.userPhoto.layer.cornerRadius = 40;
     self.userPhoto.layer.masksToBounds = YES;
     self.userPhoto.centerX = headerImageView.width/2.0;
-    self.userPhoto.backgroundColor = [UIColor orangeColor];
     
     //
     self.nickNameLbl = [UILabel labelWithFrame:CGRectMake(0, self.userPhoto.yy + 19, SCREEN_WIDTH, [FONT(15) lineHeight])

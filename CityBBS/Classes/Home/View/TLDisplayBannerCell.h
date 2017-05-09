@@ -11,6 +11,7 @@
 @class CSWBannerModel;
 @interface TLDisplayBannerCell : UICollectionViewCell
 
+@property (nonatomic, strong) TLBannerView *bannerView;
 
 + (NSString *)reuseId;
 @property (nonatomic, copy) NSArray <CSWBannerModel *>*bannerRoom;

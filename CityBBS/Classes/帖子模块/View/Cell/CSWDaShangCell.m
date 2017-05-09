@@ -97,7 +97,7 @@
             moreImageView.layer.cornerRadius = imageView.height/2.0;
             moreImageView.layer.masksToBounds = YES;
             [moreImageView setImage:[UIImage imageNamed:@"content_reward_more"] forState:UIControlStateNormal];
-            moreImageView.backgroundColor = [UIColor orangeColor];
+//            moreImageView.backgroundColor = [UIColor orangeColor];
             [self.contentView addSubview:moreImageView];
             [moreImageView addTarget:self action:@selector(goRecordFlow) forControlEvents:UIControlEventTouchUpInside];
         }

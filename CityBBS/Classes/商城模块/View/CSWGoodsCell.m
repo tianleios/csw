@@ -1,22 +1,21 @@
 //
-//  CSWDIYCell.m
+//  CSWGoodsCell.m
 //  CityBBS
 //
-//  Created by  tianlei on 2017/3/20.
+//  Created by  tianlei on 2017/3/21.
 //  Copyright © 2017年  tianlei. All rights reserved.
 //
 
-#import "CSWDIYCell.h"
-#import "CSWVideoModel.h"
+#import "CSWGoodsCell.h"
 
-@interface CSWDIYCell()
+@interface CSWGoodsCell()
 
 @property (nonatomic, strong) UIImageView *displayImageView;
 @property (nonatomic, strong) UILabel *introduceLbl;
 
 @end
 
-@implementation CSWDIYCell
+@implementation CSWGoodsCell
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -46,39 +45,15 @@
             make.left.equalTo(self.contentView.mas_left).offset(5);
             make.right.equalTo(self.contentView.mas_right).offset(-5);
             make.top.equalTo(self.displayImageView.mas_bottom).offset(5);
-//            make.bottom.equalTo(self.contentView.mas_bottom).offset(-5);
-        }];
-        self.introduceLbl.text = @"你们在家";
-//        if (random()%2 == 1) {
-//            self.introduceLbl.text = @"fjkaljdfalkjfklajsdlkfjkla计费的卡拉胶付款啦";
-//
-//        } else {
-//            
-//            self.introduceLbl.text = @"fjkaljdfalkjfklfjkaljdfalkjfklajsdlkfjklafjkaljdfalkjfklajsdlkfjklaajsdlkfjkla计费的卡拉胶付款啦";
-//
-//        }
-        
-        
-        //
-        [self.contentView  mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo((SCREEN_WIDTH - 5)/2.0);
-            make.bottom.equalTo(self.introduceLbl.mas_bottom);
-            make.top.equalTo(self.displayImageView.mas_top);
+            //            make.bottom.equalTo(self.contentView.mas_bottom).offset(-5);
         }];
         
+
     }
+    
     return self;
+    
 }
 
-- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
 
-    [self setNeedsLayout];
-    [self layoutIfNeeded];
-    CGSize size = [self.contentView systemLayoutSizeFittingSize:layoutAttributes.size]; // 获取自适应size
-    CGRect newFrame = layoutAttributes.frame;
-    newFrame.size.height = size.height;
-    newFrame.size.width = (SCREEN_WIDTH - 5)/2.0; // 不同屏幕适配
-    layoutAttributes.frame = newFrame;
-    return layoutAttributes;
-}
 @end

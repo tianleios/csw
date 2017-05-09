@@ -62,18 +62,7 @@
 
 }
 
-//- (void)setTabNames:(NSArray *)tabNames {
-//    
-//    _tabNames = tabNames;
-//    
-//    [self.btns enumerateObjectsUsingBlock:^(TLBarButton * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//        
-//        obj.titleLbl.text = _tabNames[idx];
-//        
-//    }];
-//    
-//    
-//}
+
 
 - (UIView *)falseTabBar {
 
@@ -158,6 +147,7 @@
 
 }
 
+//点击按钮，
 - (void)hasChoose:(TLBarButton *)btn {
 
     if ([_lastTabBarBtn isEqual:btn]) {
@@ -165,36 +155,48 @@
         return;
     }
     
-    _lastTabBarBtn.isCurrentSelected = NO;
-    btn.isCurrentSelected = YES;
-    
-    NSInteger lastIdx = _lastTabBarBtn.tag - 100;
+    //当前选中的小标
     NSInteger idx = btn.tag - 100;
 
+    
     if (self.tl_delegate && [self.tl_delegate respondsToSelector:@selector(didSelected:tabBar:)]) {
         
         if([self.tl_delegate didSelected:idx tabBar:self]) {
         
-            //上次选中改变图片
-            NSString *unselectedStr = self.tabBarItems[lastIdx].unSelectedImgUrl ;
-            
-            [_lastTabBarBtn.iconImageView sd_setImageWithURL:[NSURL URLWithString:unselectedStr] placeholderImage:nil];
-            
-            _lastTabBarBtn.titleLbl.textColor = [UIColor textColor];
-            
-            //当前选中改变图片
-             NSString *selectedStr = self.tabBarItems[idx].selectedImgUrl;
-            [btn.iconImageView sd_setImageWithURL:[NSURL URLWithString:selectedStr] placeholderImage:nil];
-            btn.titleLbl.textColor = [UIColor themeColor];
-            
-            btn.selected = NO;
-            _lastTabBarBtn = btn;
-            _lastTabBarBtn.selected = YES;
-            
-        
+            [self changeUIWithCurrentSelectedBtn:btn idx:idx];
+
         }
+        
+    } else {
+
+        [self changeUIWithCurrentSelectedBtn:btn idx:idx];
+        
     }
     
+
+}
+
+- (void)changeUIWithCurrentSelectedBtn:(TLBarButton *)btn idx:(NSInteger)idx {
+
+    _lastTabBarBtn.isCurrentSelected = NO;
+    btn.isCurrentSelected = YES;
+    
+    NSInteger lastIdx = _lastTabBarBtn.tag - 100;
+    //上次选中改变图片
+    NSString *unselectedStr = self.tabBarItems[lastIdx].unSelectedImgUrl ;
+    
+    [_lastTabBarBtn.iconImageView sd_setImageWithURL:[NSURL URLWithString:unselectedStr] placeholderImage:nil];
+    
+    _lastTabBarBtn.titleLbl.textColor = [UIColor textColor];
+    
+    //当前选中改变图片
+    NSString *selectedStr = self.tabBarItems[idx].selectedImgUrl;
+    [btn.iconImageView sd_setImageWithURL:[NSURL URLWithString:selectedStr] placeholderImage:nil];
+    btn.titleLbl.textColor = [UIColor themeColor];
+    
+    btn.selected = NO;
+    _lastTabBarBtn = btn;
+    _lastTabBarBtn.selected = YES;
 
 }
 

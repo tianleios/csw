@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+@class CSWVideoModel;
 
 @interface CSWDIYCell : UICollectionViewCell
+
+@property (nonatomic, strong) CSWVideoModel *videoModel;
 
 @end

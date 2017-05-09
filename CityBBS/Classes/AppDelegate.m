@@ -55,7 +55,11 @@
     self.window.rootViewController = [[CSWLoadRootVC alloc] init];
 
     //取出用户信息
-    [TLUser user].isLogin;
+    if([TLUser user].isLogin) {
+    
+        [[TLUser user] initUserData];
+        
+    };
     
     //
     return YES;

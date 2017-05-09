@@ -8,8 +8,13 @@
 
 #import "CSWDIYPartVC.h"
 #import "CSWDIYCell.h"
+#import "CSWVideoModel.h"
+#import "MJRefresh.h"
 
 @interface CSWDIYPartVC ()<UICollectionViewDelegate,UICollectionViewDataSource>
+
+@property (nonatomic, strong) UICollectionView *videCollectionView;
+@property (nonatomic, copy) NSArray <CSWVideoModel *>*videos;
 
 
 @end
@@ -19,6 +24,72 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self setUpUI];
+    
+    //加载头条帖子
+    TLPageDataHelper *http = [[TLPageDataHelper alloc] init];
+    http.code = @"610055";
+    http.parameters[@"companyCode"] = [CSWCityManager manager].currentCity.code;
+    [http modelClass:[CSWVideoModel class]];
+    
+    
+    __weak typeof(self) weakSelf = self;
+    //刷新事件
+    self.videCollectionView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        
+        [http refresh:^(NSMutableArray *objs, BOOL stillHave) {
+            
+            weakSelf.videos = objs;
+            
+            [weakSelf.videCollectionView reloadData];
+            [weakSelf.videCollectionView.mj_header endRefreshing];
+            
+            if (!stillHave) {
+                
+                [weakSelf.videCollectionView.mj_footer endRefreshingWithNoMoreData];
+                
+            }
+            
+        } failure:^(NSError *error) {
+            
+            [weakSelf.videCollectionView.mj_header endRefreshing];
+            
+        }];
+        
+    }];
+    
+    //上拉
+    self.videCollectionView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+        
+        [http loadMore:^(NSMutableArray *objs, BOOL stillHave) {
+            
+            weakSelf.videos = objs;
+            [weakSelf.videCollectionView reloadData];
+            if (stillHave) {
+                
+                [weakSelf.videCollectionView.mj_footer endRefreshing];
+                
+            } else {
+                
+                [weakSelf.videCollectionView.mj_footer endRefreshingWithNoMoreData];
+                
+            }
+            
+            
+        } failure:^(NSError *error) {
+            
+            [weakSelf.videCollectionView.mj_footer endRefreshing];
+            
+            
+        }];
+        
+    }];
+    
+    
+}
+
+- (void)setUpUI {
+
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
     flowLayout.minimumLineSpacing = 5;
     flowLayout.minimumInteritemSpacing = 5;
@@ -32,6 +103,7 @@
     collectionView.delegate = self;
     collectionView.dataSource = self;
     collectionView.backgroundColor = [UIColor backgroundColor];
+    self.videCollectionView = collectionView;
     
     //
     [collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -41,16 +113,14 @@
     }];
     
     [collectionView registerClass:[CSWDIYCell class] forCellWithReuseIdentifier:@"id"];
-    
-    
-    
 }
 
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
 
 
-    return 50;
+    return self.videos.count;
+    
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -58,6 +128,7 @@
     CSWDIYCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"id" forIndexPath:indexPath];
     
     cell.backgroundColor = RANDOM_COLOR;
+    
     return cell;
 
 }

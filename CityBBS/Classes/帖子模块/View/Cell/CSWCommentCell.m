@@ -9,9 +9,11 @@
 #import "CSWCommentCell.h"
 #import "CSWLayoutHelper.h"
 #import "MLLinkLabel.h"
+#import "CSWUserPhotoView.h"
+
 @interface CSWCommentCell()
 
-@property (nonatomic, strong) UIImageView *photoImageView;
+@property (nonatomic, strong) CSWUserPhotoView *photoImageView;
 @property (nonatomic, strong) UILabel *nameLbl;
 @property (nonatomic, strong) UILabel *timeLbl;
 @property (nonatomic, strong) MLLinkLabel *commentContentLbl;
@@ -25,7 +27,7 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
        
         //
-        self.photoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 15, 40, 40)];
+        self.photoImageView = [[CSWUserPhotoView alloc] initWithFrame:CGRectMake(15, 15, 40, 40)];
         [self.contentView addSubview:self.photoImageView];
         self.photoImageView.layer.cornerRadius = 20;
         self.photoImageView.layer.masksToBounds = YES;
@@ -104,6 +106,8 @@
     _commentLayoutItem = commentLayoutItem;
     
     //
+    self.photoImageView.userId = _commentLayoutItem.commentModel.commentUserId;
+    
     [self.photoImageView sd_setImageWithURL:[NSURL URLWithString:[_commentLayoutItem.commentModel.photo convertThumbnailImageUrl]] placeholderImage:USER_PLACEHOLDER_SMALL];
     
     //

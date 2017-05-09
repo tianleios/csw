@@ -34,7 +34,7 @@
 
 
     CSWUserDetailVC *userDetailVC = [[CSWUserDetailVC alloc] init];
-    userDetailVC.type = CSWUserDetailVCTypeOther;
+//    userDetailVC.type = CSWUserDetailVCTypeOther;
     [self.navigationController pushViewController:userDetailVC animated:YES];
     
 }

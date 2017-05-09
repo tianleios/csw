@@ -9,7 +9,7 @@
 #import "CSWDIYOverAllVC.h"
 #import <WebKit/WebKit.h>
 
-@interface CSWDIYOverAllVC ()
+@interface CSWDIYOverAllVC ()<WKNavigationDelegate>
 
 @end
 
@@ -20,13 +20,26 @@
     
     WKWebView *webView = [[WKWebView alloc] init];
     [self.view addSubview:webView];
+    webView.navigationDelegate = self;
     
     [webView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
     
-    NSURLRequest *req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://segmentfault.com"]];
+    NSURLRequest *req = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:self.url]];
     [webView loadRequest:req];
+    
+}
+
+
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
+    [TLProgressHUD showWithStatus:@"加载中...."];
+}
+
+//--//
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    
+    [TLProgressHUD dismiss];
     
 }
 

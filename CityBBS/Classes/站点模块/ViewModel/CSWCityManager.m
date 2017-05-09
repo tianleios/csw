@@ -8,6 +8,11 @@
 
 #import "CSWCityManager.h"
 
+#import "CSWWebVC.h"
+#import "CSWMallVC.h"
+#import "CSWPlateDetailVC.h"
+
+
 #define CSW_RECOMMEND_CITY @"推荐"
 #define CSW_CURRENT_CITY @"当前"
 
@@ -141,7 +146,7 @@
     TLNetworking *bannerHttp = [TLNetworking new];
     bannerHttp.code = @"610107";
     bannerHttp.parameters[@"companyCode"] = city.code;
-    bannerHttp.parameters[@"location"] = city.code;
+    bannerHttp.parameters[@"location"] = @"0";
     
     [bannerHttp postWithSuccess:^(id responseObject) {
         
@@ -240,15 +245,40 @@
 }
 
 #pragma mark- 统一处理，跳转
-+ (void)jumpWithUrl:(NSString *)url navCtrl:(UINavigationController *)nacCtrl parameters:(id)parameters {
++ (void)jumpWithUrl:(NSString *)url navCtrl:(UINavigationController *)nacCtrl parameters:(id)parameters signin:(void(^)())signinBlock {
     
-    UIViewController *vc = [[UIViewController alloc] init];
-    [nacCtrl pushViewController:vc animated:YES];
-    if ([parameters isKindOfClass:[NSString class]]) {
+    if ([url containsString:@"page"]) { //内部页
         
-    } else {
+        if ([url containsString:@"page:mall"]) { //商城
+            
+            CSWMallVC *mallVC = [[CSWMallVC alloc] init];
+            [nacCtrl pushViewController:mallVC animated:YES];
+            
+        } else if ([url containsString:@"page:board"]) { //板块
+        
+            NSRange range = [url rangeOfString:@"code:"];
+            NSString *code = [url substringFromIndex:range.location + range.length];
+            
+            CSWPlateDetailVC *plateVC = [[CSWPlateDetailVC alloc] init];
+            plateVC.plateCode = code;
+            [nacCtrl pushViewController:plateVC animated:YES];
+        
+        } else if ([url containsString:@"page:signin"]) { //签到
+        
+            if (signinBlock) {
+                signinBlock();
+            }
+            
+        }
+        
+    } else {//外部页
+    
+        CSWWebVC *webVC = [[CSWWebVC alloc] init];
+        webVC.url = url;
+        [nacCtrl pushViewController:webVC animated:YES];
     
     }
+
 
 }
 

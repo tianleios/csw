@@ -36,8 +36,10 @@
 @property (nonatomic, copy) NSString *idNo;
 
 @property (nonatomic, copy) NSString *remark;
+
 @property (nonatomic, copy) NSString *totalFansNum;
 @property (nonatomic, copy) NSString *totalFollowNum;
+
 @property (nonatomic, copy) NSString *updateDatetime;
 @property (nonatomic, copy) NSString *updater;
 @property (nonatomic, strong) TLUserExt *userExt;
@@ -51,6 +53,7 @@
 
 //是否为需要登录，如果已登录，取出用户信息
 - (BOOL)isLogin;
+- (void)initUserData;
 
 - (void)loginOut;
 

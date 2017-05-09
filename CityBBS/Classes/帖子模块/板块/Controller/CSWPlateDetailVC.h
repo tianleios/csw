@@ -10,4 +10,6 @@
 
 @interface CSWPlateDetailVC : TLBaseVC
 
+@property (nonatomic, copy) NSString *plateCode;
+
 @end

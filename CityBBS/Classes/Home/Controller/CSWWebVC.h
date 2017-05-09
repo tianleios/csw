@@ -1,14 +1,14 @@
 //
-//  CSWDIYOverAllVC.h
+//  CSWWebVC.h
 //  CityBBS
 //
-//  Created by  tianlei on 2017/3/20.
+//  Created by  tianlei on 2017/5/8.
 //  Copyright © 2017年  tianlei. All rights reserved.
-//  整体是一个连接
+//
 
 #import "TLBaseVC.h"
 
-@interface CSWDIYOverAllVC : TLBaseVC
+@interface CSWWebVC : TLBaseVC
 
 @property (nonatomic, copy) NSString *url;
 

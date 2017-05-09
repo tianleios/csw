@@ -104,7 +104,8 @@
 
 }
 
-#pragma tabBar-delegate
+
+#pragma mark- tabbar-delegate
 - (BOOL)didSelected:(NSInteger)idx tabBar:(TLTabBar *)tabBar {
 
     if (idx == 3 && ![TLUser user].isLogin) {
@@ -117,6 +118,7 @@
         return NO;
     }
     
+    //
     self.selectedIndex = idx;
     return YES;
    

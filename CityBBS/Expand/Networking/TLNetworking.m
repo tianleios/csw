@@ -152,10 +152,10 @@
           }
           
           if(self.isShowMsg) { //异常也是失败
-//              [SVProgressHUD showErrorWithStatus:responseObject[@"errorInfo"]];
-              [TLAlert alertWithError:responseObject[@"errorInfo"]];
-//              [TLAlert alertWithMsg:responseObject[@"errorInfo"]];
-//              [TLAlert alertWithHUDText:responseObject[@"errorInfo"]];
+              
+//              [TLAlert alertWithError:responseObject[@"errorInfo"]];
+              [TLAlert alertWithInfo:responseObject[@"errorInfo"]];
+
           }
       
       

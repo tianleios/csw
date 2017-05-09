@@ -346,6 +346,7 @@
 
 - (NSString *)convertToTimelineDate {
 
+    //后期改为类似于微信的那种做法
     return  [self convertToDetailDate];
 
 }

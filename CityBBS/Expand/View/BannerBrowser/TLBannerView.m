@@ -119,7 +119,6 @@ static NSString * const XNBannerCellID = @"XNBannerCellID ";
             UIPageControl *tmpPageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, self.frame.size.height - pageControlHeight, self.frame.size.width, pageControlHeight)];
             [self addSubview:tmpPageControl];
             tmpPageControl.hidesForSinglePage = YES;
-            
             tmpPageControl.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
             
             tmpPageControl.pageIndicatorTintColor = [UIColor colorWithHexString:@"#cccccc"];
@@ -137,6 +136,10 @@ static NSString * const XNBannerCellID = @"XNBannerCellID ";
                 tmpPageControl.numberOfPages = 1;
                 
             }
+            
+            CGSize size = [tmpPageControl sizeForNumberOfPages:tmpPageControl.numberOfPages];
+            tmpPageControl.width = size.width;
+            tmpPageControl.x = self.width - 15 - size.width;
             
             //添加指示
             [self addSubview:tmpPageControl];

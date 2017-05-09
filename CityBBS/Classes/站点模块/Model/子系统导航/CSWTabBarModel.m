@@ -20,6 +20,10 @@
         self.unSelectedImageUrl = imgs[0];
         self.selectedImageUrl = imgs[1];
         
+    } else  {
+    
+        self.unSelectedImageUrl = imgs[0];
+        self.selectedImageUrl = imgs[0];
     }
     
 }

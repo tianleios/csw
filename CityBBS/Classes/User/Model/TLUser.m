@@ -63,6 +63,18 @@ NSString *const kUserInfoChange = @"kUserInfoChange_zh";
 }
 
 
+- (void)initUserData {
+
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    NSString *userId = [userDefault objectForKey:USER_ID_KEY];
+    NSString *token = [userDefault objectForKey:TOKEN_ID_KEY];
+    
+        self.userId = userId;
+        self.token = token;
+        [self setUserInfoWithDict:[userDefault objectForKey:USER_INFO_DICT_KEY]];
+
+}
+
 - (BOOL)isLogin {
 
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
@@ -70,9 +82,9 @@ NSString *const kUserInfoChange = @"kUserInfoChange_zh";
     NSString *token = [userDefault objectForKey:TOKEN_ID_KEY];
     if (userId && token) {
         
-        self.userId = userId;
-        self.token = token;
-        [self setUserInfoWithDict:[userDefault objectForKey:USER_INFO_DICT_KEY]];
+//        self.userId = userId;
+//        self.token = token;
+//        [self setUserInfoWithDict:[userDefault objectForKey:USER_INFO_DICT_KEY]];
         
         return YES;
     } else {

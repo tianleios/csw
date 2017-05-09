@@ -46,9 +46,11 @@
                                                         delegate:self
                                                       dataSource:self];
     [self.view addSubview:mineTableView];
-    [mineTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
-    }];
+//    [mineTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
+//    }];
+    mineTableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64 - 49);
+    
     mineTableView.rowHeight = 45;
     
     //headerView
@@ -78,7 +80,7 @@
     if (type == MineHeaderSeletedTypeDefault) {
         //个人中心
         CSWUserDetailVC *userDetailVC = [[CSWUserDetailVC alloc] init];
-        userDetailVC.type = CSWUserDetailVCTypeMine;
+//        userDetailVC.type = CSWUserDetailVCTypeMine;
         [self.navigationController pushViewController:userDetailVC animated:YES];
         
 //        CSWUserDetailEditVC *userDetailVC = [[CSWUserDetailEditVC alloc] init];
@@ -91,7 +93,7 @@
             case 0: {//帖子
             
                 CSWUserDetailVC *userDetailVC = [[CSWUserDetailVC alloc] init];
-                userDetailVC.type = CSWUserDetailVCTypeMine;
+//                userDetailVC.type = CSWUserDetailVCTypeMine;
                 [self.navigationController pushViewController:userDetailVC animated:YES];
                 
             }

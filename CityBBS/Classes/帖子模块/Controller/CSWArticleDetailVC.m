@@ -89,6 +89,7 @@
     return _commentLayoutItems;
 }
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"帖子详情";
@@ -166,7 +167,12 @@
             //
             [self.commentLayoutItems addObject:layoutItem];
             //            [self.articleDetailTableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.commentTableView reloadData];
+            
+            if (self.commentLayoutItems.count) {
+                
+                [self.commentTableView reloadData];
+
+            }
             
         }];
         
@@ -186,7 +192,11 @@
         
         self.dzModels = [CSWLikeModel tl_objectArrayWithDictionaryArray:responseObject[@"data"][@"list"]];
         
-        [self.dzTableView reloadData];
+        if(self.dzModels.count) {
+            
+            [self.dzTableView reloadData];
+
+        }
         
     } failure:^(NSError *error) {
         
@@ -225,6 +235,7 @@
     }
     
     switch (actionType) {
+            
             case  CSWArticleDetailToolBarActionTypeSendCompose : {
             
                 //对帖子进行评论
@@ -239,10 +250,15 @@
                     [self.commentLayoutItems insertObject:layoutItem atIndex:0];
                     [self.commentTableView reloadData_tl];
                     
+                    //评论数据增加
+                    self.layoutItem.article.sumComment = @([self.layoutItem.article.sumComment longLongValue] + 1);
+                    self.userActionSwitchView.countStrRoom = @[[self.layoutItem.article.sumComment stringValue] ,[self.layoutItem.article.sumLike stringValue]];
+                    
                 }];
                 //
                 UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:sendCommentVC];
                 [self presentViewController:nav animated:YES completion:nil];
+                
             }
             break;
             
@@ -332,7 +348,7 @@
             [TLProgressHUD showWithStatus:nil];
             [CSWArticleApi dsArticleWithCode:self.articleCode
                                         user:[TLUser user].userId
-                                       money:10
+                                       money:[alertCtrl.textFields[0].text floatValue]
                                      success:^{
                                          
                                          [alertCtrl dismissViewControllerAnimated:YES completion:nil];
@@ -343,7 +359,7 @@
                                          CSWDSRecord *recoerd = [[CSWDSRecord alloc] init];
                                          recoerd.nickname = [TLUser user].nickname;
                                          recoerd.photo = [TLUser user].userExt.photo;
-                                         
+
                                          [self.dsRecordRoom insertObject:recoerd atIndex:0];
                                          [self.articleDetailTableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:0];
 
@@ -388,20 +404,22 @@
 
 }
 
+
 -(BOOL)canPerformAction:(SEL)action withSender:(id)sender{
     if(action == @selector(comment:)){
         
         
         return YES;
-    }else if (action==@selector(report:)){
         
+    }else if (action==@selector(report:)){
         
         return YES;
     }
     return [super canPerformAction:action withSender:sender];
 }
 
-#pragma mark- 评论 评论
+
+#pragma mark- 对评论进行评论
 - (void)comment:(id)sender {
 
     
@@ -453,14 +471,16 @@
         return;
     }
 
-  
-   
+    //
     if ([scrollView isEqual:self.commentTableView]) {
         
+        //两个内容同步
         self.dzTableView.contentOffset = scrollView.contentOffset;
+        
+        
         if(scrollView.contentOffset.y > 0 ) {
         
-            //1.
+            //1............
             if (scrollView.contentOffset.y > self.articleDetailTableViewHeigth) {
             
                  self.userActionSwitchView.y = scrollView.contentOffset.y;
@@ -470,21 +490,14 @@
 
             }
             
-            
-            
-            //2.
-//            self.articleDetailTableView.y = -scrollView.contentOffset.y;
-//            self.userActionSwitchView.y = self.articleDetailTableViewHeigth -scrollView.contentOffset.y;
-//            if (scrollView.contentOffset.y > self.articleDetailTableViewHeigth) {
-//                
-//                self.userActionSwitchView.y = 0;
-//            }
-            
         }
         
     } else {
     
+        //两个内容同步
         self.commentTableView.contentOffset = scrollView.contentOffset;
+        
+        
         if(scrollView.contentOffset.y > 0 ) {
             
             //1.
@@ -504,10 +517,8 @@
 
 - (void)setUpUI {
 
-
+    //帖子高度 + 赏金cell高度 + 间隔
     CGFloat articleDetailTableViewHeight = _layoutItem.cellHeight + SJ_CELL_HEIGHT + 20;
-    
-    
     self.articleDetailTableViewHeigth = articleDetailTableViewHeight;
     
     
@@ -517,30 +528,25 @@
     [self.view addSubview:self.bgScrollView];
     self.bgScrollView.delegate = self;
     
+    //底部工具栏
     self.toolBarView = [[CSWArticleDetailToolBarView alloc] initWithFrame:CGRectMake(0, self.bgScrollView.yy, SCREEN_WIDTH, COMMENT_INPUT_VIEW_HEIGHT)];
     self.toolBarView.delegate = self;
     [self.view addSubview:self.toolBarView];
 
-    
-
-    
-    
-//    //假header
-    UIView *falseHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, articleDetailTableViewHeight + USER_ACTION_SWITCH_HEIGHT)];
-    
- 
     //6.帖子详情 + 赏金
     self.articleDetailTableView = [TLTableView  groupTableViewWithframe:CGRectMake(0, 0, SCREEN_WIDTH, articleDetailTableViewHeight) delegate:self dataSource:self];
     self.articleDetailTableView.scrollEnabled = NO;
-    [self.bgScrollView addSubview:self.articleDetailTableView];
+//    [self.bgScrollView addSubview:self.articleDetailTableView];
     
-    //7.评论点赞切换
+    //7.评论点赞 展示 切换
     self.userActionSwitchView.frame = CGRectMake(0, self.articleDetailTableView.yy, SCREEN_WIDTH, USER_ACTION_SWITCH_HEIGHT);
-    [self.bgScrollView addSubview:self.userActionSwitchView];
+//    [self.bgScrollView addSubview:self.userActionSwitchView];
     
- 
     
-    //
+    //假header
+    UIView *falseHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, articleDetailTableViewHeight + USER_ACTION_SWITCH_HEIGHT)];
+    
+    
     //5.点赞的table
     self.dzTableView = [TLTableView  tableViewWithframe:CGRectMake(0, 0, self.bgScrollView.width, self.bgScrollView.height) delegate:self dataSource:self];
     [self.bgScrollView addSubview:self.dzTableView];
@@ -548,14 +554,14 @@
     self.dzTableView.tableHeaderView = falseHeaderView;
     self.dzHeaderView = falseHeaderView;
     
-    
+    //-//
     UIView *falseHeaderView1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, articleDetailTableViewHeight + USER_ACTION_SWITCH_HEIGHT)];
     falseHeaderView1.backgroundColor = [UIColor backgroundColor];
     [falseHeaderView1 addSubview:self.articleDetailTableView];
     [falseHeaderView1 addSubview:self.userActionSwitchView];
     self.commentHeaderView = falseHeaderView1;
     
-    //4.评论的table
+    //4.评论的tableView
     self.commentTableView = [TLTableView  tableViewWithframe:self.dzTableView.frame delegate:self dataSource:self];
     self.commentTableView.backgroundColor = [UIColor cyanColor];
     self.commentTableView.tableHeaderView = falseHeaderView1;
@@ -563,45 +569,19 @@
     [self.bgScrollView addSubview:self.commentTableView];
     
     
-
-    
-   
- 
-    
-    
-    //调整
+    //调整 背景scrollView暂无-----特殊用途，可能view也可以
     self.bgScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, self.bgScrollView.height);
-//
-//    self.bgScrollView.height + articleDetailTableViewHeight
-//    self.dzTableView.height = self.bgScrollView.contentSize.height;
-//    self.commentTableView.height = self.bgScrollView.contentSize.height;
     
-//    self.commentTableView.scrollEnabled = NO;
-//    self.dzTableView.scrollEnabled = NO;
-
+    //
+    //调整contentSize
     self.commentTableView.contentSize = CGSizeMake
     (SCREEN_WIDTH, self.bgScrollView.height + self.articleDetailTableViewHeigth);
+    
+    //
     self.dzTableView.contentSize = self.commentTableView.contentSize;
     
+    
 }
-
-
-
-//#pragma mark- 键盘通知监测
-//- (void)keyboardWillAppear:(NSNotification *)notification {
-//    
-//    //获取键盘高度
-//    CGFloat duration =  [notification.userInfo[@"UIKeyboardAnimationDurationUserInfoKey"] floatValue];
-//    CGRect keyBoardFrame = [notification.userInfo[@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
-//    
-//    
-////    [UIView animateWithDuration:duration animations:^{
-////        
-////        self.toolBarView.y = CGRectGetMinY(keyBoardFrame) - 49 - 64;
-////
-////    }];
-//    
-//}
 
 - (CSWUserActionSwitchView *)userActionSwitchView {
 
@@ -622,26 +602,26 @@
 
 //    [self.articleDetailTableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];
     
-    
     if (idx == 0) {
         //评论
         self.commentTableView.hidden = NO;
         self.dzTableView.hidden = YES;
-        [self.commentTableView addSubview:self.articleDetailTableView];
-        [self.commentTableView addSubview:self.userActionSwitchView];
+        [self.commentHeaderView  addSubview:self.articleDetailTableView];
+        [self.commentHeaderView  addSubview:self.userActionSwitchView];
 
-        
     } else {
         
         self.commentTableView.hidden = YES;
         self.dzTableView.hidden = NO;
 //        [self.bgScrollView bringSubviewToFront:self.dzTableView];
-        [self.dzHeaderView addSubview:self.articleDetailTableView];
-        [self.dzHeaderView addSubview:self.userActionSwitchView];
+        [self.dzHeaderView  addSubview:self.articleDetailTableView];
+        [self.dzHeaderView  addSubview:self.userActionSwitchView];
 
     }
 
 }
+
+
 
 #pragma tableView -- dataSource
 //--//
@@ -667,7 +647,6 @@
     //点赞
         return 75;
 
-    
     }
 
 }
@@ -695,6 +674,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    //
     if ([tableView isEqual:self.articleDetailTableView]) {
         
         if (indexPath.section == 0) {
@@ -719,8 +699,6 @@
                 cell = [[CSWDaShangCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CSWDaShangCellId"];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 
-                
-                
             }
             cell.recordRoom = self.dsRecordRoom;
             return cell;
@@ -728,14 +706,15 @@
         }
         
     } else if ([tableView isEqual:self.commentTableView]) {
+        //评论的tableView
         
-        if (tableView.contentSize.height < (self.bgScrollView.height + self.articleDetailTableViewHeigth)) {
-            
-            
-            tableView.contentSize = CGSizeMake
-            (SCREEN_WIDTH, self.bgScrollView.height + self.articleDetailTableViewHeigth);
-            
-        }
+//        if (tableView.contentSize.height < (self.bgScrollView.height + self.articleDetailTableViewHeigth)) {
+//            
+//            tableView.contentSize = CGSizeMake
+//            (SCREEN_WIDTH, self.bgScrollView.height + self.articleDetailTableViewHeigth);
+//            
+//        }
+        
         
         CSWCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CSWCommentCellId"];
         if (!cell) {
@@ -747,15 +726,19 @@
         cell.commentLayoutItem = self.commentLayoutItems[indexPath.row];
 
         return cell;
-    } else {
         
-        if (tableView.contentSize.height < (self.bgScrollView.height + self.articleDetailTableViewHeigth)) {
-            
-            
-            tableView.contentSize = CGSizeMake
-            (SCREEN_WIDTH, self.bgScrollView.height + self.articleDetailTableViewHeigth);
-            
-        }
+    } else {
+        //点赞的tableView
+        
+        
+//        if (tableView.contentSize.height < (self.bgScrollView.height + self.articleDetailTableViewHeigth)) {
+//            
+//            
+//            tableView.contentSize = CGSizeMake
+//            (SCREEN_WIDTH, self.bgScrollView.height + self.articleDetailTableViewHeigth);
+//            
+//        }
+        
         //点赞
         CSWDZCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CSWDZCellID"];
         if (!cell) {

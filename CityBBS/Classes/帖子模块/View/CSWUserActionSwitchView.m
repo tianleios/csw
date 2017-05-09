@@ -76,6 +76,8 @@
         self.isFirst = YES;
         //
         self.backgroundColor = [UIColor whiteColor];
+        self.userInteractionEnabled = YES;
+        
         
         CGFloat margin = 15;
 

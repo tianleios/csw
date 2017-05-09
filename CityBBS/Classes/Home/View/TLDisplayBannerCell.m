@@ -12,7 +12,6 @@
 
 @interface TLDisplayBannerCell()
 
-@property (nonatomic, strong) TLBannerView *bannerView;
 
 @end
 

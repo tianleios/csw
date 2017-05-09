@@ -8,6 +8,8 @@
 
 #import "CSWDZCell.h"
 #import "CSWLikeModel.h"
+#import "CSWUserPhotoView.h"
+
 
 @interface CSWDZCell()
 
@@ -90,6 +92,7 @@
     
     //
     [self.photoImageView sd_setImageWithURL:[NSURL URLWithString:[_dzModel.photo convertThumbnailImageUrl]] placeholderImage:USER_PLACEHOLDER_SMALL];
+//    self.photoImageView.userId =  dzModel.
     
     //
     self.nameLbl.text = _dzModel.nickname;

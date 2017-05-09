@@ -19,17 +19,20 @@
 //设置改值后外界只需要 调用reloadData
 @property (nonatomic,weak) TLTableView *tableView;
 
+@property (nonatomic, weak) id tableOrCollectionView;
+
+
 //除start 和 limit 外的其它请求参数
 @property (nonatomic,strong) NSMutableDictionary *parameters;
 - (void)modelClass:(Class)className;
 
-//对得到的每个数据进行加工
+//对得到的每个数据模型进行加工
 @property (nonatomic, copy) id(^dealWithPerModel)(id model);
-
 
 
 - (void)refresh:(void(^)(NSMutableArray *objs,BOOL stillHave))refresh failure:(void(^)(NSError *error))failure;
 
 - (void)loadMore:(void(^)(NSMutableArray *objs,BOOL stillHave))loadMore failure:(void(^)(NSError *error))failure;
+
 
 @end
