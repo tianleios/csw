@@ -8,7 +8,7 @@
 
 #import "CSWCommentCell.h"
 #import "CSWLayoutHelper.h"
-#import "MLLinkLabel.h"
+#import "CSWLinkLabel.h"
 #import "CSWUserPhotoView.h"
 
 @interface CSWCommentCell()
@@ -16,7 +16,7 @@
 @property (nonatomic, strong) CSWUserPhotoView *photoImageView;
 @property (nonatomic, strong) UILabel *nameLbl;
 @property (nonatomic, strong) UILabel *timeLbl;
-@property (nonatomic, strong) MLLinkLabel *commentContentLbl;
+@property (nonatomic, strong) CSWLinkLabel *commentContentLbl;
 
 @end
 
@@ -75,8 +75,7 @@
 //        [self.contentView addSubview:self.commentContentLbl];
 //        self.commentContentLbl.numberOfLines = 0;
         
-        self.commentContentLbl = [[MLLinkLabel alloc] initWithFrame:CGRectZero];
-        self.commentContentLbl.dataDetectorTypes = MLDataDetectorTypeAll;
+        self.commentContentLbl = [[CSWLinkLabel alloc] initWithFrame:CGRectZero];
         self.commentContentLbl.font = [CSWLayoutHelper helper].contentFont;
         self.commentContentLbl.delegate = self;
         self.commentContentLbl.textColor = [UIColor textColor];

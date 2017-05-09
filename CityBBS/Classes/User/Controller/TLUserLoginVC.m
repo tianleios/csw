@@ -112,9 +112,14 @@
                 //登录环信
                 if ([[ChatManager defaultManager] loginWithUserName:userId]) {
                     
+                    //保存用户信息
                     [TLUser user].userId = userId;
                     [TLUser user].token = token;
+                    
+                    //保存用户信息
                     [[TLUser user] saveUserInfo:userInfo];
+                    
+                    //初始化用户信息
                     [[TLUser user] setUserInfoWithDict:userInfo];
                     
                     [[NSNotificationCenter defaultCenter] postNotificationName:kUserLoginNotification object:nil];

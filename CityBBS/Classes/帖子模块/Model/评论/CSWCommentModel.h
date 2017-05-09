@@ -25,13 +25,12 @@
 
 //原生数据
 @property (nonatomic, copy) NSString *code;
-
 @property (nonatomic, copy) NSString *status;
-
 //评论时间
 @property (nonatomic, copy) NSString *commDatetime;
 @property (nonatomic, copy) NSString *content;
-@property (nonatomic, copy) NSString *commer;
+@property (nonatomic, copy) NSString *commer; //userId
+
 @property (nonatomic, copy) NSString *photo;
 @property (nonatomic, copy) NSString *postCode;
 @property (nonatomic, copy) NSString *nickname;

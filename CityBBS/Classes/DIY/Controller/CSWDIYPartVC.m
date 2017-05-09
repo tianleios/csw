@@ -10,19 +10,35 @@
 #import "CSWDIYCell.h"
 #import "CSWVideoModel.h"
 #import "MJRefresh.h"
+#import "CSWWebVC.h"
 
 @interface CSWDIYPartVC ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
 @property (nonatomic, strong) UICollectionView *videCollectionView;
 @property (nonatomic, copy) NSArray <CSWVideoModel *>*videos;
 
+@property (nonatomic, assign) BOOL isFirst;
+
 
 @end
 
 @implementation CSWDIYPartVC
 
+- (void)viewWillAppear:(BOOL)animated {
+
+    [super viewWillAppear:animated];
+    if (self.isFirst) {
+        
+        [self.videCollectionView.mj_header beginRefreshing];
+        self.isFirst = NO;
+    }
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.isFirst = YES;
     
     [self setUpUI];
     
@@ -30,6 +46,8 @@
     TLPageDataHelper *http = [[TLPageDataHelper alloc] init];
     http.code = @"610055";
     http.parameters[@"companyCode"] = [CSWCityManager manager].currentCity.code;
+    http.parameters[@"status"] = @"1";
+
     [http modelClass:[CSWVideoModel class]];
     
     
@@ -94,7 +112,7 @@
     flowLayout.minimumLineSpacing = 5;
     flowLayout.minimumInteritemSpacing = 5;
     
-    flowLayout.itemSize = CGSizeMake((SCREEN_WIDTH - 5 - 10)/2.0, 100);
+    flowLayout.itemSize = CGSizeMake((SCREEN_WIDTH - 5 - 10)/2.0, 130);
     
     //
     UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
@@ -123,12 +141,21 @@
     
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+
+    CSWWebVC *webVC = [[CSWWebVC alloc] init];
+    webVC.url = self.videos[indexPath.row].url;
+    [self.navigationController pushViewController:webVC animated:YES];
+    
+
+}
+
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 
     CSWDIYCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"id" forIndexPath:indexPath];
     
-    cell.backgroundColor = RANDOM_COLOR;
-    
+//    cell.backgroundColor = RANDOM_COLOR;
+    cell.videoModel = self.videos[indexPath.row];
     return cell;
 
 }

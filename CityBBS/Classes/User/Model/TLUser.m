@@ -69,9 +69,11 @@ NSString *const kUserInfoChange = @"kUserInfoChange_zh";
     NSString *userId = [userDefault objectForKey:USER_ID_KEY];
     NSString *token = [userDefault objectForKey:TOKEN_ID_KEY];
     
-        self.userId = userId;
-        self.token = token;
-        [self setUserInfoWithDict:[userDefault objectForKey:USER_INFO_DICT_KEY]];
+    self.userId = userId;
+    self.token = token;
+    
+    //--//
+    [self setUserInfoWithDict:[userDefault objectForKey:USER_INFO_DICT_KEY]];
 
 }
 
@@ -101,10 +103,12 @@ NSString *const kUserInfoChange = @"kUserInfoChange_zh";
 
     self.userId = nil;
     self.token = nil;
+    
     self.mobile = nil;
     self.nickname = nil;
     self.userExt = nil;
     self.tradepwdFlag = nil;
+    self.level = nil;
     
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:USER_ID_KEY];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:TOKEN_ID_KEY];
@@ -117,7 +121,9 @@ NSString *const kUserInfoChange = @"kUserInfoChange_zh";
 - (void)saveUserInfo:(NSDictionary *)userInfo {
 
     [[NSUserDefaults standardUserDefaults] setObject:userInfo forKey:USER_INFO_DICT_KEY];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    //
+//    [[NSUserDefaults standardUserDefaults] synchronize];
     
 }
 
@@ -160,6 +166,7 @@ NSString *const kUserInfoChange = @"kUserInfoChange_zh";
     self.realName = dict[@"realName"];
     self.idNo = dict[@"idNo"];
     self.tradepwdFlag = dict[@"tradepwdFlag"];
+    self.level = dict[@"level"];
     
     NSDictionary *userExt = dict[@"userExt"];
     if (userExt) {
@@ -179,11 +186,29 @@ NSString *const kUserInfoChange = @"kUserInfoChange_zh";
             self.userExt.area = userExt[@"area"];
         }
         
-    }
-    
-    if (dict[@"userExt"][@"test"]) {
+        //性别
+        if (userExt[@"gender"]) {
+            self.userExt.gender = userExt[@"gender"];
+        }
+        
+        //生日
+        if (userExt[@"birthday"]) {
+            self.userExt.birthday = userExt[@"birthday"];
+        }
+        
+        //email
+        if (userExt[@"email"]) {
+            self.userExt.email = userExt[@"email"];
+        }
+        
+        //介绍
+        if (userExt[@"introduce"]) {
+            self.userExt.introduce = userExt[@"introduce"];
+        }
+        
         
     }
+
     
 }
 

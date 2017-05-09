@@ -81,76 +81,121 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"更多"] style:UIBarButtonItemStylePlain target:self action:@selector(goMore)];
     
     
-    //1.根据userId 获取用户信息
-    TLNetworking *http = [TLNetworking new];
-    http.showView = self.view;
-    http.code = @"805256";
-    http.parameters[@"userId"] = self.userId;
-
-    [http postWithSuccess:^(id responseObject) {
+    if(self.userId) {
         
-        //
-        self.currentUser = [TLUser tl_objectWithDictionary:responseObject[@"data"]];
+        //1.根据userId 获取用户信息
+        TLNetworking *http = [TLNetworking new];
+        http.showView = self.view;
+        http.code = @"805256";
+        http.parameters[@"userId"] = self.userId;
         
-        //
-        TLTableView *tableView = [TLTableView tableViewWithframe:CGRectZero delegate:self dataSource:self];
-        [self.view addSubview:tableView];
-        //    tableView.backgroundColor = [UIColor cyanColor];
-        [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsMake(-64, 0, -45, 0));
+        [http postWithSuccess:^(id responseObject) {
+            
+            //
+            self.currentUser = [TLUser tl_objectWithDictionary:responseObject[@"data"]];
+            [self initUI];
+            
+        } failure:^(NSError *error) {
+            
         }];
-        
-        //headerView
-        tableView.tableHeaderView = [self headerView];
-        CGFloat h=  [self.nickNameLbl.font lineHeight];
-        NSAttributedString *femaleString = [NSAttributedString convertImg:[UIImage imageNamed:@"女"] bounds:CGRectMake(0, -3, h - 2, h - 2)];
-        
-        
-        NSMutableAttributedString *nickAttrStr = [[NSMutableAttributedString alloc] initWithString:self.currentUser.nickname ];
-        [nickAttrStr appendAttributedString:femaleString];
-        
-        [self.userPhoto sd_setImageWithURL:[NSURL URLWithString:[self.currentUser.userExt.photo convertImageUrl]] placeholderImage:USER_PLACEHOLDER_SMALL];
-        
-        //
-        self.nickNameLbl.attributedText = nickAttrStr;
-        
-        self.focusLbl.text = [NSString stringWithFormat:@"关注 %@",self.currentUser.totalFollowNum];
-        
-        
-        self.fansLbl.text = [NSString stringWithFormat:@"粉丝 %@",self.currentUser.totalFansNum];
-        
-        self.userIntroduceLbl.text = @"自我介绍";
-        
-        //底部工具栏--我的直接编写资料
-        [self.view addSubview:self.bootoomTooBar];
-        self.bootoomTooBar.y = SCREEN_HEIGHT - 64 - 45;
-        
-        self.navBarImageView=(UIImageView *)self.navigationController.navigationBar.subviews.firstObject;
-        self.navBarImageView.alpha = 0;
-        
-        
-        
-    } failure:^(NSError *error) {
-        
-    }];
-
-
-    return;
-
-//    //初始化数据
-//    if (self.type == CSWUserDetailVCTypeMine) { //我的
-//        
-//
-//        [self userInfoChange];
-//    } else { //其它用户
-//        
-//    
-//    }
     
-
+    } else if (self.nickName) {
     
+        //1.根据userId 获取用户信息
+        TLNetworking *http = [TLNetworking new];
+        http.showView = self.view;
+        http.code = @"805255";
+        http.parameters[@"nickname"] = self.nickName;
+        http.parameters[@"start"] = @"1";
+        http.parameters[@"limit"] = @"1";
+        
+        [http postWithSuccess:^(id responseObject) {
+            
+            //
+            NSArray *users = responseObject[@"data"][@"list"];
+            if (users.count > 0) {
+                
+                self.currentUser = [TLUser tl_objectWithDictionary:users[0]];
+                [self initUI];
+
+            } else {
+            
+                [TLAlert alertWithError:@"该用户不存在"];
+                [self.navigationController popViewControllerAnimated:YES];
+            
+            }
+            
+            
+        } failure:^(NSError *error) {
+            
+        }];
+    
+    } else {
+    
+        [TLAlert alertWithError:@"必须有id 或者 nickName"];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+ 
+    
+    //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoChange) name:kUserInfoChange object:nil];
+  
 }
+
+- (void)initUI {
+    
+    if (!self.currentUser) {
+        NSLog(@"您还没有获取用户的信息");
+        return;
+    }
+    
+    //
+    TLTableView *tableView = [TLTableView tableViewWithframe:CGRectZero delegate:self dataSource:self];
+    [self.view addSubview:tableView];
+    //    tableView.backgroundColor = [UIColor cyanColor];
+    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsMake(-64, 0, -45, 0));
+    }];
+    
+    //headerView
+    tableView.tableHeaderView = [self headerView];
+    CGFloat h=  [self.nickNameLbl.font lineHeight];
+    NSAttributedString *femaleString = [NSAttributedString convertImg:[UIImage imageNamed:@"女"] bounds:CGRectMake(0, -3, h - 2, h - 2)];
+    
+    
+    NSMutableAttributedString *nickAttrStr = [[NSMutableAttributedString alloc] initWithString:self.currentUser.nickname ];
+    [nickAttrStr appendAttributedString:femaleString];
+    
+    [self.userPhoto sd_setImageWithURL:[NSURL URLWithString:[self.currentUser.userExt.photo convertImageUrl]] placeholderImage:USER_PLACEHOLDER_SMALL];
+    
+    //
+    self.nickNameLbl.attributedText = nickAttrStr;
+    self.focusLbl.text = [NSString stringWithFormat:@"关注 %@",self.currentUser.totalFollowNum];
+    
+    
+    self.fansLbl.text = [NSString stringWithFormat:@"粉丝 %@",self.currentUser.totalFansNum];
+    
+    if (self.currentUser.userExt.introduce) {
+        
+        self.userIntroduceLbl.text = self.currentUser.userExt.introduce;
+
+    } else {
+        
+        self.userIntroduceLbl.text = @"该用户还没有留下自我介绍";
+
+    
+    }
+    
+    //底部工具栏--我的直接编写资料
+    [self.view addSubview:self.bootoomTooBar];
+    self.bootoomTooBar.y = SCREEN_HEIGHT - 64 - 45;
+    
+    self.navBarImageView=(UIImageView *)self.navigationController.navigationBar.subviews.firstObject;
+    self.navBarImageView.alpha = 0;
+
+}
+
+
 
 - (void)userInfoChange {
 

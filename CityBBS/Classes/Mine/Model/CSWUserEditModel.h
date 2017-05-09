@@ -15,7 +15,7 @@
 
 
 @property (nonatomic, copy) NSString *url;
-@property (nonatomic, copy) NSString *imageName;
+//@property (nonatomic, copy) NSString *imageName;
 @property (nonatomic, strong) UIImage *img;
 
 

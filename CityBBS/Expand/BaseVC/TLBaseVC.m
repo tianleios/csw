@@ -31,17 +31,17 @@
         
         UIView *view = [[UIView alloc] initWithFrame:self.view.bounds];
         view.backgroundColor = self.view.backgroundColor;
-        UILabel *lbl = [UILabel labelWithFrame:CGRectMake(0, 100, view.width, 50) textAligment:NSTextAlignmentCenter backgroundColor:[UIColor clearColor] font:FONT(18) textColor:[UIColor blackColor]];
+        UILabel *lbl = [UILabel labelWithFrame:CGRectMake(0, 100, view.width, 50) textAligment:NSTextAlignmentCenter backgroundColor:[UIColor clearColor] font:FONT(18) textColor:[UIColor textColor]];
         [view addSubview:lbl];
         lbl.text = title;
         UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(20, lbl.yy + 10, 200, 40)];
         [self.view addSubview:btn];
         btn.titleLabel.font = FONT(15);
-//        [btn setTitleColor:[UIColor zh_themeColor] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor textColor] forState:UIControlStateNormal];
         btn.centerX = view.width/2.0;
         btn.layer.cornerRadius = 5;
         btn.layer.borderWidth = 1;
-//        btn.layer.borderColor = [UIColor zh_themeColor].CGColor;
+        btn.layer.borderColor = [UIColor textColor].CGColor;
         [btn addTarget:self action:@selector(tl_placeholderOperation) forControlEvents:UIControlEventTouchUpInside];
         [btn setTitle:opTitle forState:UIControlStateNormal];
         [view addSubview:btn];

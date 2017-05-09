@@ -46,6 +46,17 @@
     if (self.type == CSWUserEditTypeEmail) {
 
         
+        if ([self.contentTf.text valid]) {
+            
+            self.editModel.content = self.contentTf.text;
+
+        }
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        if (self.done) {
+            self.done();
+        }
+        
     } else {
         
         if (![self.contentTf.text valid]) {

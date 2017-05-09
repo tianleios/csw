@@ -13,6 +13,7 @@
 @property (nonatomic, copy) NSString *nickname;
 @property (nonatomic, copy) NSString *photo;
 @property (nonatomic, copy) NSString *talkDatetime;
+@property (nonatomic, copy) NSString *talker;  //userId
 
 
 

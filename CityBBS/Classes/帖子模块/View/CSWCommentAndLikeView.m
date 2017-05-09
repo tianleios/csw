@@ -8,26 +8,25 @@
 
 #import "CSWCommentAndLikeView.h"
 
-#import "MLLinkLabel.h"
-#import "CSWClickLinkLabel.h"
-
+#import "CSWLinkLabel.h"
 
 @interface CSWCommentAndLikeView()
 
 @property (nonatomic, strong) UIImageView *likeImageView;
 @property (nonatomic, strong) UILabel *likeCountLbl;
-@property (nonatomic, strong) MLLinkLabel *likeLabel;
+
+@property (nonatomic, strong) CSWLinkLabel *likeLabel;
 @property (nonatomic, strong) CALayer *line;
 @property (nonatomic, strong) UIButton *lookMoreCommentBtn;
 
 
-@property (nonatomic, strong) NSMutableArray <CSWClickLinkLabel *>*commentLblRooms;
+@property (nonatomic, strong) NSMutableArray <CSWLinkLabel *>*commentLblRooms;
 
 @end
 
 @implementation CSWCommentAndLikeView
 
-- (NSMutableArray<CSWClickLinkLabel *> *)commentLblRooms {
+- (NSMutableArray<CSWLinkLabel *> *)commentLblRooms {
 
     if (!_commentLblRooms) {
         
@@ -71,10 +70,8 @@
         [self addSubview:self.likeCountLbl];
         
         //更多点赞列表
-        self.likeLabel = [[MLLinkLabel alloc] initWithFrame:CGRectZero];
-        self.likeLabel.dataDetectorTypes = MLDataDetectorTypeAll;
+        self.likeLabel = [[CSWLinkLabel alloc] initWithFrame:CGRectZero];
         self.likeLabel.font = layout.likeFont;
-        self.likeLabel.delegate = self;
         self.likeLabel.textAlignment = NSTextAlignmentLeft;
         //        self.likeLabel.textColor = [UIColor colorWithHexString:@"#7d0000"];
         self.likeLabel.textColor = [UIColor textColor];
@@ -152,7 +149,7 @@
         //先移除，视图
         [self.commentLblRooms enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            if ([obj isKindOfClass:[CSWClickLinkLabel class]]) {
+            if ([obj isKindOfClass:[CSWLinkLabel class]]) {
                 
                 [obj removeFromSuperview];
                 
@@ -165,7 +162,8 @@
             
             //创建,差值
             for (NSInteger i = 0; i < targetCount - currentCount; i ++) {
-                CSWClickLinkLabel *linkLable = [[CSWClickLinkLabel alloc] init];
+                
+                CSWLinkLabel *linkLable = [[CSWLinkLabel alloc] init];
                 linkLable.textColor = [UIColor textColor];
                 linkLable.font = [CSWLayoutHelper helper].commentFont;
                 linkLable.numberOfLines = 0;
@@ -178,7 +176,7 @@
         //评论, 创建Lbl -- 把lbl存储起来
         [_layoutItem.commentFrames enumerateObjectsUsingBlock:^(NSValue * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            CSWClickLinkLabel *linkLable = self.commentLblRooms[idx];
+            CSWLinkLabel *linkLable = self.commentLblRooms[idx];
             linkLable.frame = [obj CGRectValue];
             linkLable.attributedText = _layoutItem.attributedComments[idx];
             linkLable.hidden = NO;
@@ -202,7 +200,7 @@
     
         [self.commentLblRooms enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            if ([obj isKindOfClass:[CSWClickLinkLabel class]]) {
+            if ([obj isKindOfClass:[CSWLinkLabel class]]) {
                 
                 obj.hidden = YES;
                 

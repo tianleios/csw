@@ -38,7 +38,16 @@
 
 - (NSString *)commentUserNickname {
 
-    return self.nickname;
+    if (self.nickname) {
+        
+        return self.nickname;
+
+    } else {
+        
+        return @"未知用户";
+
+    
+    }
 
 }
 

@@ -163,38 +163,13 @@ static MLLinkLabel * kProtypeLabel() {
             *stop = YES;
         }
         
-        //            if (obj.replyCommentUserId) { //双人回复
-        //
-        ////                singleCommentAttrStr  = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ 回复 %@: %@",obj.userId,obj.reUserId,obj.reCommentText] ];
-        ////
-        ////                [singleCommentAttrStr addAttributes:@{
-        ////                                                      NSLinkAttributeName : obj.userId
-        ////                                                      } range:NSMakeRange(0, obj.userId.length)];
-        ////
-        ////                [singleCommentAttrStr addAttributes:@{
-        ////                                                      NSLinkAttributeName : obj.reUserId
-        ////                                                      } range:NSMakeRange(obj.userId.length + 2 + 2, obj.reUserId.length)];
-        //
-        //
-        //
-        //            } else {//单评论
-        //
-        //                singleCommentAttrStr  = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@: %@",obj.commentUserNickname,obj.commentContent]];
-        //
-        //                [singleCommentAttrStr addAttributes:@{
-        //                                                      NSLinkAttributeName : obj.commentUserId
-        //                                                      } range:NSMakeRange(0, obj.commentUserId.length)];
-        //
-        //
-        //            }
-        
         //显示但评论
         NSMutableAttributedString *singleCommentAttrStr = nil;
         NSString *commetnStr = [NSString stringWithFormat:@"%@: %@",obj.commentUserNickname,obj.commentContent];
         singleCommentAttrStr  = [[NSMutableAttributedString alloc] initWithString:commetnStr];
         
         [singleCommentAttrStr addAttributes:@{
-                                              NSLinkAttributeName : obj.commentUserId
+                                              NSLinkAttributeName : obj.commentUserNickname
                                               } range:NSMakeRange(0, obj.commentUserNickname.length)];
         
         //添加评论

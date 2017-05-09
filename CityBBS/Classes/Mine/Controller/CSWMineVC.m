@@ -67,10 +67,21 @@
 //
 - (void)userInfoChange {
     
-    [self.headerView.userPhoto sd_setImageWithURL:[NSURL URLWithString:[TLUser user].userExt.photo] placeholderImage:[UIImage imageNamed:@"user_placeholder"]];
+    NSString *userPhotoStr = [[TLUser user].userExt.photo convertThumbnailImageUrl];
+    
+    //
+    [self.headerView.userPhoto sd_setImageWithURL:[NSURL URLWithString:userPhotoStr] placeholderImage:USER_PLACEHOLDER_SMALL];
+     
+     
     self.headerView.nameLbl.text = [TLUser user].nickname;
-    self.headerView.levelLbl.text = @"论坛绞肉机";
+    
+    //论坛-绞肉机
+    self.headerView.levelLbl.text = [TLUser user].level;
+    
+    //
     self.headerView.numberArray = @[@1,@323,@3332,@111];
+    
+    //
     
 }
 
@@ -80,11 +91,8 @@
     if (type == MineHeaderSeletedTypeDefault) {
         //个人中心
         CSWUserDetailVC *userDetailVC = [[CSWUserDetailVC alloc] init];
-//        userDetailVC.type = CSWUserDetailVCTypeMine;
+        userDetailVC.userId = [TLUser user].userId;
         [self.navigationController pushViewController:userDetailVC animated:YES];
-        
-//        CSWUserDetailEditVC *userDetailVC = [[CSWUserDetailEditVC alloc] init];
-//        [self.navigationController pushViewController:userDetailVC animated:YES];
         
         
     } else {

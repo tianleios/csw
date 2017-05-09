@@ -63,10 +63,11 @@ void TLLog(NSString *format, ...) {
             
             
         case RunEnvDev: {
+
+          self.qiniuDomain = @"http://oigx51fc5.bkt.clouddn.com";
             
-//            self.qiniuDomain = @"http://oi99f4peg.bkt.clouddn.com";
-//            self.chatKey = @"tianleios#cd-test";
-            self.qiniuDomain = @"http://oigx51fc5.bkt.clouddn.com";
+//        self.qiniuDomain = @"http://oofr2abh1.bkt.clouddn.com/";
+
             self.chatKey = @"tianleios#cd-test";
             self.systemCode = @"CD-CCSW000008";
             self.addr = @"http://121.43.101.148:8901";

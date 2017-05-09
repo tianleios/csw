@@ -15,6 +15,9 @@
 #import "TLTextView.h"
 #import "QNUploadManager.h"
 #import "TLUploadManager.h"
+#import "QNResponseInfo.h"
+#import "QNConfiguration.h"
+
 
 @interface CSWUserDetailEditVC ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -47,31 +50,56 @@
     
     editTableView.tableFooterView = self.textView;
     //
-    CSWUserEditModel *phootModel = [CSWUserEditModel new];
-    phootModel.title = @"头像";
-    phootModel.imageName = @"user_placeholder";
+    CSWUserEditModel *photoModel = [CSWUserEditModel new];
+    photoModel.title = @"头像";
+    if ([TLUser user].userExt.photo) {
+        
+        photoModel.url = [[TLUser user].userExt.photo convertThumbnailImageUrl];
+ 
+    } else {
+        
+        photoModel.url = @"没有头像";
+
+    
+    }
     
     //昵称
     CSWUserEditModel *nickNameModel = [CSWUserEditModel new];
     nickNameModel.title = @"昵称";
-    nickNameModel.content = [TLUser user].nickname;
+    nickNameModel.content = [TLUser user].nickname ;
     
     //生日
     CSWUserEditModel *birthdayModel = [CSWUserEditModel new];
     birthdayModel.title = @"生日";
-    birthdayModel.content = @"请选择生日";
+    birthdayModel.content =  [TLUser user].userExt.birthday ? : @"请选择生日";
     
     //性别
     CSWUserEditModel *sexModel = [CSWUserEditModel new];
     sexModel.title = @"性别";
-    sexModel.content = @"请选择性别";
+    if ([TLUser user].userExt.gender) {
+        
+        sexModel.content = [[TLUser user].userExt.gender isEqualToString:@"1"] ? @"男" : @"女";
+        
+    } else {
+        
+        sexModel.content = @"请选择性别";
+
+    
+    }
     
     //昵称
     CSWUserEditModel *emailModel = [CSWUserEditModel new];
     emailModel.title = @"邮箱";
-    emailModel.content = @"请填写邮箱";
+    emailModel.content =[TLUser user].userExt.email ? : @"请填写邮箱";
     
-    self.models = @[phootModel,nickNameModel,birthdayModel,sexModel,emailModel];
+    //自我介绍
+    if ([TLUser user].userExt.introduce) {
+        self.textView.text = [TLUser user].userExt.introduce;
+    }
+    
+    
+    
+    self.models = @[photoModel,nickNameModel,birthdayModel,sexModel,emailModel];
     
     
     __weak typeof(self) weakSelf = self;
@@ -84,37 +112,56 @@
         getUploadToken.parameters[@"token"] = [TLUser user].token;
         [getUploadToken postWithSuccess:^(id responseObject) {
             
-            [MBProgressHUD showHUDAddedTo:weakSelf.view animated:YES];
-            QNUploadManager *uploadManager = [[QNUploadManager alloc] init];
+//            [MBProgressHUD showHUDAddedTo:weakSelf.view animated:YES];
+            
+            [TLProgressHUD showWithStatus:@""];
+            
+            //
+            
+            QNUploadManager *uploadManager = [[QNUploadManager alloc] initWithConfiguration:[QNConfiguration build:^(QNConfigurationBuilder *builder) {
+                builder.zone = [QNZone zone2];
+                
+            }]];
+          
             NSString *token = responseObject[@"data"][@"uploadToken"];
             
             UIImage *image = info[@"UIImagePickerControllerOriginalImage"];
             NSData *imgData = UIImageJPEGRepresentation(image, 0.4);
             
             [uploadManager putData:imgData key:[TLUploadManager imageNameByImage:image] token:token complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
                 
-                //设置头像
-                TLNetworking *http = [TLNetworking new];
-                http.showView = weakSelf.view;
-                http.code = USER_CHANGE_USER_PHOTO;
-                http.parameters[@"userId"] = [TLUser user].userId;
-                http.parameters[@"photo"] = key;
-                http.parameters[@"token"] = [TLUser user].token;
-                [http postWithSuccess:^(id responseObject) {
+                [TLProgressHUD dismiss];
+                
+                if (!info.error) {
                     
-                    [TLAlert alertWithInfo:@"修改头像成功"];
-                    [TLUser user].userExt.photo = key;
+                    //设置头像
+                    TLNetworking *http = [TLNetworking new];
+                    http.showView = weakSelf.view;
+                    http.code = USER_CHANGE_USER_PHOTO;
+                    http.parameters[@"userId"] = [TLUser user].userId;
+                    http.parameters[@"photo"] = key;
+                    http.parameters[@"token"] = [TLUser user].token;
+                    [http postWithSuccess:^(id responseObject) {
+                        
+                        [TLAlert alertWithInfo:@"修改头像成功"];
+                        [TLUser user].userExt.photo = key;
+                        
+                        weakSelf.models[0].img = img;
+                        [weakSelf.editTableView reloadData];
+                        
+                        //
+                        [[TLUser user] updateUserInfo];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kUserInfoChange object:nil];
+                        
+                    } failure:^(NSError *error) {
+                        
+                        
+                    }];
                     
-                     weakSelf.models[0].img = img;
-                    [weakSelf.editTableView reloadData];
-                    
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kUserInfoChange object:nil];
-                    
-                } failure:^(NSError *error) {
-                    
-                    
-                }];
+                } else {
+                
+                    [TLAlert alertWithError:@"图片上传失败"];
+                }
                 
                 
             } option:nil];
@@ -139,6 +186,65 @@
 #pragma mark- 资料保存
 - (void)save {
     
+    NSString *birthdayStr = self.models[2].content;
+    NSString *sexStr = self.models[3].content;
+    NSString *emailStr = self.models[4].content;
+
+    
+    
+    if ([birthdayStr isEqualToString:@"请选择生日"]) {
+        
+        [TLAlert alertWithInfo:@"请填写生日"];
+        return;
+    }
+    
+    if ([sexStr isEqualToString:@"请选则性别"]) {
+        
+        [TLAlert alertWithInfo:@"请选择性别"];
+        return;
+    }
+    
+    if ([emailStr isEqualToString:@"请填写邮箱"]) {
+        
+        [TLAlert alertWithInfo:@"请填写邮箱"];
+        return;
+    }
+    
+    if (![self.textView.text valid]) {
+        
+        [TLAlert alertWithInfo:@"请填写自我介绍"];
+        return;
+    }
+    
+    
+    //昵称修改上传不在此处
+    
+    //用户扩展信息修改
+    TLNetworking *userExtHttp = [TLNetworking new];
+    userExtHttp.showView = self.view;
+    userExtHttp.code = @"805074";
+    userExtHttp.parameters[@"userId"] = [TLUser user].userId;
+    userExtHttp.parameters[@"token"] = [TLUser user].token;
+    
+    //--//
+    userExtHttp.parameters[@"gender"] = [sexStr isEqualToString:@"男"] ? @"1" : @"0";
+    
+    userExtHttp.parameters[@"birthday"] = birthdayStr;
+    userExtHttp.parameters[@"email"] = emailStr;
+    userExtHttp.parameters[@"introduce"] = self.textView.text;
+
+    [userExtHttp postWithSuccess:^(id responseObject) {
+        
+        [TLAlert alertWithInfo:@"保存成功"];
+        [self.navigationController popViewControllerAnimated:YES];
+        
+        //发出用户信息变更通知
+        [[NSNotificationCenter defaultCenter] postNotificationName:kUserInfoChange object:nil];
+        
+    } failure:^(NSError *error) {
+        
+        
+    }];
     
     
 }
@@ -147,7 +253,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
     CSWUserEditModel *model = self.models[indexPath.row];
-    if (model.url || model.imageName) { //选择图片
+    if (model.url) { //选择图片
         
         [self.imgPicker picker];
         
@@ -192,8 +298,6 @@
                 }]];
                 
                 
-                // 由于它是一个控制器 直接modal出来就好了
-                
                 [self presentViewController:alertController animated:YES completion:nil];
                 
             }break;
@@ -208,7 +312,10 @@
                     [tableView reloadData];
                     
                 }];
+                
+                //
                 [self.navigationController pushViewController:editVC animated:YES];
+                //
                 
             }break;
                 
@@ -303,7 +410,7 @@
     CSWUserEditModel *model = self.models[indexPath.row];
     
     cell.titleLbl.text = model.title;
-    if (model.url || model.imageName) {
+    if (model.url || model.img) {
         
         //优先URl
         //img
@@ -311,11 +418,11 @@
         if (model.img) {
             
             cell.userPhoto.image = model.img;
-
-        } else if(model.imageName) {
-        
-            cell.userPhoto.image = [UIImage imageNamed:model.imageName];
-
+            
+        } else if (model.url) {
+            
+            [cell.userPhoto sd_setImageWithURL:[NSURL URLWithString:model.url] placeholderImage:USER_PLACEHOLDER_SMALL];
+            
         }
         
         

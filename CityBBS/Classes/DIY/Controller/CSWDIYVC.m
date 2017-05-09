@@ -66,8 +66,9 @@
     http.parameters[@"companyCode"] = [CSWCityManager manager].currentCity.code;
     //1 可见 0 不可见
     http.parameters[@"status"] = @"1";
+    
     http.parameters[@"start"] = @"1";
-    http.parameters[@"limit"] = @"20";
+    http.parameters[@"limit"] = @"2";
 
     
     [http postWithSuccess:^(id responseObject) {
@@ -95,8 +96,11 @@
             self.overAllVC.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64 - 49);
         
         } else { //无视频
+            
+            //此处应提醒用户
         
         }
+        
         
     } failure:^(NSError *error) {
         

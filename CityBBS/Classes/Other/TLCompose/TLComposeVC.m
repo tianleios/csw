@@ -23,6 +23,7 @@
 #import "TLImagePickerController.h"
 #import "CSWSmallPlateModel.h"
 #import "QNUploadManager.h"
+#import "QNConfiguration.h"
 
 #define TITLE_MARGIN 10
 #define TEXT_MARGIN 5
@@ -388,8 +389,11 @@
             //
             NSString *token = responseObject[@"data"][@"uploadToken"];
             //
-            QNUploadManager *qnUoloadManange = [[QNUploadManager alloc] init];
-            
+            QNUploadManager *qnUoloadManange = [[QNUploadManager alloc] initWithConfiguration:[QNConfiguration build:^(QNConfigurationBuilder *builder) {
+                
+                builder.zone = [QNZone zone2];
+                
+            }]];
             //可直接上传PHAsset 以后优化
             
             [self.photoChooseView.imgs enumerateObjectsUsingBlock:^(UIImage * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -467,6 +471,7 @@
             
         }
         [TLAlert alertHUDWithMsg:@"发布成功"];
+        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
         
     } failure:^(NSError *error) {
         

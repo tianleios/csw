@@ -10,7 +10,7 @@
 
 @interface TLBaseVC : UIViewController
 
-@property (nonatomic,strong) UIView *tl_placeholderView;
+@property (nonatomic, strong) UIView *tl_placeholderView;
 
 - (UIView *)tl_placholderViewWithTitle:(NSString *)title opTitle:(NSString *)opTitle;
 - (void)tl_placeholderOperation;

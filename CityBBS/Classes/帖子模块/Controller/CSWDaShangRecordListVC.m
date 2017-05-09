@@ -8,6 +8,8 @@
 
 #import "CSWDaShangRecordListVC.h"
 #import "CSWDSRecord.h"
+#import "CSWDaShangUserCell.h"
+
 @interface CSWDaShangRecordListVC ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, copy) NSArray <CSWDSRecord *>*recordRoom;
@@ -101,34 +103,19 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCellId"];
+    CSWDaShangUserCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCellId"];
     if (!cell) {
         
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UITableViewCellId"];
+        cell = [[CSWDaShangUserCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UITableViewCellId"];
         
-        cell.textLabel.textColor = [UIColor textColor];
-        cell.textLabel.font = FONT(13);
-        UIView *line = [[UIView alloc] init];
-        line.backgroundColor = [UIColor lineColor];
-        [cell addSubview:line];
-        [line mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(cell.mas_left);
-            make.width.equalTo(cell.mas_width);
-            make.height.mas_equalTo(LINE_HEIGHT);
-            make.bottom.equalTo(cell.mas_bottom);
-        }];
-        
-        cell.imageView.layer.cornerRadius = 17;
-        cell.imageView.layer.masksToBounds = YES;
+     
     }
     
     //
     CSWDSRecord *record = self.recordRoom[indexPath.row];
-    
-    [cell.imageView sd_setImageWithURL:[NSURL URLWithString:[record.photo convertImageUrl]]
-                      placeholderImage:USER_PLACEHOLDER_SMALL];
-    
-    cell.textLabel.text = record.nickname;
+    cell.userNameLbl.text = record.nickname;
+    [cell.userPhoto sd_setImageWithURL:
+     [NSURL URLWithString:[record.photo convertThumbnailImageUrl]]];
     
     //
     return cell;

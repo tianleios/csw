@@ -23,14 +23,17 @@
     self = [super initWithFrame:frame];
     if (self) {
         
+        self.backgroundColor = [UIColor whiteColor];
         self.displayImageView = [[UIImageView alloc] init];
+        self.displayImageView.clipsToBounds = YES;
         [self.contentView addSubview:self.displayImageView];
+        self.displayImageView.contentMode = UIViewContentModeScaleAspectFill;
         [self.displayImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             
             make.left.equalTo(self.contentView.mas_left);
             make.right.equalTo(self.contentView.mas_right);
             make.top.equalTo(self.contentView.mas_top);
-            make.height.mas_equalTo(80);
+            make.height.mas_equalTo(100);
             
         }];
         
@@ -46,28 +49,31 @@
             make.left.equalTo(self.contentView.mas_left).offset(5);
             make.right.equalTo(self.contentView.mas_right).offset(-5);
             make.top.equalTo(self.displayImageView.mas_bottom).offset(5);
+            make.height.mas_equalTo(20);
 //            make.bottom.equalTo(self.contentView.mas_bottom).offset(-5);
         }];
-        self.introduceLbl.text = @"你们在家";
-//        if (random()%2 == 1) {
-//            self.introduceLbl.text = @"fjkaljdfalkjfklajsdlkfjkla计费的卡拉胶付款啦";
-//
-//        } else {
-//            
-//            self.introduceLbl.text = @"fjkaljdfalkjfklfjkaljdfalkjfklajsdlkfjklafjkaljdfalkjfklajsdlkfjklaajsdlkfjkla计费的卡拉胶付款啦";
-//
-//        }
+
         
         
         //
-        [self.contentView  mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo((SCREEN_WIDTH - 5)/2.0);
-            make.bottom.equalTo(self.introduceLbl.mas_bottom);
-            make.top.equalTo(self.displayImageView.mas_top);
-        }];
+//        [self.contentView  mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.width.mas_equalTo((SCREEN_WIDTH - 5)/2.0);
+//            make.bottom.equalTo(self.introduceLbl.mas_bottom);
+//            make.top.equalTo(self.displayImageView.mas_top);
+//        }];
         
     }
     return self;
+}
+
+- (void)setVideoModel:(CSWVideoModel *)videoModel {
+
+    _videoModel = videoModel;
+    
+    [self.displayImageView sd_setImageWithURL:[NSURL URLWithString:[_videoModel.pic convertImageUrl]] placeholderImage:nil];
+    self.introduceLbl.text = _videoModel.name;
+
+
 }
 
 - (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {

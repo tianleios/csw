@@ -59,6 +59,9 @@
     
         [[TLUser user] initUserData];
         
+        //异步跟新用户信息
+        [[TLUser user] updateUserInfo];
+        
     };
     
     //

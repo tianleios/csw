@@ -14,6 +14,11 @@
 
 @property (nonatomic, assign) BOOL isFirst;
 
+@property (nonatomic, copy) NSString *currentProvince;
+@property (nonatomic, copy) NSString *currentCity;
+@property (nonatomic, copy) NSString *currentArea;
+
+
 @end
 
 @implementation CSWLoadRootVC
@@ -27,20 +32,7 @@
     [super viewDidLoad];
     //定位
     self.isFirst = YES;
-    
-//    [SVProgressHUD showErrorWithStatus:@"出现错误"];
-//    [SVProgressHUD dismissWithDelay:3 completion:^{
-//        
-//    }];
-//    
-//    [TLAlert alertWithMsg:@"msg"];
-//    
-//    [TLAlert alertWithInfo:@"info"];
-//    [TLAlert alertWithError:@"error"];
-//    [TLAlert alertWithSucces:@"success"];
-//
-//    
-//    return;
+
     //
     UIImageView *bgImageView = [[UIImageView alloc] init];
     [self.view addSubview:bgImageView];
@@ -115,46 +107,7 @@
         
         
         [self goWithProvience:placemark.administrativeArea ? : @"" city:placemark.locality ? : placemark.administrativeArea area:placemark.subLocality];
-        
-////        [TLProgressHUD showWithStatus:@"努力加载站点中"];
-//        TLNetworking *http = [TLNetworking new];
-//        http.code = @"806012";
-//        http.parameters[@"province"] = placemark.administrativeArea ? : @"";
-//        
-//        NSString *city = placemark.locality ? : placemark.administrativeArea;
-//        http.parameters[@"city"] = city;
-////        [city substringWithRange:NSMakeRange(0, city.length - 1)];
-//        http.parameters[@"area"] = placemark.subLocality;
-//        
-//        
-//        [http postWithSuccess:^(id responseObject) {
-//            
-//            //当前站点
-//            [CSWCityManager manager].currentCity = [CSWCity tl_objectWithDictionary:responseObject[@"data"]];
-//        
-//            
-//            //获取站点详情
-//            [[CSWCityManager manager] getCityDetailBy:[CSWCityManager manager].currentCity success:^{
-//                
-//                [TLProgressHUD dismiss];
-//                [UIApplication sharedApplication].keyWindow.rootViewController = [[TLTabBarController alloc] init];
-//                
-//            } failure:^{
-//                
-//                [TLProgressHUD dismiss];
-//                
-//            }];
-//
-//         
-//            
-//        } failure:^(NSError *error) {
-//            
-//            [TLProgressHUD dismiss];
-//            [TLAlert alertWithError:@"获取站点失败"];
-//
-//        }];
-        
-        
+ 
     }];
     
 }
@@ -163,7 +116,12 @@
 //根据省市区加载站点
 - (void)goWithProvience:(NSString *)province city:(NSString *)city area:(NSString *)area {
 
-    //        [TLProgressHUD showWithStatus:@"努力加载站点中"];
+    //
+    self.currentProvince= province;
+    self.currentCity = city;
+    self.currentArea = area;
+    
+    //[TLProgressHUD showWithStatus:@"努力加载站点中"];
     TLNetworking *http = [TLNetworking new];
     http.code = @"806012";
     http.parameters[@"province"] = province;
@@ -175,12 +133,16 @@
     
     [http postWithSuccess:^(id responseObject) {
         
+        //移除可能出现的站位
+        [self.tl_placeholderView removeFromSuperview];
+        
         //当前站点
         [CSWCityManager manager].currentCity = [CSWCity tl_objectWithDictionary:responseObject[@"data"]];
         
-        
         //获取站点详情
-        [[CSWCityManager manager] getCityDetailBy:[CSWCityManager manager].currentCity success:^{
+        CSWCity *city = [CSWCityManager manager].currentCity;
+        
+        [[CSWCityManager manager] getCityDetailBy:city success:^{
             
             [TLProgressHUD dismiss];
             [UIApplication sharedApplication].keyWindow.rootViewController = [[TLTabBarController alloc] init];
@@ -188,18 +150,33 @@
         } failure:^{
             
             [TLProgressHUD dismiss];
+            [TLAlert alertWithError:@"获取站点失败"];
+            
+            
+            //应该出现重新加载,按钮
+            [self tl_placholderViewWithTitle:@"获取站点失败" opTitle:@"重新获取"];
+            [self.view addSubview:self.tl_placeholderView];
             
         }];
-        
-        
         
     } failure:^(NSError *error) {
         
         [TLProgressHUD dismiss];
         [TLAlert alertWithError:@"获取站点失败"];
         
+        
+        //应该出现重新加载,按钮
+        [self tl_placholderViewWithTitle:@"获取站点失败" opTitle:@"重新获取"];
+        [self.view addSubview:self.tl_placeholderView];
+        
     }];
 
+}
+
+- (void)tl_placeholderOperation {
+
+
+    [self goWithProvience:self.currentProvince city:self.currentProvince area:self.currentArea];
 
 }
 

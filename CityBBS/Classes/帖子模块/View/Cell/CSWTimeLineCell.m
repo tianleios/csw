@@ -14,8 +14,9 @@
 #import "CSWClickLinkLabel.h"
 #import "CSWCommentAndLikeView.h"
 #import "CSWUserPhotoView.h"
+#import "CSWLinkLabel.h"
 
-@interface CSWTimeLineCell()<MLLinkLabelDelegate>
+@interface CSWTimeLineCell()
 
 @property (nonatomic, strong) CSWUserPhotoView *photoImageView;
 
@@ -25,7 +26,7 @@
 
 //--//
 @property (nonatomic, strong) UILabel *titleLbl; //标题lbl
-@property (nonatomic, strong) MLLinkLabel *contentLbl; //内容lbl
+@property (nonatomic, strong) CSWLinkLabel *contentLbl; //内容lbl
 @property (nonatomic, strong) PYPhotosView *photosView; //内容lbl
 
 //工具栏
@@ -113,10 +114,8 @@
         [self.contentView addSubview:self.titleLbl];
         
         //内容
-        self.contentLbl = [[MLLinkLabel alloc] initWithFrame:CGRectMake(self.titleLbl.x, self.titleLbl.yy + 7, w, 50)];
-        self.contentLbl.dataDetectorTypes = MLDataDetectorTypeAll;
+        self.contentLbl = [[CSWLinkLabel alloc] initWithFrame:CGRectMake(self.titleLbl.x, self.titleLbl.yy + 7, w, 50)];
         self.contentLbl.font = layout.contentFont;
-        self.contentLbl.delegate = self;
         self.contentLbl.textColor = [UIColor textColor];
         self.contentLbl.numberOfLines = 0;
         self.contentLbl.lineHeightMultiple = 1.2;
@@ -201,6 +200,10 @@
         
     } else {
     
+//        http://oigx51fc5.bkt.clouddn.com/IOS_1494321384751461_750_1334.jpg?imageMogr2/auto-orient/strip/thumbnail/300x300/quality/60!
+        
+//        http://oigx51fc5.bkt.clouddn.com/ANDROID_1494317121774_580_580.jpg?imageMogr2/auto-orient/strip/thumbnail/300x300/quality/60!
+        
         self.photosView.hidden = YES;
     
     }
