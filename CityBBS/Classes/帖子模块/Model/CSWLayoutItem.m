@@ -146,7 +146,11 @@ static MLLinkLabel * kProtypeLabel() {
     
 }
 
-//--//
+
+/**
+ 处理评论
+ @param contentW 评论背景的宽度，评论lbl的宽度为 contentW- 2*间隔
+ */
 - (void)setCommentContentWithTop:(CGFloat)top leftMargin:(CGFloat)leftMargin contetnW:(CGFloat)contentW layoutHelper:(CSWLayoutHelper *)layoutHelper {
 
 
@@ -156,7 +160,7 @@ static MLLinkLabel * kProtypeLabel() {
     __block CGFloat lastCommentTop = top;
 //    lastCommentTop = layoutHelper.commentMargin;
     
-    
+    //遍历评论列表
     [_article.commentList enumerateObjectsUsingBlock:^(CSWCommentModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if (idx > 4) {
@@ -166,23 +170,36 @@ static MLLinkLabel * kProtypeLabel() {
         //显示但评论
         NSMutableAttributedString *singleCommentAttrStr = nil;
         NSString *commetnStr = [NSString stringWithFormat:@"%@: %@",obj.commentUserNickname,obj.commentContent];
-        singleCommentAttrStr  = [[NSMutableAttributedString alloc] initWithString:commetnStr];
+        
+         ////////----/////////////
+        //处理emjio
+        singleCommentAttrStr = [[TLEmoticonHelper convertEmoticonStrToAttributedString:commetnStr] mutableCopy];
+        
+        MLLinkLabel *testLabel = kProtypeLabel();
+        testLabel.attributedText = singleCommentAttrStr;
+        
+        //计算每一条所需要的宽高
+        CGSize perCommentContenSize = [testLabel sizeThatFits:CGSizeMake(contentW - 2*layoutHelper.commentMargin , MAXFLOAT)];
         
         [singleCommentAttrStr addAttributes:@{
                                               NSLinkAttributeName : obj.commentUserNickname
                                               } range:NSMakeRange(0, obj.commentUserNickname.length)];
         
-        //添加评论
+        //计算出评论的富文本并添加
         [self.attributedComments addObject: singleCommentAttrStr];
         
-        //添加评论的frame
-        CGSize size = [singleCommentAttrStr.string calculateStringSize:CGSizeMake(contentW - 2*layoutHelper.commentMargin, MAXFLOAT) font:layoutHelper.commentFont];
         
-        CGRect commentFrame = CGRectMake(layoutHelper.commentMargin, lastCommentTop, size.width, size.height);
+    
+        
+        
+//        //添加评论的frame
+//        CGSize size = [singleCommentAttrStr.string calculateStringSize:CGSizeMake(contentW - 2*layoutHelper.commentMargin, MAXFLOAT) font:layoutHelper.commentFont];
+        
+        CGRect commentFrame = CGRectMake(layoutHelper.commentMargin, lastCommentTop, perCommentContenSize.width, perCommentContenSize.height);
         [self.commentFrames addObject:[NSValue valueWithCGRect:commentFrame]];
         
         //为下一次计算准备
-        lastCommentTop = lastCommentTop +  size.height + layoutHelper.commentMargin;
+        lastCommentTop = lastCommentTop +  perCommentContenSize.height + layoutHelper.commentMargin;
         
     }];
     

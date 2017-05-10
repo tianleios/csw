@@ -128,7 +128,7 @@
     
 #pragma mark- 时间线刷新时间
     TLPageDataHelper *timeLinePageData = [[TLPageDataHelper alloc] init];
-    timeLinePageData.code = @"610130";
+    timeLinePageData.code = ARTICLE_QUERY;
     timeLinePageData.parameters[@"companyCode"] =[CSWCityManager manager].currentCity.code;
     timeLinePageData.tableView = self.timeLineTableView;
     [timeLinePageData modelClass:[CSWArticleModel class]];

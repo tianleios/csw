@@ -18,7 +18,10 @@
         self.backgroundColor = [UIColor whiteColor];
         //
         self.plateImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 15, 50, 50)];
+        self.plateImageView.contentMode = UIViewContentModeScaleAspectFill;
+        self.plateImageView.clipsToBounds = YES;
         [self addSubview:self.plateImageView];
+        //
        
         //
         self.nameLbl = [UILabel labelWithFrame:CGRectZero

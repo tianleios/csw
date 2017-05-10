@@ -27,19 +27,26 @@
 //#define IMG_UPLOAD_CODE @"001700"//
 #define IMG_UPLOAD_CODE @"807900"//
 
-
-
-
-//商品相关
-#define GOODS_ADD @"808010" //增加商品
-#define ORDER_QUERY @"808070" //订单查询
-
-//店铺相关
-#define SHOP_ADD @"808201" //增加店铺
-#define SHOP_RE_ADD @"808203" //增加店铺
-
 //
 #define USER_INFO @"805056"
+
+
+//帖子
+#define ARTICLE_QUERY @"610130" //帖子查询
+
+
+
+////商品相关
+//#define GOODS_ADD @"808010" //增加商品
+//#define ORDER_QUERY @"808070" //订单查询
+//
+////店铺相关
+//#define SHOP_ADD @"808201" //增加店铺
+//#define SHOP_RE_ADD @"808203" //增加店铺
+//
+
+
+
 
 
 #endif /* apiCodeHeader_h */

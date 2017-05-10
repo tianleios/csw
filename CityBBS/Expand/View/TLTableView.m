@@ -197,6 +197,15 @@
 //        _placeholderV = _placeholderView();
 //        [self addSubview:_placeholderV];
         
+        if (self.tableHeaderView) {
+            if (self.placeHolderView.y <  self.tableHeaderView.height) {
+                
+                   self.placeHolderView.y =   self.placeHolderView.y  + self.tableHeaderView.height;
+            }
+         
+            
+        }
+        
         [self addSubview:self.placeHolderView];
         self.placeHolderView.width = self.width;
         self.placeHolderView.centerX = self.width/2.0;

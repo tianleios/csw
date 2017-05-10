@@ -163,6 +163,7 @@
         
         CSWPlateDetailVC *plateDetailVC = [[CSWPlateDetailVC alloc] init];
         
+        plateDetailVC.plateCode = self.smallPlateRoom[indexPath.row].code;
         [self.navigationController pushViewController:plateDetailVC animated:YES];
 
         [tableView deselectRowAtIndexPath:indexPath animated:YES];

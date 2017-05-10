@@ -111,7 +111,7 @@
     
     //加载头条帖子
     TLPageDataHelper *homeData = [[TLPageDataHelper alloc] init];
-    homeData.code = @"610130";
+    homeData.code = ARTICLE_QUERY;
     homeData.parameters[@"companyCode"] =[CSWCityManager manager].currentCity.code;
     [homeData modelClass:[CSWArticleModel class]];
     self.homeHeadlineArticlePageData = homeData;

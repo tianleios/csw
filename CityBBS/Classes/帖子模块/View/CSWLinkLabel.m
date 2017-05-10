@@ -90,6 +90,7 @@
 
 - (void)initAction {
 
+    self.lineHeightMultiple = 1.2f;
     self.dataDetectorTypes = MLDataDetectorTypeAll;
     self.delegate = self;
 

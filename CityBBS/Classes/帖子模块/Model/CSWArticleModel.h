@@ -12,12 +12,12 @@
 
 @interface CSWArticleModel : TLBaseModel
 
-//@property (nonatomic, copy) NSString *title;
-//@property (nonatomic, copy) NSString *content;
-//@property (nonatomic, copy) NSArray *photos;
-//
-//@property (nonatomic, strong) NSArray *dzArray;
-//@property (nonatomic, strong) NSArray<CSWCommentModel *> *comments;
+//status
+//A 草稿中 B 已发布 C1 不信任待审批 C2 被举报待审批 D 审批通过 E 待回收 F 被过滤;
+//传CC查询不信任和被举报待审核
+//传BD查询已发布和审核通过
+
+//location A 置顶 B 精华 C 头条
 
 
 @property (nonatomic, copy) NSString *code;
