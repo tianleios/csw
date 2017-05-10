@@ -7,6 +7,7 @@
 //
 
 #import "CSWSJCell.h"
+#import "CSWAccountFlowModel.h"
 
 @interface CSWSJCell()
 
@@ -19,6 +20,18 @@
 @end
 
 @implementation CSWSJCell
+
+- (void)setFlowModel:(CSWAccountFlowModel *)flowModel {
+
+    _flowModel = flowModel;
+    
+    self.typeLbl.text = _flowModel.bizNote;
+    self.awardLbl.text = [_flowModel.transAmount convertToSimpleRealMoney];
+    self.timeLbl.text = [_flowModel.createDatetime convertDate];
+    
+
+}
+
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
 
@@ -81,9 +94,7 @@
         
     }
     
-    self.typeLbl.text = @"发帖奖励";
-    self.awardLbl.text = @"+4";
-    self.timeLbl.text = @"2100-32-32";
+
 
     return self;
     

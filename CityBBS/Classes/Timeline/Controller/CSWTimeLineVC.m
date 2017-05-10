@@ -27,7 +27,8 @@
 @property (nonatomic, strong) NSMutableArray <CSWLayoutItem *>*timeLineLayoutItemRoom;
 
 @property (nonatomic, assign) BOOL isFirst;
-@property (nonatomic, strong) TLNetworking *timelinHttp;
+//@property (nonatomic, strong) TLNetworking *timelinHttp;
+@property (nonatomic, strong) TLPageDataHelper *timeLinePageDataHelper;
 
 @end
 
@@ -67,6 +68,10 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange) name:kCityChangeNotification object:nil];
+    
+    
     //left-search
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"headline_search"] style:UIBarButtonItemStylePlain target:self action:@selector(search)];
     
@@ -95,7 +100,7 @@
     [bgScrollView addSubview:self.timeLineTableView];
     self.timeLineTableView.placeHolderView = [TLPlaceholderView placeholderViewWithText:@"暂无帖子"];
 
-    //添加
+    //论坛版块相关
     CSWForumVC *forumVC = [[CSWForumVC alloc] init];
     [self addChildViewController:forumVC];
     forumVC.view.frame = CGRectMake(SCREEN_WIDTH, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64 - 49);
@@ -127,6 +132,7 @@
     timeLinePageData.parameters[@"companyCode"] =[CSWCityManager manager].currentCity.code;
     timeLinePageData.tableView = self.timeLineTableView;
     [timeLinePageData modelClass:[CSWArticleModel class]];
+    self.timeLinePageDataHelper = timeLinePageData;
     
     //数据转换
     [timeLinePageData setDealWithPerModel:^(id model){
@@ -154,9 +160,9 @@
         
     }];
     
-    [self.timeLineTableView addRefreshAction:^{
+    [self.timeLineTableView addLoadMoreAction:^{
         
-        [timeLinePageData refresh:^(NSMutableArray *objs, BOOL stillHave) {
+        [timeLinePageData loadMore:^(NSMutableArray *objs, BOOL stillHave) {
             
             weakSelf.timeLineLayoutItemRoom = objs;
             [weakSelf.timeLineTableView reloadData_tl];
@@ -169,40 +175,18 @@
     }];
   
     
-    
-//    [self.timeLineTableView addRefreshAction:^{
-//        
-//        weakSelf.timelinHttp = [TLNetworking new];
-//        weakSelf.timelinHttp.code = @"610130";
-//        weakSelf.timelinHttp.parameters[@"companyCode"] =[CSWCityManager manager].currentCity.code;;
-////
-//        weakSelf.timelinHttp.parameters[@"start"] = @"1";
-//        weakSelf.timelinHttp.parameters[@"limit"] = @"10";
-//        
-//        [weakSelf.timelinHttp postWithSuccess:^(id responseObject) {
-//            
-//            NSArray *arrticleArr =  responseObject[@"data"][@"list"];
-//            [arrticleArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//                
-//              CSWArticleModel *model =  [CSWArticleModel tl_objectWithDictionary:obj];
-//                CSWLayoutItem *layoutItem = [CSWLayoutItem new];
-//              layoutItem.type = CSWArticleLayoutTypeDefault;
-//              layoutItem.article = model;
-//              [weakSelf.timeLineLayoutItemRoom addObject:layoutItem];
-//                
-//            }];
-//            
-//            [weakSelf.timeLineTableView reloadData_tl];
-//            [weakSelf.timeLineTableView endRefreshHeader];
-//            
-//        } failure:^(NSError *error) {
-//            
-//            
-//        }];
-//        
-//    }];
+
     
 
+}
+
+
+- (void)cityChange {
+
+     self.timeLinePageDataHelper
+         .parameters[@"companyCode"] =[CSWCityManager manager].currentCity.code;
+     [self.timeLineTableView beginRefreshing];
+    
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -239,7 +223,6 @@
     
     
     TLComposeVC *composeVC = [[TLComposeVC alloc] init];
-    
     TLNavigationController *nav = [[TLNavigationController alloc] initWithRootViewController:composeVC];
     [self presentViewController:nav animated:YES completion:nil];
     

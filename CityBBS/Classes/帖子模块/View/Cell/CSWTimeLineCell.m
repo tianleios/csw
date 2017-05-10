@@ -69,6 +69,17 @@
                                      textColor:[UIColor themeColor]];
         [self.contentView addSubview:self.plateLbl];
         
+        //关注按钮,详情显示关注按钮，外部列表显示来自哪个版块
+        self.focusBtn = [[UIButton alloc] init];
+        [self.contentView addSubview:self.focusBtn];
+        self.focusBtn.layer.cornerRadius = 4;
+        self.focusBtn.layer.borderColor = [UIColor themeColor].CGColor;
+        self.focusBtn.layer.borderWidth = 1;
+        [self.focusBtn setTitleColor:[UIColor themeColor] forState:UIControlStateNormal];
+        self.focusBtn.titleLabel.font = FONT(13);
+        //
+        
+        
         [self.nameLbl mas_makeConstraints:^(MASConstraintMaker *make) {
             
             make.top.equalTo(self.photoImageView.mas_top).offset(10);
@@ -85,6 +96,7 @@
             
         }];
         
+        //--//
         //时间
         self.timeLbl = [UILabel labelWithFrame:CGRectZero
                                    textAligment:NSTextAlignmentLeft
@@ -101,6 +113,17 @@
             
         }];
         
+        [self.focusBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(60);
+            make.height.mas_equalTo(25);
+            make.right.equalTo(self.contentView.mas_right).offset(-15);
+            make.centerY.equalTo(self.photoImageView.mas_centerY);
+            
+        }];
+    
+        
+        
+//--------头部以下-----------//
         CSWLayoutHelper *layout = [CSWLayoutHelper helper];
         
         //帖子标题
@@ -174,6 +197,34 @@
     self.nameLbl.text= _layoutItem.article.nickname;
     self.photoImageView.userId = _layoutItem.article.publisher;
     
+    //是详情，还是外部列表
+    if (_layoutItem.type == CSWArticleLayoutTypeArticleDetail) {
+        
+        self.focusBtn.hidden = NO;
+        self.plateLbl.hidden = YES;
+        if (/*已关注*/0) {
+            
+            [self.focusBtn setTitle:@"取消关注" forState:UIControlStateNormal];
+            [self.focusBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(65);
+            }];
+            
+        } else {
+        
+            [self.focusBtn setTitle:@"+关注" forState:UIControlStateNormal];
+            [self.focusBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(50);
+            }];
+
+        }
+        
+    } else  {
+        
+        self.focusBtn.hidden = YES;
+        self.plateLbl.hidden = NO;
+
+    }
+    
     
     //--//
     NSMutableAttributedString *plateStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"来自%@",_layoutItem.article.plateName]];
@@ -191,7 +242,7 @@
     
     
     //3.图片浏览
-    if (_layoutItem.isHasPhoto) {
+    if (/*有图*/_layoutItem.isHasPhoto) {
         
         self.photosView.hidden = NO;
         self.photosView.frame = _layoutItem.phototsFrame;
@@ -199,10 +250,7 @@
         self.photosView.originalUrls = _layoutItem.article.originalUrls;
         
     } else {
-    
-//        http://oigx51fc5.bkt.clouddn.com/IOS_1494321384751461_750_1334.jpg?imageMogr2/auto-orient/strip/thumbnail/300x300/quality/60!
-        
-//        http://oigx51fc5.bkt.clouddn.com/ANDROID_1494317121774_580_580.jpg?imageMogr2/auto-orient/strip/thumbnail/300x300/quality/60!
+
         
         self.photosView.hidden = YES;
     

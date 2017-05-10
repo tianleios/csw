@@ -10,16 +10,37 @@
 #import "CSWMallVC.h"
 #import "CSWSJRuleVC.h"
 #import "CSWSJCell.h"
+#import "CSWAccountFlowModel.h"
 
 @interface CSWMoneyRewardFlowVC ()<UITableViewDelegate,UITableViewDataSource>
+
+@property (nonatomic, strong) TLTableView *flowTableView;
+@property (nonatomic, copy) NSArray <CSWAccountFlowModel *> *flowModels;
+@property (nonatomic, assign) BOOL isFirst;
 
 @end
 
 @implementation CSWMoneyRewardFlowVC
 
+
+- (void)viewWillAppear:(BOOL)animated {
+
+
+    [super viewWillAppear:animated];
+    if (self.isFirst) {
+        
+        self.isFirst = NO;
+        [self.flowTableView beginRefreshing];
+    }
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"赏金详情";
+    
+    self.isFirst = YES;
+    
     //赏金商城
     UIButton *goMallBtn = [self btnWithFram:CGRectMake(0, 0, SCREEN_WIDTH/2.0, 60) imgName:@"mine_积分商城" title:@"积分商城"];
     [self.view addSubview:goMallBtn];
@@ -31,7 +52,6 @@
     [sjBtn addTarget:self action:@selector(goSJ) forControlEvents:UIControlEventTouchUpInside];
     
     //
-    
     UIView *line = [[UIView alloc] init];
     line.backgroundColor = [UIColor lineColor];
     [self.view addSubview:line];
@@ -44,30 +64,84 @@
     
     
     TLTableView *tableView = [TLTableView tableViewWithframe:CGRectZero delegate:self dataSource:self];
+    self.flowTableView = tableView;
     [self.view addSubview:tableView];
+    
+    
+    tableView.placeHolderView = [TLPlaceholderView placeholderViewWithText:@"暂无记录"];
     tableView.rowHeight = 45;
     [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsMake(70, 0, 0, 0));
     }];
 
     
+    TLPageDataHelper *pageDateHelper = [[TLPageDataHelper alloc] init];
+    pageDateHelper.code = @"802524";
+    pageDateHelper.tableView = self.flowTableView;
+    //
+    pageDateHelper.parameters[@"userId"] = [TLUser user].userId;
+    pageDateHelper.parameters[@"token"] = [TLUser user].token;
+//  accountNumber = A2017050812285008914;
+    
+    
+    
+    pageDateHelper.parameters[@"accountNumber"] = @"A2017050812285008914";
+    
+    
+  [pageDateHelper modelClass:[CSWAccountFlowModel class]];
+    
+    //--//
+    __weak typeof(self) weakself = self;
+    [self.flowTableView addRefreshAction:^{
+        
+        [pageDateHelper refresh:^(NSMutableArray *objs, BOOL stillHave) {
+            
+            weakself.flowModels = objs;
+            [weakself.flowTableView reloadData_tl];
+            
+        } failure:^(NSError *error) {
+            
+        }];
+        
+    }];
+    
+    
+    [self.flowTableView addLoadMoreAction:^{
+        
+        [pageDateHelper loadMore:^(NSMutableArray *objs, BOOL stillHave) {
+            
+//          weakself.users = objs;
+            weakself.flowModels = objs;
+            [weakself.flowTableView reloadData_tl];
+            
+        } failure:^(NSError *error) {
+            
+        }];
+        
+    }];
+    
+    
     
 }
 
 
+//--//
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
-    return 10;
+    return self.flowModels.count;
 }
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     CSWSJCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CSWSJCellID"];
     if (!cell) {
         
         cell = [[CSWSJCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CSWSJCellID"];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
     }
     
+    cell.flowModel = self.flowModels[indexPath.row];
     return cell;
 
 }
@@ -88,9 +162,6 @@
 
 
 
-
-
-
 - (UIButton *)btnWithFram:(CGRect)frame imgName:(NSString *)imgName title:(NSString *)title {
 
     UIButton *goMallBtn = [[UIButton alloc] initWithFrame:frame];
@@ -103,19 +174,6 @@
     return goMallBtn;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

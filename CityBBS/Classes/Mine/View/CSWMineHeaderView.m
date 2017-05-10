@@ -105,6 +105,7 @@
                 make.top.equalTo(btn.mas_top).offset(10);
             }];
             [self.lbls addObject:numLbl];
+            numLbl.text = @"--";
             
             //
             UILabel *typeNameLbl = [UILabel labelWithFrame:CGRectZero
@@ -145,6 +146,45 @@
 
 }
 
+- (void)setArticelNum:(NSNumber *)articelNum {
+
+    _articelNum = articelNum;
+    
+    self.lbls[0].text = [NSString stringWithFormat:@"%@",_articelNum];
+
+}
+
+- (void)setFocusNum:(NSNumber *)focusNum {
+
+    _focusNum = focusNum;
+    
+    self.lbls[1].text = [NSString stringWithFormat:@"%@",_focusNum];
+
+}
+
+
+- (void)setFansNum:(NSNumber *)fansNum {
+
+    _fansNum = fansNum;
+    self.lbls[2].text = [NSString stringWithFormat:@"%@",_fansNum];
+
+}
+
+
+- (void)setSjNumText:(NSString *)sjNumText {
+
+    _sjNumText = sjNumText;
+    self.lbls[3].text = _sjNumText;
+
+
+}
+
+
+
+
+
+
+//
 - (void)setNumberArray:(NSArray *)numberArray {
 
     _numberArray = numberArray;

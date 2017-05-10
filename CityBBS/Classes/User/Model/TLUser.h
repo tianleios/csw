@@ -37,8 +37,8 @@
 
 @property (nonatomic, copy) NSString *remark;
 
-@property (nonatomic, copy) NSString *totalFansNum;
-@property (nonatomic, copy) NSString *totalFollowNum;
+@property (nonatomic, strong) NSNumber *totalFansNum;
+@property (nonatomic, strong) NSNumber *totalFollowNum;
 
 @property (nonatomic, copy) NSString *updateDatetime;
 @property (nonatomic, copy) NSString *updater;

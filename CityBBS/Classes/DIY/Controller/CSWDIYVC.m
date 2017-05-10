@@ -59,6 +59,16 @@
     [super viewDidLoad];
 //    self.title = @"DIY";
     
+    //
+    [self initData];
+    
+    //城市切换
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange) name:kCityChangeNotification object:nil];
+}
+
+
+- (void)initData {
+
     //1.判断有一个视频还是很多视频
     TLNetworking *http = [TLNetworking new];
     http.showView = self.view;
@@ -69,9 +79,11 @@
     
     http.parameters[@"start"] = @"1";
     http.parameters[@"limit"] = @"2";
-
+    
     
     [http postWithSuccess:^(id responseObject) {
+        
+        [self.tl_placeholderView removeFromSuperview];
         
         //一个视频
         NSArray <CSWVideoModel *>*arr = [CSWVideoModel tl_objectArrayWithDictionaryArray:responseObject[@"data"][@"list"]];
@@ -92,28 +104,47 @@
             [self addChildViewController:self.overAllVC];
             [self.view addSubview:self.overAllVC.view];
             
-
+            
             self.overAllVC.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64 - 49);
-        
+            
         } else { //无视频
             
             //此处应提醒用户
-        
+            [TLAlert alertWithInfo:@"暂无视频"];
+            
         }
         
         
     } failure:^(NSError *error) {
         
+        
+        [self tl_placholderViewWithTitle:@"加载失败" opTitle:@"重新加载"];
+        [self.view addSubview:self.tl_placeholderView];
+        
+        
     }];
+
     
-    //城市切换
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange) name:kCityChangeNotification object:nil];
+}
+
+- (void)tl_placeholderOperation {
+
+    [self initData];
+    
 }
 
 - (void)cityChange {
 
+    //
+    [self.partVC removeFromParentViewController];
+    [self.partVC.view removeFromSuperview];
     
-
+    //
+    [self.overAllVC removeFromParentViewController];
+    [self.overAllVC.view removeFromSuperview];
+    
+    //
+    [self initData];
 
 }
 

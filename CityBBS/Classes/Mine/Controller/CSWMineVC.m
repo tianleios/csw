@@ -24,6 +24,10 @@
 
 @property (nonatomic, strong) CSWMineHeaderView *headerView;
 @property (nonatomic, strong) TLSettingGroup *group;
+@property (nonatomic, strong) TLTableView *mineTableView;
+
+@property (nonatomic, assign) BOOL isFirst;
+
 @end
 
 @implementation CSWMineVC
@@ -32,8 +36,14 @@
     [super viewWillAppear:animated];
 
     [self.navigationController setNavigationBarHidden:NO animated:YES];
-//    self.navigationController.navigationBar.alpha = 0;
+
+    if (self.isFirst) {
+        
+        [self.mineTableView beginRefreshing];
+        self.isFirst = NO;
+    }
     
+    //--//
 }
 
 
@@ -41,6 +51,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"我的";
+    
+    self.isFirst = YES;
     
     TLTableView *mineTableView = [TLTableView groupTableViewWithframe:CGRectZero
                                                         delegate:self
@@ -50,9 +62,11 @@
 //        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
 //    }];
     mineTableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64 - 49);
-    
     mineTableView.rowHeight = 45;
+    self.mineTableView = mineTableView;
     
+    
+    //tableview的header
     //headerView
     CSWMineHeaderView *mineHeaderView = [[CSWMineHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 210)];
     mineTableView.tableHeaderView = mineHeaderView;
@@ -61,8 +75,69 @@
     
     //
     [self userInfoChange];
+    //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoChange) name:kUserInfoChange object:nil];
+    
+    
+    __weak typeof(self) weakself = self;
+    //添加刷新行为
+    [mineTableView addRefreshAction:^{
+        
+        //1.刷新用户信息
+        [[TLUser user] updateUserInfo];
+        
+        //2.获取帖子数目
+        //NO_A 非草稿状态，BD 已发布和审核通过 CC 待审核
+        TLNetworking *http = [TLNetworking new];
+        http.code = @"610150";
+        http.parameters[@"userId"] = [TLUser user].userId;
+        http.parameters[@"status"] = @"BD";
+        [http postWithSuccess:^(id responseObject) {
+            
+           NSNumber *totalNum = responseObject[@"data"];
+            
+           //
+            weakself.headerView.articelNum = totalNum;
+            [weakself.mineTableView endRefreshHeader];
+            
+        } failure:^(NSError *error) {
+            
+            [weakself.mineTableView endRefreshHeader];
+            
+        }];
+        
+        
+        //--//
+        //刷新赏金
+        TLNetworking *sjHttp = [TLNetworking new];
+        sjHttp.code = @"802503";
+        sjHttp.parameters[@"userId"] = [TLUser user].userId;
+        sjHttp.parameters[@"token"] = [TLUser user].token;
+        [sjHttp postWithSuccess:^(id responseObject) {
+            
+            NSArray <NSDictionary *> *arr = responseObject[@"data"];
+            [arr enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                if ([obj[@"currency"] isEqualToString:@"JF"]) {
+                    
+                    weakself.headerView.sjNumText = [obj[@"amount"] convertToRealMoney];
+                }
+                
+            }];
+            
+            
+            
+        } failure:^(NSError *error) {
+            
+            
+        }];
+
+
+        
+    }];
+    
 }
+
 
 //
 - (void)userInfoChange {
@@ -79,8 +154,8 @@
     self.headerView.levelLbl.text = [TLUser user].level;
     
     //
-    self.headerView.numberArray = @[@1,@323,@3332,@111];
-    
+    self.headerView.focusNum = [TLUser user].totalFansNum;
+    self.headerView.fansNum = [TLUser user].totalFollowNum;
     //
     
 }
@@ -92,6 +167,7 @@
         //个人中心
         CSWUserDetailVC *userDetailVC = [[CSWUserDetailVC alloc] init];
         userDetailVC.userId = [TLUser user].userId;
+        
         [self.navigationController pushViewController:userDetailVC animated:YES];
         
         
@@ -101,7 +177,7 @@
             case 0: {//帖子
             
                 CSWUserDetailVC *userDetailVC = [[CSWUserDetailVC alloc] init];
-//                userDetailVC.type = CSWUserDetailVCTypeMine;
+                userDetailVC.userId = [TLUser user].userId;
                 [self.navigationController pushViewController:userDetailVC animated:YES];
                 
             }
@@ -110,6 +186,7 @@
             case 1: {//关注
                 
                 CSWFansVC *fansVC = [[CSWFansVC alloc] init];
+                fansVC.type = CSWReleationTypeFocus;
                 [self.navigationController pushViewController:fansVC animated:YES];
                 
             }
@@ -118,6 +195,7 @@
             case 2: {//粉丝
                 
                 CSWFansVC *fansVC = [[CSWFansVC alloc] init];
+                fansVC.type = CSWReleationTypeFans;
                 [self.navigationController pushViewController:fansVC animated:YES];
                 
             }

@@ -31,6 +31,8 @@
 @property (nonatomic, strong) UIButton *titleBtn;
 @property (nonatomic, strong) UILabel *currentCityLbl;
 @property (nonatomic, copy) NSArray <CSWArticleModel *> *headlineArticles;
+@property (nonatomic, strong) TLPageDataHelper *homeHeadlineArticlePageData;
+
 
 @property (nonatomic, assign) BOOL isFirst;
 
@@ -105,11 +107,14 @@
     //当前城市
     self.currentCityLbl.text = [CSWCityManager manager].currentCity.name;
     
+    
+    
     //加载头条帖子
     TLPageDataHelper *homeData = [[TLPageDataHelper alloc] init];
     homeData.code = @"610130";
     homeData.parameters[@"companyCode"] =[CSWCityManager manager].currentCity.code;
     [homeData modelClass:[CSWArticleModel class]];
+    self.homeHeadlineArticlePageData = homeData;
     
     
     __weak typeof(self) weakSelf = self;
@@ -125,13 +130,13 @@
             if (!stillHave) {
                 
                 [weakSelf.homeCollectionView.mj_footer endRefreshingWithNoMoreData];
-
+                
             }
             
         } failure:^(NSError *error) {
             
             [weakSelf.homeCollectionView.mj_header endRefreshing];
-
+            
         }];
         
     }];
@@ -146,22 +151,23 @@
             if (stillHave) {
                 
                 [weakSelf.homeCollectionView.mj_footer endRefreshing];
-
+                
             } else {
-            
+                
                 [weakSelf.homeCollectionView.mj_footer endRefreshingWithNoMoreData];
-
+                
             }
-
+            
             
         } failure:^(NSError *error) {
             
             [weakSelf.homeCollectionView.mj_footer endRefreshing];
-
+            
             
         }];
         
     }];
+  
   
  
 }
@@ -183,6 +189,8 @@
     [self.homeCollectionView registerClass:[TLFunc8Cell class] forCellWithReuseIdentifier:[TLFunc8Cell reuseId]];
     [self.homeCollectionView registerClass:[TLArticleCell class] forCellWithReuseIdentifier:[TLArticleCell reuseId]];
     
+    
+    //
     //显示模型
     self.groups = [[NSMutableArray alloc] init];
     
@@ -235,11 +243,19 @@
         TLChangeCityVC *changeCityVC = [[TLChangeCityVC alloc] init];
         changeCityVC.changeCity = ^(CSWCity *city){
             
+            //切换成功
             [CSWCityManager manager].currentCity = city;
             self.currentCityLbl.text = [CSWCityManager manager].currentCity.name;
-            [self.homeCollectionView reloadData];
+            
+            //--//
+            self.homeHeadlineArticlePageData.parameters[@"companyCode"] =[CSWCityManager manager].currentCity.code;
+            
+            //--//
+            [self.homeCollectionView.mj_header beginRefreshing];
+//          [self.homeCollectionView reloadData];
             
         };
+        
         //--//
         TLNavigationController *nav = [[TLNavigationController alloc] initWithRootViewController:changeCityVC];
         nav.navigationBar.barTintColor = [UIColor whiteColor];

@@ -8,6 +8,14 @@
 
 #import "TLBaseVC.h"
 
+typedef NS_ENUM(NSUInteger, CSWReleationType) {
+    CSWReleationTypeFans = 0,
+    CSWReleationTypeFocus = 1
+};
+
+
 @interface CSWFansVC : TLBaseVC
+
+@property (nonatomic, assign) CSWReleationType type;
 
 @end

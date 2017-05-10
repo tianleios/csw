@@ -329,6 +329,8 @@
 		2EABB1571E77BDAF00FD2A68 /* CSWTimeLineVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EABB1561E77BDAF00FD2A68 /* CSWTimeLineVC.m */; };
 		2EB021671E83B7D900991F78 /* CSWSJRuleVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB021661E83B7D900991F78 /* CSWSJRuleVC.m */; };
 		2EB0216A1E83BC1A00991F78 /* CSWSJCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB021691E83BC1A00991F78 /* CSWSJCell.m */; };
+		2EE1995B1EC2E01400F35B62 /* CSWRelationUserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE1995A1EC2E01400F35B62 /* CSWRelationUserModel.m */; };
+		2EE1995E1EC2F1BA00F35B62 /* CSWAccountFlowModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE1995D1EC2F1BA00F35B62 /* CSWAccountFlowModel.m */; };
 		79B8414366990370B2E167C3 /* libPods-CityBBS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00E9F737182A35C66A3AEA4A /* libPods-CityBBS.a */; };
 /* End PBXBuildFile section */
 
@@ -968,6 +970,10 @@
 		2EB021661E83B7D900991F78 /* CSWSJRuleVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWSJRuleVC.m; sourceTree = "<group>"; };
 		2EB021681E83BC1A00991F78 /* CSWSJCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWSJCell.h; sourceTree = "<group>"; };
 		2EB021691E83BC1A00991F78 /* CSWSJCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWSJCell.m; sourceTree = "<group>"; };
+		2EE199591EC2E01400F35B62 /* CSWRelationUserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWRelationUserModel.h; sourceTree = "<group>"; };
+		2EE1995A1EC2E01400F35B62 /* CSWRelationUserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWRelationUserModel.m; sourceTree = "<group>"; };
+		2EE1995C1EC2F1BA00F35B62 /* CSWAccountFlowModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWAccountFlowModel.h; sourceTree = "<group>"; };
+		2EE1995D1EC2F1BA00F35B62 /* CSWAccountFlowModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWAccountFlowModel.m; sourceTree = "<group>"; };
 		626EB6FF8CB264869FFDD743 /* Pods-CityBBS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityBBS.release.xcconfig"; path = "Pods/Target Support Files/Pods-CityBBS/Pods-CityBBS.release.xcconfig"; sourceTree = "<group>"; };
 		B01BAB57D36E23B637CCE73A /* Pods-CityBBS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityBBS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CityBBS/Pods-CityBBS.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2545,6 +2551,10 @@
 			children = (
 				2E0E18CA1E7BC78D00079648 /* CSWUserEditModel.h */,
 				2E0E18CB1E7BC78D00079648 /* CSWUserEditModel.m */,
+				2EE199591EC2E01400F35B62 /* CSWRelationUserModel.h */,
+				2EE1995A1EC2E01400F35B62 /* CSWRelationUserModel.m */,
+				2EE1995C1EC2F1BA00F35B62 /* CSWAccountFlowModel.h */,
+				2EE1995D1EC2F1BA00F35B62 /* CSWAccountFlowModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2935,6 +2945,7 @@
 				2E9539F01E6BE91400668E0F /* EMCDDeviceManagerBase.m in Sources */,
 				2E9539FD1E6BE91400668E0F /* MWZoomingScrollView.m in Sources */,
 				2E0E18BD1E7B8E6900079648 /* TLUserExt.m in Sources */,
+				2EE1995E1EC2F1BA00F35B62 /* CSWAccountFlowModel.m in Sources */,
 				2E953A461E6BE91400668E0F /* EaseFacialView.m in Sources */,
 				2E9539EB1E6BE91400668E0F /* EMAudioRecorderUtil.m in Sources */,
 				2E3E16201EC0135A00C41AEF /* CSWDaShangRecordListVC.m in Sources */,
@@ -3065,6 +3076,7 @@
 				2E0E18C61E7BC25100079648 /* CSWUserDetailEditVC.m in Sources */,
 				2E953A291E6BE91400668E0F /* EaseEmoji.m in Sources */,
 				2E953A4C1E6BE91400668E0F /* Foundation+Log.m in Sources */,
+				2EE1995B1EC2E01400F35B62 /* CSWRelationUserModel.m in Sources */,
 				2E45DAA71E80FAE700DD3532 /* NSDate+TLAdd.m in Sources */,
 				2E953A211E6BE91400668E0F /* NSDate+Category.m in Sources */,
 				2E9539E51E6BE91400668E0F /* AppDelegate+Chat.m in Sources */,

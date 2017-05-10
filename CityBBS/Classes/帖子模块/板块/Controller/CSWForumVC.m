@@ -77,6 +77,7 @@
     }];
     
     
+    //左侧大类
     __weak typeof(self) weakSelf = self;
     self.leftTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         
@@ -142,8 +143,17 @@
     }];
     
     
+   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange) name:kCityChangeNotification object:nil];
 }
 
+
+
+#pragma mark- 城市切换
+- (void)cityChange {
+
+    [self.leftTableView.mj_header beginRefreshing];
+    
+}
 
 #pragma mark-- delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

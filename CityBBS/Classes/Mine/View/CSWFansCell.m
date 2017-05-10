@@ -7,12 +7,13 @@
 //
 
 #import "CSWFansCell.h"
+#import "CSWRelationUserModel.h"
 
 @interface CSWFansCell()
 
 @property (nonatomic, strong) UIImageView *userPhoto;
 @property (nonatomic, strong) UILabel *nameLbl;
-@property (nonatomic, strong) UILabel *numLbl;
+//@property (nonatomic, strong) UILabel *numLbl;
 
 
 @end
@@ -49,27 +50,27 @@
                                           textColor:[UIColor themeColor]];
         [self.contentView addSubview:self.nameLbl];
         
-        //
-        self.numLbl = [UILabel labelWithFrame:CGRectZero
-                                  textAligment:NSTextAlignmentLeft
-                               backgroundColor:[UIColor whiteColor]
-                                          font:FONT(12)
-                                     textColor:[UIColor colorWithHexString:@"#999999"]];
-        [self.contentView addSubview:self.numLbl];
+//        //
+//        self.numLbl = [UILabel labelWithFrame:CGRectZero
+//                                  textAligment:NSTextAlignmentLeft
+//                               backgroundColor:[UIColor whiteColor]
+//                                          font:FONT(12)
+//                                     textColor:[UIColor colorWithHexString:@"#999999"]];
+//        [self.contentView addSubview:self.numLbl];
         
         
         //约束
         [self.nameLbl mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.userPhoto.mas_right).offset(10);
-            make.top.equalTo(self.userPhoto.mas_top).offset(2);
+            make.centerY.equalTo(self.userPhoto.mas_centerY);
             
         }];
         
-        [self.numLbl mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.nameLbl.mas_left);
-            make.top.equalTo(self.nameLbl.mas_bottom).offset(8);
-            //make.bottom.equalTo(self.contentView.mas_bottom).offset(-5);
-        }];
+//        [self.numLbl mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.equalTo(self.nameLbl.mas_left);
+//            make.top.equalTo(self.nameLbl.mas_bottom).offset(8);
+//            //make.bottom.equalTo(self.contentView.mas_bottom).offset(-5);
+//        }];
         
         [self.userPhoto mas_makeConstraints:^(MASConstraintMaker *make) {
             
@@ -81,19 +82,30 @@
         }];
     }
     
-    [self data];
     return self;
 
 }
 
-- (void)data {
+- (void)setUser:(CSWRelationUserModel *)user {
 
+    _user = user;
     
-    self.userPhoto.backgroundColor = [UIColor orangeColor];
-    self.nameLbl.text = @"潮汐猎人";
-    self.numLbl.text = @"232万";
-
+    if (user.photo) {
+       
+        //--//
+        NSString *urlStr = [user.photo convertThumbnailImageUrl];
+        [self.userPhoto sd_setImageWithURL:[NSURL URLWithString:urlStr] placeholderImage:USER_PLACEHOLDER_SMALL];
+        
+    } else {
+    
+        self.userPhoto.image = USER_PLACEHOLDER_SMALL;
+    
+    }
+ 
+    self.nameLbl.text = user.nickname;
+    
 }
+
 
 - (void)awakeFromNib {
     [super awakeFromNib];

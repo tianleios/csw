@@ -11,6 +11,11 @@
 
 @interface CSWTimeLineCell : UITableViewCell
 
+//关注按钮
+@property (nonatomic, strong) UIButton *focusBtn;
+
+
+
 @property (nonatomic, strong) CSWLayoutItem *layoutItem;
 
 @end

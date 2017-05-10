@@ -103,7 +103,8 @@ NSString *const kUserInfoChange = @"kUserInfoChange_zh";
 
     self.userId = nil;
     self.token = nil;
-    
+    self.totalFansNum = nil;
+    self.totalFollowNum = nil;
     self.mobile = nil;
     self.nickname = nil;
     self.userExt = nil;
@@ -167,6 +168,11 @@ NSString *const kUserInfoChange = @"kUserInfoChange_zh";
     self.idNo = dict[@"idNo"];
     self.tradepwdFlag = dict[@"tradepwdFlag"];
     self.level = dict[@"level"];
+    
+    //--//
+    self.totalFollowNum = dict[@"totalFollowNum"];
+    self.totalFansNum = dict[@"totalFansNum"];
+
     
     NSDictionary *userExt = dict[@"userExt"];
     if (userExt) {

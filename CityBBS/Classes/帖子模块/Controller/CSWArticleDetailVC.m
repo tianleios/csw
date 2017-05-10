@@ -102,15 +102,34 @@
         return;
     }
     
+    //0.增加帖子阅读量
+    TLNetworking *readNumHttp = [TLNetworking new];
+    readNumHttp.code = @"610120";
+    readNumHttp.parameters[@"postCode"] = self.articleCode;
+    [readNumHttp postWithSuccess:nil failure:nil];
+
     
+    [self getArticleDetailData];
+
+
+}
+
+#pragma mark- 获取帖子详情
+- (void)getArticleDetailData {
+
     //1.根据code获取帖子信息
     [TLProgressHUD showWithStatus:@"加载中...."];
     TLNetworking *getArticleHttp = [TLNetworking new];
     getArticleHttp.code = @"610132";
     getArticleHttp.parameters[@"code"] = self.articleCode;
-
+    getArticleHttp.parameters[@"userId"] = [TLUser user].userId ? : nil;
+    
     [getArticleHttp postWithSuccess:^(id responseObject) {
         
+        //移除可能失败的重新加载站位
+        [self.tl_placeholderView removeFromSuperview];
+        
+        //
         CSWArticleModel *articleModel = [CSWArticleModel tl_objectWithDictionary:responseObject[@"data"]];
         self.layoutItem = [[CSWLayoutItem alloc] init];
         self.layoutItem.type = CSWArticleLayoutTypeArticleDetail;
@@ -126,26 +145,29 @@
         
         //获取打赏，评论 ，点在数据
         [self getData];
-
+        
     } failure:^(NSError *error) {
         
         [TLProgressHUD dismiss];
-        [TLAlert alertWithError:@"加载失败"];
+        //        [TLAlert alertWithError:@"加载失败"];
+        
+        [self tl_placholderViewWithTitle:@"加载失败" opTitle:@"重新加载"];
+        [self.view addSubview:self.tl_placeholderView];
         
     }];
 
-    
-    
-    
-    return;
-    //keyboard
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillAppear:) name:UIKeyboardWillChangeFrameNotification object:nil];
-    
-    
-    //1.
 }
 
 
+#pragma mark- 重新加载方法
+- (void)tl_placeholderOperation {
+
+    [self getArticleDetailData];
+    
+}
+
+
+//--//
 - (void)getData {
 
     //获取评论
@@ -293,7 +315,6 @@
                                              
                                          }];
                 
-                
             }
             break;
             
@@ -303,7 +324,6 @@
                 vc.reportObjCode = self.articleCode;
                 [self.navigationController pushViewController:vc animated:YES];
              
-                
             }
             break;
 
@@ -313,7 +333,6 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     
     if (![TLUser user].userId) {
         
@@ -621,6 +640,62 @@
 
 }
 
+#pragma mark- 关注行为
+-(void)focusAction:(UIButton *)btn {
+
+    if (![TLUser user].userId) {
+        
+        TLUserLoginVC *loginVC = [[TLUserLoginVC alloc] init];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginVC];
+        [self presentViewController:nav animated:YES completion:nil];
+        
+        return;
+    }
+    
+    if ([self.layoutItem.article.isDZ isEqual:@1]) {
+        //取消关注
+        TLNetworking *unFocusHttp = [TLNetworking new];
+        unFocusHttp.showView = self.view;
+        unFocusHttp.code = @"805081";
+        unFocusHttp.parameters[@"userId"] = [TLUser user].userId;
+        unFocusHttp.parameters[@"token"] = [TLUser user].token;
+        unFocusHttp.parameters[@"toUser"] = self.layoutItem.article.publisher;
+        //
+        [unFocusHttp postWithSuccess:^(id responseObject) {
+            
+            [TLAlert alertWithInfo:@"成功取消关注"];
+            
+        } failure:^(NSError *error) {
+            
+        }];
+        
+    } else {
+        //关注
+        //关注用户
+        TLNetworking *focusHttp = [TLNetworking new];
+        focusHttp.showView = self.view;
+        focusHttp.code = @"805080";
+        focusHttp.parameters[@"userId"] = [TLUser user].userId;
+        focusHttp.parameters[@"token"] = [TLUser user].token;
+        focusHttp.parameters[@"toUser"] = self.layoutItem.article.publisher;;
+        //
+        [focusHttp postWithSuccess:^(id responseObject) {
+            
+            [TLAlert alertWithInfo:@"关注成功"];
+
+        } failure:^(NSError *error) {
+            
+        }];
+    
+    }
+ 
+
+    
+    
+    
+
+}
+
 
 
 #pragma tableView -- dataSource
@@ -689,6 +764,7 @@
             
             //cell.layoutItem = self.layoutItem;
             cell.layoutItem = self.layoutItem;
+            [cell.focusBtn addTarget:self action:@selector(focusAction:) forControlEvents:UIControlEventTouchUpInside];
             return cell;
             
         } else {

@@ -26,6 +26,17 @@ typedef NS_ENUM(NSUInteger, MineHeaderSeletedType) {
 @property (nonatomic, strong) UILabel *levelLbl;
 @property (nonatomic, weak) id<CSWMineHeaderSeletedDelegate> delegate;
 
+
+//
+@property (nonatomic, strong) NSNumber *articelNum;
+@property (nonatomic, strong) NSNumber *fansNum;
+@property (nonatomic, strong) NSNumber *focusNum;
+//@property (nonatomic, strong) NSNumber *sjNum;
+
+@property (nonatomic, copy) NSString *sjNumText;
+
+
+
 @property (nonatomic, copy) NSArray <NSNumber *>*numberArray;
 
 

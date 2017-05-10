@@ -54,4 +54,16 @@
                   success:(void(^)())success
                   failure:(void(^)())failure;
 
+
+
+
+///**
+//  查询用户发帖数
+// */
+//+ (void)dsArticleWithCode:(NSString *)code
+//                     user:(NSString *)userId
+//                    money:(CGFloat)money
+//                  success:(void(^)())success
+//                  failure:(void(^)())failure;
+
 @end

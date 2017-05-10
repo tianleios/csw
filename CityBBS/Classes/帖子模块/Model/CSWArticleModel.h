@@ -49,9 +49,11 @@
 
 //用户处于登录状态
 @property (nonatomic, strong) NSNumber *isDZ; //点赞
-@property (nonatomic, strong) NSNumber *isLock; //锁帖
 @property (nonatomic, strong) NSNumber *isSC; //收藏
 
+
+
+@property (nonatomic, strong) NSNumber *isLock; //锁帖
 
 
 //code = TZ20170410112062331;

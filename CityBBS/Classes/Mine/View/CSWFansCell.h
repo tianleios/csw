@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class CSWRelationUserModel;
+
 @interface CSWFansCell : UITableViewCell
+
+@property (nonatomic, strong) CSWRelationUserModel *user;
 
 @end

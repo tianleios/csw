@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+@class CSWAccountFlowModel;
+
 @interface CSWSJCell : UITableViewCell
 
+@property (nonatomic, strong) CSWAccountFlowModel *flowModel;
 @end

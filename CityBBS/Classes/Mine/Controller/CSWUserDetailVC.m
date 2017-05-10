@@ -183,7 +183,6 @@
         
         self.userIntroduceLbl.text = @"该用户还没有留下自我介绍";
 
-    
     }
     
     //底部工具栏--我的直接编写资料
