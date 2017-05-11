@@ -7,6 +7,8 @@
 //
 
 #import "CSWArticleModel.h"
+#import "AppConfig.h"
+#import "CSWLayoutHelper.h"
 
 @implementation CSWArticleModel
 
@@ -27,7 +29,29 @@
     NSMutableArray *arr = [[NSMutableArray alloc] initWithCapacity:self.picArr.count];
     [self.picArr enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        [arr addObject:[obj convertThumbnailImageUrl]];
+        //重要优化，列表要取足够小的缩略图，输出--》 获取足够小的正方形图片
+        NSString *imgDomain = [AppConfig config].qiniuDomain;
+        
+      
+        CGFloat photoW_PX = [CSWLayoutHelper helper].photoWidth * [UIScreen mainScreen].scale;
+        
+        //imageView2/1/w/50/h/50/format/jpg/q/75|imageslim
+        //
+        //imageMogr2/gravity/Center/crop/300x300
+
+        //先缩略，在截取正中心 正方形
+//       imageMogr2/auto-orient/strip/thumbnail/!100x100r/gravity/Center/crop/100x100
+        
+         NSString *imgSizeThumbnailXXXX = [NSString stringWithFormat:@"!%fx%fr",photoW_PX,photoW_PX];
+        
+        NSString *imgSizeCropXXXX = [NSString stringWithFormat:@"%fx%f",photoW_PX,photoW_PX];
+        
+        
+        NSString *imgUrlStr =
+        [[NSString stringWithFormat:@"%@/%@?imageMogr2/auto-orient/strip/thumbnail/%@/gravity/Center/crop/%@",imgDomain,obj,imgSizeThumbnailXXXX,imgSizeCropXXXX]
+         stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        
+        [arr addObject:imgUrlStr];
     }];
     return arr;
 

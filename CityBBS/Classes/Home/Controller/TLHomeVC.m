@@ -113,6 +113,7 @@
     TLPageDataHelper *homeData = [[TLPageDataHelper alloc] init];
     homeData.code = ARTICLE_QUERY;
     homeData.parameters[@"companyCode"] =[CSWCityManager manager].currentCity.code;
+    homeData.parameters[@"location"] = @"C";
     [homeData modelClass:[CSWArticleModel class]];
     self.homeHeadlineArticlePageData = homeData;
     

@@ -58,6 +58,10 @@
 @property (nonatomic, strong) CSWCommentModel *currentOperationComment;
 
 @property (nonatomic, strong) NSMutableArray <CSWDSRecord *>*dsRecordRoom;
+@property (nonatomic, strong) CSWTimeLineCell *currentDetailTimeLineCell;
+
+//--// 当用户登录的时候，判断是否关注了该发帖人
+@property (nonatomic, assign) BOOL isFocus;
 
 @end
 
@@ -129,6 +133,9 @@
         //移除可能失败的重新加载站位
         [self.tl_placeholderView removeFromSuperview];
         
+        [TLProgressHUD dismiss];
+
+        
         //
         CSWArticleModel *articleModel = [CSWArticleModel tl_objectWithDictionary:responseObject[@"data"]];
         self.layoutItem = [[CSWLayoutItem alloc] init];
@@ -141,7 +148,44 @@
         //评论点赞数据
         self.userActionSwitchView.countStrRoom = @[[self.layoutItem.article.sumComment stringValue],[self.layoutItem.article.sumLike stringValue]];
         
-        [TLProgressHUD dismiss];
+        
+        if ([TLUser user].userId  && ![[TLUser user].userId isEqualToString:self.layoutItem.article.publisher]) {
+            //是否关注了该用户
+            TLNetworking *http = [TLNetworking new];
+            http.code = @"805092";
+            http.parameters[@"userId"] = [TLUser user].userId;
+            http.parameters[@"toUser"] = self.layoutItem.article.publisher;
+            [http postWithSuccess:^(id responseObject) {
+                
+                NSNumber *isFocus = responseObject[@"data"];
+                
+                if ([isFocus isEqual:@0]) {
+                    //未关注
+                    [self.currentDetailTimeLineCell unFocus];
+                    self.isFocus = NO;
+                    
+                } else {
+                    
+                    //已关注
+                    [self.currentDetailTimeLineCell focusing];
+                    self.isFocus = YES;
+
+                }
+                
+            } failure:^(NSError *error) {
+                
+                [self.currentDetailTimeLineCell unFocus];
+
+            }];
+
+            //--//
+        } else {
+            
+            //隐藏掉关注按钮
+            self.currentDetailTimeLineCell.hidden = YES;
+        
+        }
+        
         
         //获取打赏，评论 ，点在数据
         [self getData];
@@ -230,7 +274,7 @@
     dsRecordHttp.code = @"610142";
     dsRecordHttp.parameters[@"postCode"] = self.layoutItem.article.code;
     dsRecordHttp.parameters[@"start"] = @"1";
-    dsRecordHttp.parameters[@"limit"] = @"20";
+    dsRecordHttp.parameters[@"limit"] = @"15";
     [dsRecordHttp postWithSuccess:^(id responseObject) {
         
         //
@@ -652,7 +696,7 @@
         return;
     }
     
-    if ([self.layoutItem.article.isDZ isEqual:@1]) {
+    if (self.isFocus) {
         //取消关注
         TLNetworking *unFocusHttp = [TLNetworking new];
         unFocusHttp.showView = self.view;
@@ -664,6 +708,8 @@
         [unFocusHttp postWithSuccess:^(id responseObject) {
             
             [TLAlert alertWithInfo:@"成功取消关注"];
+            [self.currentDetailTimeLineCell unFocus];
+            self.isFocus = NO;
             
         } failure:^(NSError *error) {
             
@@ -682,18 +728,14 @@
         [focusHttp postWithSuccess:^(id responseObject) {
             
             [TLAlert alertWithInfo:@"关注成功"];
+            [self.currentDetailTimeLineCell focusing];
+            self.isFocus = YES;
 
         } failure:^(NSError *error) {
             
         }];
     
     }
- 
-
-    
-    
-    
-
 }
 
 
@@ -759,8 +801,10 @@
                 
                 cell = [[CSWTimeLineCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CSWTimeLineCell"];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                self.currentDetailTimeLineCell = cell;
                 
             }
+            
             
             //cell.layoutItem = self.layoutItem;
             cell.layoutItem = self.layoutItem;

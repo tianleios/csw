@@ -39,5 +39,7 @@ typedef NS_ENUM(NSUInteger, MineHeaderSeletedType) {
 
 @property (nonatomic, copy) NSArray <NSNumber *>*numberArray;
 
+- (void)reset;
+
 
 @end

@@ -77,7 +77,6 @@
         
         self.commentContentLbl = [[CSWLinkLabel alloc] initWithFrame:CGRectZero];
         self.commentContentLbl.font = [CSWLayoutHelper helper].contentFont;
-        self.commentContentLbl.delegate = self;
         self.commentContentLbl.textColor = [UIColor textColor];
         self.commentContentLbl.numberOfLines = 0;
         [self.contentView addSubview:self.commentContentLbl];
@@ -93,6 +92,8 @@
             make.height.mas_equalTo(LINE_HEIGHT);
             make.bottom.equalTo(self.mas_bottom);
         }];
+        
+        //
     }
     
     return self;

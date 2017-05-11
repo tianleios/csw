@@ -205,6 +205,7 @@ static MLLinkLabel * kProtypeLabel() {
     
     
     if (_article.commentList.count > 5) {
+        //列表评论最多显示 5 条，评论
         
         self.isShowLookMoreCommentBtn = YES;
         self.lookMoreCommentBtnFrame = CGRectMake(layoutHelper.commentMargin, lastCommentTop, 150, [FONT(14) lineHeight]);

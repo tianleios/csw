@@ -77,6 +77,9 @@
     [self userInfoChange];
     //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoChange) name:kUserInfoChange object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLogin) name:kUserLoginNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoginOut) name:kUserLoginOutNotification object:nil];
     
     
     __weak typeof(self) weakself = self;
@@ -138,6 +141,34 @@
     
 }
 
+//用户退出
+- (void)userLoginOut {
+
+    //
+    [self.headerView.userPhoto sd_setImageWithURL:nil placeholderImage:USER_PLACEHOLDER_SMALL];
+    
+    //
+    [self.headerView reset];
+    
+    //
+    self.headerView.nameLbl.text = @"--";
+    
+    //论坛-绞肉机
+    self.headerView.levelLbl.text = @"--";
+    
+
+}
+
+//用户登录
+- (void)userLogin {
+
+    [self.mineTableView beginRefreshing];
+    
+//  [self userInfoChange];
+    
+    
+}
+
 
 //
 - (void)userInfoChange {
@@ -159,6 +190,7 @@
     //
     
 }
+
 
 #pragma mark- 头部条状 事件处理
 - (void)didSelectedWithType:(MineHeaderSeletedType)type idx:(NSInteger)idx {
@@ -203,8 +235,32 @@
                 
             case 3: {//赏金
                 
-                CSWMoneyRewardFlowVC *vc = [CSWMoneyRewardFlowVC new];
-                [self.navigationController pushViewController:vc animated:YES];
+                TLNetworking *sjHttp = [TLNetworking new];
+                sjHttp.code = @"802503";
+                sjHttp.parameters[@"userId"] = [TLUser user].userId;
+                sjHttp.parameters[@"token"] = [TLUser user].token;
+                [sjHttp postWithSuccess:^(id responseObject) {
+                    
+                    NSArray <NSDictionary *> *arr = responseObject[@"data"];
+                    [arr enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        
+                        if ([obj[@"currency"] isEqualToString:@"JF"]) {
+                            
+                            CSWMoneyRewardFlowVC *vc = [CSWMoneyRewardFlowVC new];
+                            vc.accountNumber = obj[@"accountNumber"];
+                            [self.navigationController pushViewController:vc animated:YES];
+                        }
+                        
+                    }];
+                    
+                    
+                    
+                } failure:^(NSError *error) {
+                    
+                    
+                }];
+                
+            
             }
             break;
                 

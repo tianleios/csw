@@ -18,8 +18,6 @@
 //传BD查询已发布和审核通过
 
 //location A 置顶 B 精华 C 头条
-
-
 @property (nonatomic, copy) NSString *code;
 
 @property (nonatomic, copy) NSString *title;

@@ -147,6 +147,39 @@
 
 }
 
+- (void)setSelectedIdx:(NSInteger)selectedIdx {
+
+    _selectedIdx = selectedIdx;
+    
+    [self.btns enumerateObjectsUsingBlock:^(TLBarButton * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (idx == selectedIdx) {
+            
+            //上一个选中改变
+            _lastTabBarBtn.titleLbl.textColor = [UIColor textColor];
+            _lastTabBarBtn.isCurrentSelected = NO;
+            NSString *lastUrlStr = self.tabBarItems[_lastTabBarBtn.tag - 100].unSelectedImgUrl;
+            [_lastTabBarBtn.iconImageView sd_setImageWithURL:[NSURL URLWithString:lastUrlStr]];
+            
+            
+            //---//
+            //当前选中改变
+            obj.titleLbl.textColor = [UIColor themeColor];
+            obj.isCurrentSelected = YES;
+            NSString *currentUrlStr = self.tabBarItems[idx].selectedImgUrl;
+            [obj.iconImageView sd_setImageWithURL:[NSURL URLWithString:currentUrlStr]];
+            
+            _lastTabBarBtn = obj;
+
+            //
+            *stop = YES;
+            
+        }
+    }];
+    
+
+
+}
+
 //点击按钮，
 - (void)hasChoose:(TLBarButton *)btn {
 
@@ -157,7 +190,8 @@
     
     //当前选中的小标
     NSInteger idx = btn.tag - 100;
-
+    
+    //--//
     
     if (self.tl_delegate && [self.tl_delegate respondsToSelector:@selector(didSelected:tabBar:)]) {
         
@@ -194,10 +228,11 @@
     [btn.iconImageView sd_setImageWithURL:[NSURL URLWithString:selectedStr] placeholderImage:nil];
     btn.titleLbl.textColor = [UIColor themeColor];
     
+    //--//
     btn.selected = NO;
     _lastTabBarBtn = btn;
     _lastTabBarBtn.selected = YES;
-
+    
 }
 
 ////fix: 超出父视图，无法显示

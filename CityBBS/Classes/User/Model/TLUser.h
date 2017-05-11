@@ -53,19 +53,25 @@
 
 //是否为需要登录，如果已登录，取出用户信息
 - (BOOL)isLogin;
+
+//用户已登录状态，从数据库中初始化用户信息
 - (void)initUserData;
 
 - (void)loginOut;
 
+- (void)saveToken:(NSString *)token;
+
 //存储用户信息
 - (void)saveUserInfo:(NSDictionary *)userInfo;
 
-//设置出tokenId 和 userId 之外的用户信息
+//设置用户信息
 - (void)setUserInfoWithDict:(NSDictionary *)dict;
 
+//异步更新用户信息
 - (void)updateUserInfo;
 
 - (NSString *)detailAddress;
+
 @end
 
 FOUNDATION_EXTERN  NSString *const kUserLoginNotification;

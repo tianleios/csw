@@ -41,8 +41,8 @@
     if (self) {
         
         self.backgroundColor = [UIColor colorWithHexString:@"#f5f5f5"];
-                self.layer.cornerRadius = 8;
-                self.layer.masksToBounds = YES;
+//                self.layer.cornerRadius = 8;
+//                self.layer.masksToBounds = YES;
         
         
         CSWLayoutHelper *layout = [CSWLayoutHelper helper];
@@ -62,7 +62,7 @@
         //点赞人数
         self.likeCountLbl = [UILabel labelWithFrame:CGRectZero
                                        textAligment:NSTextAlignmentCenter
-                                    backgroundColor:[UIColor clearColor]
+                                    backgroundColor:self.backgroundColor
                                                font:layout.likeFont
                                           textColor:[UIColor textColor]];
         
@@ -73,6 +73,7 @@
         self.likeLabel = [[CSWLinkLabel alloc] initWithFrame:CGRectZero];
         self.likeLabel.font = layout.likeFont;
         self.likeLabel.textAlignment = NSTextAlignmentLeft;
+        self.likeLabel.backgroundColor = self.backgroundColor;
         //        self.likeLabel.textColor = [UIColor colorWithHexString:@"#7d0000"];
         self.likeLabel.textColor = [UIColor textColor];
         
@@ -109,6 +110,7 @@
         [self.lookMoreCommentBtn setTitle:@"查看全部评论>>" forState:UIControlStateNormal];
         self.lookMoreCommentBtn.titleLabel.font = layout.commentFont;
         [self.lookMoreCommentBtn setTitleColor:[UIColor colorWithHexString:@"#999999"] forState:UIControlStateNormal];
+        self.lookMoreCommentBtn.backgroundColor = self.backgroundColor;
         self.lookMoreCommentBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         [self addSubview:self.lookMoreCommentBtn];
         
@@ -167,6 +169,7 @@
                 linkLable.textColor = [UIColor textColor];
                 linkLable.font = [CSWLayoutHelper helper].commentFont;
                 linkLable.numberOfLines = 0;
+                linkLable.backgroundColor = self.backgroundColor;
                 linkLable.textColor = [UIColor textColor];
                 [self.commentLblRooms addObject:linkLable];
             }

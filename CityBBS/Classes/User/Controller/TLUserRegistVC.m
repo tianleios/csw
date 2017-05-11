@@ -246,6 +246,9 @@
                     NSDictionary *userInfo = responseObject[@"data"];
                     [TLUser user].userId = userId;
                     [TLUser user].token = tokenId;
+                    
+                    //保存信息
+                    [[TLUser user] saveToken:tokenId];
                     [[TLUser user] saveUserInfo:userInfo];
                     [[TLUser user] setUserInfoWithDict:userInfo];
                     [[NSNotificationCenter defaultCenter] postNotificationName:kUserLoginNotification object:nil];

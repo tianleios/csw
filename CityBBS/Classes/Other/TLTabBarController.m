@@ -60,6 +60,7 @@
     tabBar.backgroundColor = [UIColor orangeColor];
     [self setValue:tabBar forKey:@"tabBar"];
     
+    //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cityChange) name:kCityChangeNotification object:nil];
 
 }

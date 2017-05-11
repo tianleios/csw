@@ -10,4 +10,6 @@
 
 @interface CSWMoneyRewardFlowVC : TLBaseVC
 
+@property (nonatomic, copy) NSString *accountNumber;
+
 @end

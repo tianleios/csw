@@ -35,6 +35,8 @@
 @property (nonatomic, copy) NSArray *tabNames;
 
 @property (nonatomic, copy) NSArray <TLTabBarItem *>*tabBarItems;
+@property (nonatomic, assign) NSInteger selectedIdx;
+
 
 @end
 

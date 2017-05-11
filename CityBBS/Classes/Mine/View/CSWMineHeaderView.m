@@ -180,6 +180,13 @@
 }
 
 
+- (void)reset {
+
+    [self.lbls enumerateObjectsUsingBlock:^(UILabel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        obj.text = @"--";
+    }];
+
+}
 
 
 

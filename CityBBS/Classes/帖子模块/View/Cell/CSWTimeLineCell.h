@@ -14,6 +14,10 @@
 //关注按钮
 @property (nonatomic, strong) UIButton *focusBtn;
 
+//关注,用来操作关注按钮
+- (void)focusing;
+- (void)unFocus;
+
 
 
 @property (nonatomic, strong) CSWLayoutItem *layoutItem;

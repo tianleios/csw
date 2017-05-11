@@ -85,7 +85,7 @@
     
     
     
-    pageDateHelper.parameters[@"accountNumber"] = @"A2017050812285008914";
+    pageDateHelper.parameters[@"accountNumber"] = self.accountNumber;
     
     
   [pageDateHelper modelClass:[CSWAccountFlowModel class]];

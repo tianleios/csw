@@ -115,7 +115,7 @@
                     //保存用户信息
                     [TLUser user].userId = userId;
                     [TLUser user].token = token;
-                    
+                    [[TLUser user] saveToken:token];
                     //保存用户信息
                     [[TLUser user] saveUserInfo:userInfo];
                     

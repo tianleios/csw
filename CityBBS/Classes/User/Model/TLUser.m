@@ -10,13 +10,13 @@
 #import "TLUserExt.h"
 #import "UICKeyChainStore.h"
 
-#define USER_ID_KEY @"user_id_key_zh"
-#define TOKEN_ID_KEY @"token_id_key_zh"
-#define USER_INFO_DICT_KEY @"user_info_dict_key_zh"
+//#define USER_ID_KEY @"user_id_key_csw"
+#define TOKEN_ID_KEY @"token_id_key_csw"
+#define USER_INFO_DICT_KEY @"user_info_dict_key_csw"
 
-NSString *const kUserLoginNotification = @"kUserLoginNotification_zh";
-NSString *const kUserLoginOutNotification = @"kUserLoginOutNotification_zh";
-NSString *const kUserInfoChange = @"kUserInfoChange_zh";
+NSString *const kUserLoginNotification = @"kUserLoginNotification_csw";
+NSString *const kUserLoginOutNotification = @"kUserLoginOutNotification_csw";
+NSString *const kUserInfoChange = @"kUserInfoChange_csw";
 
 @implementation TLUser
 
@@ -35,41 +35,22 @@ NSString *const kUserInfoChange = @"kUserInfoChange_zh";
 }
 
 #pragma mark- 调用keyChainStore
-- (void)keyChainStore {
-
-    UICKeyChainStore *keyChainStore = [UICKeyChainStore keyChainStoreWithService:@"zh_bound_id"];
-    
-    //存值
-    [keyChainStore setString:@"" forKey:@""];
-    //取值
-    [keyChainStore stringForKey:@""];
-
-}
-
-- (void)setUserId:(NSString *)userId {
-
-    _userId = [userId copy];
-    [[NSUserDefaults standardUserDefaults] setObject:userId forKey:USER_ID_KEY];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-
-}
-
-- (void)setToken:(NSString *)token {
-
-    _token = [token copy];
-    [[NSUserDefaults standardUserDefaults] setObject:_token forKey:TOKEN_ID_KEY];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-
-}
-
+//- (void)keyChainStore {
+//
+//    UICKeyChainStore *keyChainStore = [UICKeyChainStore keyChainStoreWithService:@"zh_bound_id"];
+//    
+//    //存值
+//    [keyChainStore setString:@"" forKey:@""];
+//    //取值
+//    [keyChainStore stringForKey:@""];
+//
+//}
 
 - (void)initUserData {
 
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [userDefault objectForKey:USER_ID_KEY];
+//    NSString *userId = [userDefault objectForKey:USER_ID_KEY];
     NSString *token = [userDefault objectForKey:TOKEN_ID_KEY];
-    
-    self.userId = userId;
     self.token = token;
     
     //--//
@@ -77,16 +58,21 @@ NSString *const kUserInfoChange = @"kUserInfoChange_zh";
 
 }
 
+
+- (void)saveToken:(NSString *)token {
+
+    [[NSUserDefaults standardUserDefaults] setObject:token forKey:TOKEN_ID_KEY];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+}
+
+
 - (BOOL)isLogin {
 
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    NSString *userId = [userDefault objectForKey:USER_ID_KEY];
+//    NSString *userId = [userDefault objectForKey:USER_ID_KEY];
     NSString *token = [userDefault objectForKey:TOKEN_ID_KEY];
-    if (userId && token) {
-        
-//        self.userId = userId;
-//        self.token = token;
-//        [self setUserInfoWithDict:[userDefault objectForKey:USER_INFO_DICT_KEY]];
+    if (token) {
         
         return YES;
     } else {
@@ -111,20 +97,28 @@ NSString *const kUserInfoChange = @"kUserInfoChange_zh";
     self.tradepwdFlag = nil;
     self.level = nil;
     
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USER_ID_KEY];
+//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USER_ID_KEY];
+    
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:TOKEN_ID_KEY];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:USER_INFO_DICT_KEY];
-
+    
 //    [[NSNotificationCenter defaultCenter] postNotificationName:@"user_login_out_notification" object:nil];
 }
 
 
 - (void)saveUserInfo:(NSDictionary *)userInfo {
 
-    [[NSUserDefaults standardUserDefaults] setObject:userInfo forKey:USER_INFO_DICT_KEY];
+    NSLog(@"原%@--现%@",[TLUser user].userId,userInfo[@"userId"]);
     
+    if (![[TLUser user].userId isEqualToString:userInfo[@"userId"]]) {
+        
+        @throw [NSException exceptionWithName:@"用户信息错误" reason:@"后台原因" userInfo:nil];
+        
+    }
+    
+    [[NSUserDefaults standardUserDefaults] setObject:userInfo forKey:USER_INFO_DICT_KEY];
     //
-//    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
 }
 
@@ -148,6 +142,13 @@ NSString *const kUserInfoChange = @"kUserInfoChange_zh";
     http.parameters[@"token"] = [TLUser user].token;
     [http postWithSuccess:^(id responseObject) {
         
+//        NSLog(@"原%@--现%@",[TLUser user].userId,responseObject[@"data"][@"userId"]);
+//        if (![[TLUser user].userId isEqualToString:responseObject[@"data"][@"userId"]]) {
+//            
+//            @throw [NSException exceptionWithName:@"用户信息错误" reason:@"后台原因" userInfo:nil];
+//            
+//        }
+        
         [self setUserInfoWithDict:responseObject[@"data"]];
         [self saveUserInfo:responseObject[@"data"]];
         [[NSNotificationCenter defaultCenter] postNotificationName:kUserInfoChange object:nil];
@@ -162,6 +163,10 @@ NSString *const kUserInfoChange = @"kUserInfoChange_zh";
 
 - (void)setUserInfoWithDict:(NSDictionary *)dict {
 
+    self.userId = dict[@"userId"];
+    
+    //token用户信息没有返回，不能再此处初始化
+//    self.token = dict[@"token"];
     self.mobile = dict[@"mobile"];
     self.nickname = dict[@"nickname"];
     self.realName = dict[@"realName"];

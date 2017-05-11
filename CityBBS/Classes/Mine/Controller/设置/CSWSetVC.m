@@ -11,6 +11,7 @@
 #import "CSWUserDetailEditVC.h"
 #import "TLChangeMobileVC.h"
 #import "TLUserForgetPwdVC.h"
+#import "TLTabBar.h"
 
 @interface CSWSetVC ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -99,6 +100,10 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         tbcController.selectedIndex = 0;
+        
+//        tbcController.tabBar
+        TLTabBar *tabBar = (TLTabBar *)tbcController.tabBar;
+        tabBar.selectedIdx = 0;
         
     });
     

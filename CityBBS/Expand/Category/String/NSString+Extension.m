@@ -67,7 +67,7 @@
         
     } else {
         
-       return  [[NSString stringWithFormat:@"%@/%@?imageMogr2/auto-orient/strip/thumbnail/300x300/quality/60!",[AppConfig config].qiniuDomain,self] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+       return  [[NSString stringWithFormat:@"%@/%@?imageMogr2/auto-orient/strip/thumbnail/150x150/quality/60!",[AppConfig config].qiniuDomain,self] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
     
 }

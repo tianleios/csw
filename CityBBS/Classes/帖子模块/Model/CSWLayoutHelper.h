@@ -20,7 +20,7 @@
 @property (nonatomic, assign) CGFloat contentRightMargin;
 
 
-
+//单个图片宽度
 @property (nonatomic, assign) CGFloat photoWidth;
 @property (nonatomic, assign) CGFloat photoMargin;
 

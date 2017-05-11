@@ -45,7 +45,7 @@
     self.commentFont = FONT(14);
     self.likeHeight = 30;
     self.likeMargin = 8;
-    self.commentMargin = 8;
+    self.commentMargin = 3;
     self.commentTopMargin = 5;
     
 }

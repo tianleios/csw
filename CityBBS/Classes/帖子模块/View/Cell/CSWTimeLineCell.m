@@ -49,8 +49,8 @@
         //
         self.photoImageView = [[CSWUserPhotoView alloc] initWithFrame:CGRectMake(15, 15, 50, 50)];
         [self.contentView addSubview:self.photoImageView];
-        self.photoImageView.layer.cornerRadius = 25;
-        self.photoImageView.layer.masksToBounds = YES;
+//        self.photoImageView.layer.cornerRadius = 25;
+//        self.photoImageView.layer.masksToBounds = YES;
         self.photoImageView.backgroundColor = [UIColor orangeColor];
         
         //名称
@@ -143,6 +143,7 @@
         self.contentLbl.numberOfLines = 0;
         self.contentLbl.lineHeightMultiple = 1.2;
         [self.contentView addSubview:self.contentLbl];
+        self.contentLbl.backgroundColor = [UIColor whiteColor];
         
         //图片浏览--可能无
         self.photosView = [[PYPhotosView  alloc] init];
@@ -202,21 +203,6 @@
         
         self.focusBtn.hidden = NO;
         self.plateLbl.hidden = YES;
-        if (/*已关注*/0) {
-            
-            [self.focusBtn setTitle:@"取消关注" forState:UIControlStateNormal];
-            [self.focusBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(65);
-            }];
-            
-        } else {
-        
-            [self.focusBtn setTitle:@"+关注" forState:UIControlStateNormal];
-            [self.focusBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(50);
-            }];
-
-        }
         
     } else  {
         
@@ -286,6 +272,24 @@
     self.commentAndLikeView.frame= _layoutItem.bottomBgFrame;
     self.commentAndLikeView.layoutItem = _layoutItem;
     
+}
+
+- (void)focusing {
+
+    [self.focusBtn setTitle:@"取消关注" forState:UIControlStateNormal];
+    [self.focusBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(65);
+    }];
+}
+
+
+- (void)unFocus {
+
+    [self.focusBtn setTitle:@"+关注" forState:UIControlStateNormal];
+    [self.focusBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(50);
+    }];
+
 }
 
 

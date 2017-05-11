@@ -22,7 +22,7 @@ static MLLinkLabel * kProtypeLabel() {
         _protypeLabel.numberOfLines = 0;
         
         //        _protypeLabel.textInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-        //        _protypeLabel.lineHeightMultiple = 1.1f;
+        _protypeLabel.lineHeightMultiple = 1.2f;
     });
     return _protypeLabel;
 }

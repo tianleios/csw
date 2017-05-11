@@ -8,6 +8,11 @@
 
 #import "CSWUserDetailVC.h"
 #import "CSWUserDetailEditVC.h"
+#import "CSWLayoutItem.h"
+#import "CSWTimeLineCell.h"
+#import "CSWArticleDetailVC.h"
+#import "TLUserLoginVC.h"
+#import "ChatViewController.h"
 
 @interface CSWUserDetailVC ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -23,15 +28,24 @@
 
 //底部工具栏
 @property (nonatomic, strong) UIView *bootoomTooBar;
+@property (nonatomic, strong) UIButton *fouseBtn;
 
 //
 @property (nonatomic, assign) CGFloat lastAlpha;
 
 @property (nonatomic, strong) TLUser *currentUser;
 
+@property (nonatomic, strong) TLTableView *tableView;
+@property (nonatomic, copy) NSArray<CSWLayoutItem *> *layoutItems;
+
+@property (nonatomic, assign) BOOL isFocus;
+
+
 @end
 
 @implementation CSWUserDetailVC
+
+//
 - (void)viewWillDisappear:(BOOL)animated {
 
     [super viewWillDisappear:animated];
@@ -51,7 +65,6 @@
 
     [super viewWillAppear:animated];
 
-
 }
 
 
@@ -63,13 +76,7 @@
 }
 
 
-
-- (void)injected {
-
-    [self viewDidLoad];
-
-}
-
+//--//
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -95,6 +102,12 @@
             self.currentUser = [TLUser tl_objectWithDictionary:responseObject[@"data"]];
             [self initUI];
             
+            [self addGetDataAction];
+            [self.tableView beginRefreshing];
+            
+            //
+            [self getRelation];
+            
         } failure:^(NSError *error) {
             
         }];
@@ -117,6 +130,12 @@
                 
                 self.currentUser = [TLUser tl_objectWithDictionary:users[0]];
                 [self initUI];
+                
+                //
+                [self addGetDataAction];
+                [self.tableView beginRefreshing];
+                //
+                [self getRelation];
 
             } else {
             
@@ -142,6 +161,48 @@
   
 }
 
+//--//
+- (void)getRelation {
+
+    if ([TLUser user].userId  && ![[TLUser user].userId isEqualToString:self.currentUser.userId]) {
+        
+        //是否关注了该用户
+        TLNetworking *http = [TLNetworking new];
+        http.code = @"805092";
+        http.parameters[@"userId"] = [TLUser user].userId;
+        http.parameters[@"toUser"] = self.currentUser.userId;
+        [http postWithSuccess:^(id responseObject) {
+            
+            NSNumber *isFocus = responseObject[@"data"];
+            
+            if ([isFocus isEqual:@0]) {
+                //未关注
+                self.isFocus = NO;
+                [self.fouseBtn setTitle:@"关注" forState:UIControlStateNormal];
+                
+            } else {
+                [self.fouseBtn setTitle:@"取消关注" forState:UIControlStateNormal];
+                //已关注
+                self.isFocus = YES;
+                
+            }
+            
+        } failure:^(NSError *error) {
+            
+            
+        }];
+        
+        //--//
+    } else {
+        
+    }
+    
+    //--//
+
+}
+
+
+//--//
 - (void)initUI {
     
     if (!self.currentUser) {
@@ -150,12 +211,15 @@
     }
     
     //
-    TLTableView *tableView = [TLTableView tableViewWithframe:CGRectZero delegate:self dataSource:self];
+    TLTableView *tableView = [TLTableView tableViewWithframe:CGRectMake(0, -64, SCREEN_WIDTH, SCREEN_HEIGHT - 45) delegate:self dataSource:self];
     [self.view addSubview:tableView];
+    
     //    tableView.backgroundColor = [UIColor cyanColor];
-    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsMake(-64, 0, -45, 0));
-    }];
+//    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, -45, 0));
+//    }];
+    self.tableView = tableView;
+    self.tableView.placeHolderView = [TLPlaceholderView placeholderViewWithText:@"暂无帖子"];
     
     //headerView
     tableView.tableHeaderView = [self headerView];
@@ -194,7 +258,84 @@
 
 }
 
+#pragma mark- 获取部分数据
+- (void)addGetDataAction {
 
+    __weak typeof(self) weakSelf = self;
+    
+    TLPageDataHelper *timeLinePageData = [[TLPageDataHelper alloc] init];
+    timeLinePageData.code = ARTICLE_QUERY;
+    
+    timeLinePageData.parameters[@"publisher"] = self.currentUser.userId;
+    timeLinePageData.parameters[@"status"] = @"BD";
+    
+    timeLinePageData.tableView = self.tableView;
+    [timeLinePageData modelClass:[CSWArticleModel class]];
+    
+    //数据转换
+    [timeLinePageData setDealWithPerModel:^(id model){
+        
+        CSWLayoutItem *layoutItem = [CSWLayoutItem new];
+        layoutItem.type = CSWArticleLayoutTypeDefault;
+        layoutItem.article = model;
+        return layoutItem;
+        
+    }];
+    
+    
+    //
+    [self.tableView addRefreshAction:^{
+        
+        [timeLinePageData refresh:^(NSMutableArray *objs, BOOL stillHave) {
+            
+            weakSelf.layoutItems = objs;
+            [weakSelf.tableView reloadData_tl];
+            
+        } failure:^(NSError *error) {
+            
+            
+        }];
+        
+    }];
+    
+    [self.tableView addLoadMoreAction:^{
+        
+        [timeLinePageData loadMore:^(NSMutableArray *objs, BOOL stillHave) {
+            
+            weakSelf.layoutItems = objs;
+            [weakSelf.tableView  reloadData_tl];
+            
+        } failure:^(NSError *error) {
+            
+            
+        }];
+        
+    }];
+    
+    
+//    [self.tableView addRefreshAction:^{
+//        
+//    }]
+//    TLNetworking *http = [TLNetworking new];
+//    http.code = ARTICLE_QUERY;
+//    http.parameters[@"userId"] = [TLUser user].userId;
+//    http.parameters[@"status"] = @"BD";
+//    http.parameters[@"start"] = @"1";
+//    http.parameters[@"limit"] = @"10";
+//    [http postWithSuccess:^(id responseObject) {
+//        
+//        NSArray <CSWArticleModel *>articles = [CSWArticleModel tl_objectArrayWithDictionaryArray:responseObject[@"data"][@"list"]];
+//        [articles ];
+//        
+//    
+//        
+//    } failure:^(NSError *error) {
+//        
+//        
+//    }];
+
+
+}
 
 - (void)userInfoChange {
 
@@ -215,12 +356,70 @@
 #pragma mark- 关注
 - (void)goFouse {
 
+    
+    if (![TLUser user].userId) {
+        
+        TLUserLoginVC *loginVC = [[TLUserLoginVC alloc] init];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginVC];
+        [self presentViewController:nav animated:YES completion:nil];
+        
+        return;
+    }
+    
+    if (self.isFocus) {
+        //取消关注
+        TLNetworking *unFocusHttp = [TLNetworking new];
+        unFocusHttp.showView = self.view;
+        unFocusHttp.code = @"805081";
+        unFocusHttp.parameters[@"userId"] = [TLUser user].userId;
+        unFocusHttp.parameters[@"token"] = [TLUser user].token;
+        unFocusHttp.parameters[@"toUser"] = self.currentUser.userId;
+        //
+        [unFocusHttp postWithSuccess:^(id responseObject) {
+            
+            [TLAlert alertWithInfo:@"成功取消关注"];
+            [self.fouseBtn setTitle:@"关注" forState:UIControlStateNormal];
+            self.isFocus = NO;
+            
+        } failure:^(NSError *error) {
+            
+        }];
+        
+    } else {
+        
+        //关注
+        //关注用户
+        TLNetworking *focusHttp = [TLNetworking new];
+        focusHttp.showView = self.view;
+        focusHttp.code = @"805080";
+        focusHttp.parameters[@"userId"] = [TLUser user].userId;
+        focusHttp.parameters[@"token"] = [TLUser user].token;
+        focusHttp.parameters[@"toUser"] = self.currentUser.userId;
+        //
+        [focusHttp postWithSuccess:^(id responseObject) {
+            
+            [TLAlert alertWithInfo:@"关注成功"];
+            [self.fouseBtn setTitle:@"取消关注" forState:UIControlStateNormal];
+            self.isFocus = YES;
+            
+        } failure:^(NSError *error) {
+            
+        }];
+        
+    //--//
+    }
 
 }
 
 #pragma mark- 聊天
 - (void)goChat {
     
+    ChatViewController *chatVC = [[ChatViewController alloc] initWithConversationChatter:self.currentUser.userId conversationType:EMConversationTypeChat];
+    chatVC.defaultUserAvatarName = @"avatar_default_small";
+    
+    chatVC.oppositeAvatarUrlPath = self.currentUser.userExt.photo ?  [self.currentUser.userExt.photo convertThumbnailImageUrl] : nil;
+    chatVC.mineAvatarUrlPath = [TLUser user].userExt.photo ? [[TLUser user].userExt.photo convertThumbnailImageUrl] : nil;
+    [self.navigationController pushViewController:chatVC animated:YES];
     
 }
 
@@ -239,7 +438,9 @@
         //关注
         UIButton *fouseBtn = [self btnWithFrame:CGRectMake(0, 0, _bootoomTooBar.width/2.0, _bootoomTooBar.height) title:@"关注" imgName:@"关注"];
         [_bootoomTooBar addSubview:fouseBtn];
-          [fouseBtn addTarget:self action:@selector(goFouse) forControlEvents:UIControlEventTouchUpInside];
+        self.fouseBtn = fouseBtn;
+            
+        [fouseBtn addTarget:self action:@selector(goFouse) forControlEvents:UIControlEventTouchUpInside];
         
         
         //私信
@@ -355,21 +556,56 @@
 
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-
-    return 40;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    //计算
+    //    return  self.layoutItem.cellHeight;
+    return self.layoutItems[indexPath.row].cellHeight;
+    
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    CSWArticleDetailVC *detailVC = [[CSWArticleDetailVC alloc] init];
+    
+    CSWLayoutItem *layoutItem =  [CSWLayoutItem new];
+    
+    layoutItem.type = CSWArticleLayoutTypeArticleDetail;
+    
+    layoutItem.article = self.layoutItems[indexPath.row].article;
+    //
+    //    detailVC.layoutItem = layoutItem;
+    detailVC.articleCode = layoutItem.article.code;
+    //
+    [self.navigationController pushViewController:detailVC animated:YES];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+}
 
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCellId"];
+#pragma dataSource
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    return self.layoutItems.count;
+    
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    
+    CSWTimeLineCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CSWTimeLineCell"];
     if (!cell) {
         
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UITableViewCellId"];
+        cell = [[CSWTimeLineCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CSWTimeLineCell"];
         
     }
-    cell.backgroundColor = RANDOM_COLOR;
+    
+    
+    //    cell.layoutItem = self.layoutItem;
+    cell.layoutItem = self.layoutItems[indexPath.row];
     return cell;
+    
+    
+    
 }
 
 - (void)goMore {
