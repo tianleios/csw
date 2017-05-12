@@ -10,4 +10,10 @@
 
 @implementation CSWLikeModel
 
+- (NSString *)nickname {
+
+  return _nickname ? : @"未知用户";
+
+}
+
 @end

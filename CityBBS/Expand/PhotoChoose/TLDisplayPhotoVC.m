@@ -21,7 +21,7 @@
 
 @implementation TLDisplayPhotoVC
 {
-    dispatch_group_t _group;
+//    dispatch_group_t _group;
 
 }
 
@@ -137,9 +137,10 @@
     
 }
 
+#pragma mark- 开始加载图片
 - (void)beginLoadPhoto {
 
-    _group = dispatch_group_create();
+//    _group = dispatch_group_create();
     
     self.assetRoom = [NSMutableArray array];
     self.photoItems = [NSMutableArray array];
@@ -210,7 +211,8 @@
             PHFetchOptions *assetsFetchOptions = [[PHFetchOptions alloc] init];
             assetsFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
             
-            PHFetchResult<PHAsset *> *assetsResult =  [PHAsset fetchAssetsInAssetCollection:obj options:nil];
+            PHFetchResult<PHAsset *> *assetsResult =  [PHAsset fetchAssetsInAssetCollection:obj options:assetsFetchOptions];
+            
             //遍历相册里的图片
             [assetsResult enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
                 
@@ -218,11 +220,13 @@
                 if (asset.mediaType == PHAssetMediaTypeImage) {
                     
                     [self.assetRoom addObject:asset];
+                    
                     TLPhotoChooseItem *photoItem = [TLPhotoChooseItem new];
                     photoItem.thumbnailSize = CGSizeMake(w, w);
                     photoItem.asset = asset;
                     [self.photoItems addObject:photoItem];
                     
+                    //比对已经选择的图片，进行展示
                     if (self.replacePhotoItems) {
                         
                         [self.replacePhotoItems enumerateObjectsUsingBlock:^(TLPhotoChooseItem * _Nonnull replaceItem, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -255,46 +259,44 @@
 
 }
 
-#pragma mark- 确定图片选择
+#pragma mark- 确定图片选择,
 - (void)complection {
     
     NSMutableArray <UIImage *>*imgs = [NSMutableArray array];
     NSInteger count = [TLChooseResultManager manager].hasChooseItems.count;
     
-    //外界希望得到的应该是原图
-    [[TLChooseResultManager manager].hasChooseItems enumerateObjectsUsingBlock:^(TLPhotoChooseItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        
-        dispatch_group_enter(_group);
-        //异步获取
-        [[PHImageManager defaultManager] requestImageForAsset:obj.asset
-                                                   targetSize:PHImageManagerMaximumSize
-                                                  contentMode:PHImageContentModeAspectFill
-                                                      options:nil
-                                                resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-            
-//            NSLog(@"%@",result);
-            [imgs addObject:result];
-            NSLog(@"%ld",count - 1 -idx);
-                                                    
-           dispatch_group_leave(_group);
-            
-        }];
-        
-    }];
+//    //外界希望得到的应该是原图
+//    [[TLChooseResultManager manager].hasChooseItems enumerateObjectsUsingBlock:^(TLPhotoChooseItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        
+//        
+//        dispatch_group_enter(_group);
+//        //异步获取
+//        [[PHImageManager defaultManager] requestImageForAsset:obj.asset
+//                                                   targetSize:PHImageManagerMaximumSize
+//                                                  contentMode:PHImageContentModeAspectFill
+//                                                      options:nil
+//                                                resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+//            
+////            NSLog(@"%@",result);
+//           [imgs addObject:result];
+//            NSLog(@"%ld",count - 1 -idx);
+//                                                    
+//           dispatch_group_leave(_group);
+//            
+//        }];
+//        
+//    }];
     
-    dispatch_group_notify(_group, dispatch_get_main_queue(), ^{
-        
-        //判断方式有问题 ，注意
-        if ( self.delegate && [self.delegate respondsToSelector:@selector(imagePickerController:didFinishPickingWithImages:chooseItems:)]) {
-            
-            [self.delegate imagePickerController:self.pickerCtrl didFinishPickingWithImages:imgs chooseItems:[TLChooseResultManager manager].hasChooseItems];
-            
-            [[TLChooseResultManager manager].hasChooseItems removeAllObjects];
-            
-        }
+    imgs = nil;
     
-     });
+    //判断方式有问题 ，注意
+    if ( self.delegate && [self.delegate respondsToSelector:@selector(imagePickerController:didFinishPickingWithImages:chooseItems:)]) {
+        
+        [self.delegate imagePickerController:self.pickerCtrl didFinishPickingWithImages:imgs chooseItems:[TLChooseResultManager manager].hasChooseItems];
+        
+    }
+    
+  
     
 }
 
@@ -303,7 +305,7 @@
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerControllerDidCancel:)]) {
         
-        [[TLChooseResultManager manager].hasChooseItems removeAllObjects];
+//        [[TLChooseResultManager manager].hasChooseItems removeAllObjects];
         [self.delegate imagePickerControllerDidCancel:self.pickerCtrl];
         
     }
@@ -311,26 +313,78 @@
     
 }
 
-#pragma mark- imagePickerDelegate//  选择图片
+#pragma mark- imagePickerDelegate//拍照图片选择  选择图片
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     
-    [picker dismissViewControllerAnimated:YES completion:nil];
     UIImage *img = (UIImage *)info[@"UIImagePickerControllerOriginalImage"];
+    [picker dismissViewControllerAnimated:YES completion:nil];
     
+    //
     if ( self.delegate && [self.delegate respondsToSelector:@selector(imagePickerController:didFinishPickingWithImages: chooseItems:)]) {
-        
-        [self.delegate imagePickerController:self.pickerCtrl didFinishPickingWithImages:@[img] chooseItems:nil];
-        //清除
-        [[TLChooseResultManager manager].hasChooseItems removeAllObjects];
 
-        
+
+         __block NSString *localIdentifier = nil;
+        //
+        [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+            
+            PHAssetChangeRequest *req = [PHAssetChangeRequest creationRequestForAssetFromImage:img];
+
+            //得到唯一标识符
+            localIdentifier = req.placeholderForCreatedAsset.localIdentifier;
+            
+        } completionHandler:^(BOOL success, NSError * _Nullable error) {
+            
+            if (success && localIdentifier) {
+                
+             PHFetchResult <PHAsset *>*resulst =  [PHAsset fetchAssetsWithLocalIdentifiers:@[localIdentifier] options:nil];
+                
+                if (resulst.count > 0) {
+                    
+                    PHAsset *asset =  [resulst objectAtIndex:0];
+
+                    
+                    TLPhotoChooseItem *photoItem = [[TLPhotoChooseItem alloc] init];
+                    photoItem.asset = asset;
+                    photoItem.thumbnailImg = img;
+                    
+                    //添加到
+                    [[TLChooseResultManager manager].hasChooseItems addObject:photoItem];
+                    
+                    //回到主线程
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                      [self.delegate imagePickerController:self.pickerCtrl didFinishPickingWithImages:nil chooseItems:[TLChooseResultManager manager].hasChooseItems];
+                        
+                    });
+
+                    
+
+                }
+ 
+                
+            }
+            
+        }];
     }
     
 }
 
+//--//
+//- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+//
+//
+//}
+
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     if (self.photoItems[indexPath.row].isCamera) { //拍照
+        
+        if ([TLChooseResultManager manager].hasChooseItems.count > 9) {
+            
+            [TLAlert alertWithInfo:@"图片数量不能大于9"];
+            return;
+        }
         
         UIImagePickerController *cameraController = [[UIImagePickerController alloc] init];
         cameraController.delegate = self;

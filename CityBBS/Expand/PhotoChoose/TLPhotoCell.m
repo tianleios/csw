@@ -72,6 +72,7 @@
             self.photoItem.isSelected = YES;
             self.selectedBtn.selected = YES;
             
+            //存储选择的
             [[TLChooseResultManager manager].hasChooseItems addObject:self.photoItem];
             [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.3 initialSpringVelocity:10 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
                 
@@ -97,7 +98,25 @@
     
         self.photoItem.isSelected = NO;
         self.selectedBtn.selected = NO;
-        [[TLChooseResultManager manager].hasChooseItems removeObject:self.photoItem];
+        
+        
+       __block TLPhotoChooseItem *willRemoveItem = nil;
+        [[TLChooseResultManager manager].hasChooseItems enumerateObjectsUsingBlock:^(TLPhotoChooseItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if ([obj.asset.localIdentifier isEqualToString:self.photoItem.asset.localIdentifier]) {
+                
+                willRemoveItem = obj;
+                *stop = YES;
+            }
+        }];
+        
+        //
+        if (willRemoveItem) {
+            
+            [[TLChooseResultManager manager].hasChooseItems removeObject:willRemoveItem];
+
+        }
+        //
 
     }
 
@@ -105,23 +124,23 @@
  
     
     
-    return;
-    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        
-        self.selectedBtn.transform = CGAffineTransformMakeScale(1.2, 1.2);
-        
-    } completion:^(BOOL finished) {
-        
-        [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            
-            self.selectedBtn.transform = CGAffineTransformIdentity;
-            
-        } completion:^(BOOL finished) {
-            
-            
-        }];
-        
-    }];
+//    return;
+//    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+//        
+//        self.selectedBtn.transform = CGAffineTransformMakeScale(1.2, 1.2);
+//        
+//    } completion:^(BOOL finished) {
+//        
+//        [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+//            
+//            self.selectedBtn.transform = CGAffineTransformIdentity;
+//            
+//        } completion:^(BOOL finished) {
+//            
+//            
+//        }];
+//        
+//    }];
  
 
 }
@@ -146,6 +165,8 @@
     [[PHCachingImageManager defaultManager] requestImageForAsset:_photoItem.asset targetSize:_photoItem.thumbnailSize contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
         
         self.photoImageView.image = result;
+        //缩略图存储
+        _photoItem.thumbnailImg = result;
         
     }];
     

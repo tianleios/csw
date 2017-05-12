@@ -7,17 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TLPhotoChooseItem.h"
 
 @interface TLPhotoChooseView : UIView
 
-//@property (nonatomic, assign) UIEdgeInsets edgeInsets;
+- (void)getImgs:(void(^)(NSArray <UIImage *>*imgs))imgsBLock;
 
-@property (nonatomic, copy, getter=getImgs) NSArray <UIImage *>*imgs;
+@property (nonatomic, copy, readonly, getter=getPhotoItems) NSArray <TLPhotoChooseItem *>*currentPhotoItems;
 
-//单张选择，暂时弃用
-- (void)beginChooseWithImg:(UIImage *)img;
 
-//可传多张 【1,9】 闭区间
-- (void)finishChooseWithImgs:(NSArray <UIImage *>*)imgs;
+@property (nonatomic, copy) void(^addAction)();
+
+
+- (void)finishChooseWithImgs:(NSArray <TLPhotoChooseItem *>*)imgs;
+
 
 @end

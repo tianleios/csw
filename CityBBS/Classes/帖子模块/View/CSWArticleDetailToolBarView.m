@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) UIButton *dzBtn;
 @property (nonatomic, strong) UIButton *moreBtn;
+@property (nonatomic, strong) UIButton *deleteBtn;
 
 @end
 
@@ -33,12 +34,25 @@
             make.top.equalTo(self.mas_top);
         }];
         
+        //我可能出现删除选项
+        self.deleteBtn = [[UIButton alloc] init];
+        [self addSubview:self.deleteBtn];
+        [self.deleteBtn addTarget:self action:@selector(deleteAction) forControlEvents:UIControlEventTouchUpInside];
+        [self.deleteBtn setImage:[UIImage imageNamed:@"article_delete"] forState:UIControlStateNormal];
+        [self.deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self.mas_right).offset(-15);
+            make.centerY.equalTo(self.mas_centerY);
+            make.height.equalTo(self.mas_height);
+            make.width.mas_equalTo(30);
+        }];
+        
+        
         //点赞
         //more
         self.moreBtn = [[UIButton alloc] init];
         [self addSubview:self.moreBtn];
         [self.moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(self.mas_right).offset(-15);
+            make.right.equalTo(self.deleteBtn.mas_left).offset(-15);
             make.centerY.equalTo(self.mas_centerY);
             make.height.equalTo(self.mas_height);
             make.width.equalTo(@30);
@@ -93,13 +107,15 @@
 
 - (void)moreAction {
     
+    NSString *collectionStr = self.isCollection ? @"取消收藏" : @"收藏";
+
     //
     UIAlertController *alertCtrl = [UIAlertController alertControllerWithTitle:nil message:@"操作" preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction *collectionAction = [UIAlertAction actionWithTitle:@"收藏" style:0 handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *collectionAction = [UIAlertAction actionWithTitle:collectionStr style:0 handler:^(UIAlertAction * _Nonnull action) {
         
         if ([self.delegate respondsToSelector:@selector(didSelectedAction:action:)]) {
             
-            [self.delegate didSelectedAction:self action:CSWArticleDetailToolBarActionTypeCollection];
+            [self.delegate didSelectedAction:self action: self.isCollection ?  CSWArticleDetailToolBarActionTypeCancleCollection : CSWArticleDetailToolBarActionTypeCollection];
             
         }
         
@@ -134,6 +150,37 @@
     
 }
 
+
+- (void)isCurrentUserArticle:(BOOL)isCurrentUser {
+
+    if (isCurrentUser) {
+        
+        self.deleteBtn.enabled = YES;
+        
+    } else {
+        
+        self.deleteBtn.enabled = NO;
+
+        [self.deleteBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(0.01);
+            make.right.mas_equalTo(0);
+        }];
+    
+    }
+
+}
+
+//删除
+- (void)deleteAction {
+
+    if ([self.delegate respondsToSelector:@selector(didSelectedAction:action:)]) {
+        
+        [self.delegate didSelectedAction:self action:CSWArticleDetailToolBarActionTypeDelete];
+        
+    }
+
+}
+
 - (void)dzAction {
 
     if ([self.delegate respondsToSelector:@selector(didSelectedAction:action:)]) {
@@ -163,6 +210,12 @@
     
     [self.dzBtn setImage:[UIImage imageNamed:@"article_dz_normal"] forState:UIControlStateNormal];
     
+}
+
+- (void)unDz {
+
+     [self.dzBtn setImage:[UIImage imageNamed:@"article_dz_normal"] forState:UIControlStateNormal];
+
 }
 
 

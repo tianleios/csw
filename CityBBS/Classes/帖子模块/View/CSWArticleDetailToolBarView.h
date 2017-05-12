@@ -13,9 +13,11 @@
 typedef NS_ENUM(NSUInteger, CSWArticleDetailToolBarActionType) {
     
     CSWArticleDetailToolBarActionTypeSendCompose = 0,
+    CSWArticleDetailToolBarActionTypeDelete,
     CSWArticleDetailToolBarActionTypeDZ,
-    CSWArticleDetailToolBarActionTypeCollection,
-    CSWArticleDetailToolBarActionTypeReport,
+    CSWArticleDetailToolBarActionTypeCollection, //收藏
+    CSWArticleDetailToolBarActionTypeCancleCollection, //收藏
+    CSWArticleDetailToolBarActionTypeReport //举报
 
 };
 
@@ -30,8 +32,16 @@ typedef NS_ENUM(NSUInteger, CSWArticleDetailToolBarActionType) {
 
 @property (nonatomic, weak) id <ArticleDetailToolBarViewDelegate> delegate;
 
-- (void)dzSuccess;
-- (void)dzFailure;
+//是否收藏 yes 已经收藏，NO还未收藏
+@property (nonatomic, assign) BOOL isCollection;
+
+//当期那登录用户的帖子详情
+- (void)isCurrentUserArticle:(BOOL)isCurrentUser;
+
+//点赞操作
+- (void)dzSuccess; //点赞成功
+- (void)dzFailure; //点赞失败
+- (void)unDz; //为点赞
 
 @end
 

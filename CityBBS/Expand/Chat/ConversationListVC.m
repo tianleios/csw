@@ -89,8 +89,6 @@
         
     }
     
-    
-    
     //根据conversion 的 ext属性,获取用户的 头像 和昵称 这个需要事先约定好
     model.avatarURLPath = @"http://pic6.huitu.com/res/20130116/84481_20130116142820494200_1.jpg";
     //对方昵称
@@ -121,19 +119,5 @@
     }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

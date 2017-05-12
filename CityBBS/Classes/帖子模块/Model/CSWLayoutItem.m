@@ -38,7 +38,7 @@ static MLLinkLabel * kProtypeLabel() {
     CGFloat contentW = [CSWLayoutHelper helper].contentWidth;
     //1.标题
     CGSize titleSize = [_article.title calculateStringSize:CGSizeMake(contentW, MAXFLOAT) font:[CSWLayoutHelper helper].titleFont];
-    self.titleFrame =CGRectMake(leftMargin, CONST_TOP_HEIGHT, titleSize.width, titleSize.height);
+    self.titleFrame =CGRectMake(leftMargin, CONST_TOP_HEIGHT, titleSize.width + 1, titleSize.height + 2);
     
     //2.内容-- 先给值才能计算出真正的高度
 //    CGSize contentSize = [_article.content calculateStringSize:CGSizeMake(contentW, MAXFLOAT) font:[CSWLayoutHelper helper].contentFont];

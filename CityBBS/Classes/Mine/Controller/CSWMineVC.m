@@ -19,6 +19,7 @@
 #import "TLAboutUsVC.h"
 #import "CSWFansVC.h"
 #import "CSWMoneyRewardFlowVC.h"
+#import "ConversationListVC.h"
 
 @interface CSWMineVC ()<UITableViewDataSource,UITableViewDelegate,CSWMineHeaderSeletedDelegate>
 
@@ -185,8 +186,9 @@
     self.headerView.levelLbl.text = [TLUser user].level;
     
     //
-    self.headerView.focusNum = [TLUser user].totalFansNum;
-    self.headerView.fansNum = [TLUser user].totalFollowNum;
+    self.headerView.focusNum = [TLUser user].totalFollowNum;
+
+    self.headerView.fansNum = [TLUser user].totalFansNum;
     //
     
 }
@@ -300,6 +302,7 @@
         collectItem.text  = @"我的收藏";
         [collectItem setAction:^{
             
+
             
         }];
         
@@ -318,6 +321,8 @@
         msgItem.text  = @"我的消息";
         [msgItem setAction:^{
             
+            ConversationListVC *chatListV = [[ConversationListVC alloc] init];
+            [self.navigationController pushViewController:chatListV animated:YES];
             
         }];
         

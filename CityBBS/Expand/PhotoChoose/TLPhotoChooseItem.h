@@ -14,8 +14,14 @@
 @property (nonatomic, strong) PHAsset *asset;
 @property (nonatomic, strong) UIImage *thumbnailImg;
 @property (nonatomic, assign) CGSize thumbnailSize;
+
+//只有在选择完成之后展示才有效
+@property (nonatomic, assign) BOOL isAdd;
+
+//是否为相机拍摄
 @property (nonatomic, assign) BOOL isCamera;
 
+//是否为选中已经选中的图片
 @property (nonatomic, assign) BOOL isSelected;
 
 

@@ -7,16 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TLPhotoItem.h"
+//#import "TLPhotoItem.h"
+#import "TLPhotoChooseItem.h"
 
 @interface TLPhotoChooseCell : UICollectionViewCell
 
-@property (nonatomic, copy) void(^deleteItem)(UICollectionViewCell *cell);
-@property (nonatomic, copy) void(^add)();
+@property (nonatomic, copy) void(^deleteItem)(TLPhotoChooseItem *photoItem);
+//@property (nonatomic, copy) void(^add)();
 
+
+//
 //@property (nonatomic, assign) BOOL isAdd;
+@property (nonatomic, strong) TLPhotoChooseItem *phototItem;
 
-@property (nonatomic, strong) TLPhotoItem *phototItem;
 
 
 @end

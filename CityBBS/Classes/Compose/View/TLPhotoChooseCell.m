@@ -35,8 +35,9 @@
         
         //删除按钮
         UIButton *deleteBtn = [[UIButton alloc] init];
-        deleteBtn.backgroundColor = [UIColor orangeColor];
+//        deleteBtn.backgroundColor = [UIColor orangeColor];
         self.deleteBtn = deleteBtn;
+        [deleteBtn setImage:[UIImage imageNamed:@"搜索－删除"] forState:UIControlStateNormal];
         [deleteBtn addTarget:self action:@selector(delete) forControlEvents:UIControlEventTouchUpInside];
         
         [self.contentView addSubview:deleteBtn];
@@ -51,14 +52,16 @@
         //
         self.addPhotoBtn = [[UIButton alloc] initWithFrame:self.contentView.bounds];
         [self.contentView addSubview:self.addPhotoBtn];
-        [self.addPhotoBtn addTarget:self action:@selector(addPhoto) forControlEvents:UIControlEventTouchUpInside];
+//        [self.addPhotoBtn addTarget:self action:@selector(addPhoto) forControlEvents:UIControlEventTouchUpInside];
         [self.addPhotoBtn setBackgroundImage:[UIImage imageNamed:@"添加照片"] forState:UIControlStateNormal];
+        self.addPhotoBtn.userInteractionEnabled = NO;
         
     }
     return self;
 }
 
-- (void)setPhototItem:(TLPhotoItem *)phototItem {
+
+- (void)setPhototItem:(TLPhotoChooseItem *)phototItem {
 
     _phototItem = phototItem;
     
@@ -70,35 +73,60 @@
         self.photoImageView.hidden = YES;
         self.deleteBtn.hidden = YES;
         self.backgroundColor = [UIColor whiteColor];
-    
-
+        
+        
     } else {//显示
-
         
         self.addPhotoBtn.hidden = YES;
         self.photoImageView.hidden = NO;
         self.deleteBtn.hidden = NO;
-        self.photoImageView.image = _phototItem.img;
+        self.photoImageView.image = _phototItem.thumbnailImg;
         
     }
 
 }
 
 
-- (void)addPhoto {
+//- (void)setPhototItem:(TLPhotoItem *)phototItem {
+//
+//    _phototItem = phototItem;
+//    
+//    if (_phototItem.isAdd) {//添加按钮
+//        
+//        
+//        self.addPhotoBtn.hidden = NO;
+//        
+//        self.photoImageView.hidden = YES;
+//        self.deleteBtn.hidden = YES;
+//        self.backgroundColor = [UIColor whiteColor];
+//    
+//
+//    } else {//显示
+//
+//        
+//        self.addPhotoBtn.hidden = YES;
+//        self.photoImageView.hidden = NO;
+//        self.deleteBtn.hidden = NO;
+//        self.photoImageView.image = _phototItem.img;
+//        
+//    }
+//
+//}
 
-    if (self.add) {
-        self.add();
-    }
 
-}
+//- (void)addPhoto {
+//
+//    if (self.add) {
+//        self.add();
+//    }
+//
+//}
 
 - (void)delete {
 
-__weak typeof(self) weakself = self;
     if (self.deleteItem) {
         
-        self.deleteItem(weakself);
+        self.deleteItem(self.phototItem);
     }
 
 

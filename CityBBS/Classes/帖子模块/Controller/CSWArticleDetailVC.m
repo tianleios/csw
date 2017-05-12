@@ -63,6 +63,9 @@
 //--// 当用户登录的时候，判断是否关注了该发帖人
 @property (nonatomic, assign) BOOL isFocus;
 
+@property (nonatomic, assign) BOOL isDZ;//是否点赞
+@property (nonatomic, assign) BOOL isSC;//是否收藏
+
 @end
 
 @implementation CSWArticleDetailVC
@@ -107,10 +110,7 @@
     }
     
     //0.增加帖子阅读量
-    TLNetworking *readNumHttp = [TLNetworking new];
-    readNumHttp.code = @"610120";
-    readNumHttp.parameters[@"postCode"] = self.articleCode;
-    [readNumHttp postWithSuccess:nil failure:nil];
+    [CSWArticleApi addReadTimesWithArticleCode:self.articleCode];
 
     
     [self getArticleDetailData];
@@ -135,7 +135,6 @@
         
         [TLProgressHUD dismiss];
 
-        
         //
         CSWArticleModel *articleModel = [CSWArticleModel tl_objectWithDictionary:responseObject[@"data"]];
         self.layoutItem = [[CSWLayoutItem alloc] init];
@@ -145,10 +144,55 @@
         //UI
         [self setUpUI];
         
+        //--//
+        self.toolBarView.isCollection = NO;
+        if ([TLUser user].isLogin) {
+            
+            //是否点赞
+            if ([self.layoutItem.article.isDZ isEqual:@1]) {
+                
+                self.isDZ = YES;
+                [self.toolBarView dzSuccess];
+
+                
+            } else {
+            
+                self.isDZ = NO;
+                [self.toolBarView unDz];
+
+            }
+            
+            //是否收藏
+            if ([self.layoutItem.article.isSC isEqual:@1]) {
+                
+                self.isSC = YES;
+                self.toolBarView.isCollection = YES;
+                
+            } else {
+                
+                self.isSC = NO;
+                self.toolBarView.isCollection = NO;
+
+                
+            }
+            
+        }
+        
+        //是否是自己的帖子，可以删除
+        if ([TLUser user].isLogin &&[[TLUser user].userId isEqualToString:self.layoutItem.article.publisher]) {
+            //自己的帖子
+            [self.toolBarView isCurrentUserArticle:YES];
+            
+        } else {
+        
+            [self.toolBarView isCurrentUserArticle:NO];
+
+        }
+        
         //评论点赞数据
         self.userActionSwitchView.countStrRoom = @[[self.layoutItem.article.sumComment stringValue],[self.layoutItem.article.sumLike stringValue]];
         
-        
+        //--//
         if ([TLUser user].userId  && ![[TLUser user].userId isEqualToString:self.layoutItem.article.publisher]) {
             //是否关注了该用户
             TLNetworking *http = [TLNetworking new];
@@ -178,17 +222,23 @@
 
             }];
 
-            //--//
+        //--//
         } else {
             
-            //隐藏掉关注按钮
-            self.currentDetailTimeLineCell.hidden = YES;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                
+                //隐藏掉关注按钮
+                self.currentDetailTimeLineCell.focusBtn.hidden = YES;
+                
+            });
+         
         
         }
         
         
         //获取打赏，评论 ，点在数据
         [self getData];
+        
         
     } failure:^(NSError *error) {
         
@@ -332,18 +382,40 @@
                 
                 //是否已经点赞
                 //取消和点赞
-                [toolBarView dzSuccess];
+                if (self.isDZ) {
+                    
+                    [CSWArticleApi cancleDzArticleWithCode:self.articleCode
+                                                user:[TLUser user].userId
+                                             success:^{
+                                                 
+                                                 self.isDZ = NO;
+                                                 [self.toolBarView unDz];
+                                             }
+                                             failure:^{
+                                                 
+                                                 [toolBarView dzFailure];
+                                                 
+                                             }];
+                    
+                } else {
+                    
+                    [CSWArticleApi dzArticleWithCode:self.articleCode
+                                                user:[TLUser user].userId
+                                             success:^{
+                                                 
+                                                 self.isDZ = YES;
+                                                 [self.toolBarView dzSuccess];
+
+                                             }
+                                             failure:^{
+                                                 
+                                                 [toolBarView dzFailure];
+                                                 
+                                             }];
                 
-                [CSWArticleApi dzArticleWithCode:self.articleCode
-                                        user:[TLUser user].userId
-                                         success:^{
-                                             
-                                         }
-                                         failure:^{
-                                             
-                                             [toolBarView dzFailure];
-                                             
-                                         }];
+                
+                }
+               
                 
             }
             break;
@@ -353,7 +425,8 @@
                 [CSWArticleApi collectionArticleWithCode:self.articleCode
                                             user:[TLUser user].userId
                                          success:^{
-                                             [TLAlert alertWithSucces:@"收藏成功"];
+                                             self.toolBarView.isCollection = YES;
+
                                          }
                                          failure:^{
                                              
@@ -361,6 +434,40 @@
                 
             }
             break;
+            
+          case  CSWArticleDetailToolBarActionTypeCancleCollection : {//取消收藏
+            
+            [CSWArticleApi cancleCollectionArticleWithCode:self.articleCode
+                                                user:[TLUser user].userId
+                                             success:^{
+                                                 self.toolBarView.isCollection = NO;
+//                                                 [TLAlert alertWithSucces:@""];
+                                             }
+                                             failure:^{
+                                                 
+                                             }];
+            
+          }
+         break;
+            
+            case  CSWArticleDetailToolBarActionTypeDelete: {//删除
+            
+                [TLProgressHUD showWithStatus:@""];
+                [CSWArticleApi deleteArticleWithCode:self.articleCode user:[TLUser user].userId success:^{
+                    
+                    
+                    [self.navigationController popViewControllerAnimated:YES];
+                    [TLProgressHUD dismiss];
+                    
+                } failure:^{
+                    
+                    [TLProgressHUD dismiss];
+
+                }];
+                
+            }
+            break;
+            
             
             case  CSWArticleDetailToolBarActionTypeReport: {//举报
                 
@@ -578,12 +685,12 @@
 
 }
 
+
 - (void)setUpUI {
 
     //帖子高度 + 赏金cell高度 + 间隔
     CGFloat articleDetailTableViewHeight = _layoutItem.cellHeight + SJ_CELL_HEIGHT + 20;
     self.articleDetailTableViewHeigth = articleDetailTableViewHeight;
-    
     
     //1.背景
     self.bgScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 64 - COMMENT_INPUT_VIEW_HEIGHT)];
@@ -599,11 +706,9 @@
     //6.帖子详情 + 赏金
     self.articleDetailTableView = [TLTableView  groupTableViewWithframe:CGRectMake(0, 0, SCREEN_WIDTH, articleDetailTableViewHeight) delegate:self dataSource:self];
     self.articleDetailTableView.scrollEnabled = NO;
-//    [self.bgScrollView addSubview:self.articleDetailTableView];
     
     //7.评论点赞 展示 切换
     self.userActionSwitchView.frame = CGRectMake(0, self.articleDetailTableView.yy, SCREEN_WIDTH, USER_ACTION_SWITCH_HEIGHT);
-//    [self.bgScrollView addSubview:self.userActionSwitchView];
     
     
     //假header
@@ -737,7 +842,6 @@
     
     }
 }
-
 
 
 #pragma tableView -- dataSource

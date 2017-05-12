@@ -24,6 +24,10 @@
 
 @implementation TLImagePickerController
 
+- (void)dealloc {
+
+    NSLog(@"多图选择被释放");
+}
 //- (instancetype)initWithDelegate:(id<TLImagePickerControllerDelegate> )pickerDelegate {
 //
 //    TLDisplayPhotoVC *displayVC = [[TLDisplayPhotoVC alloc] init];
@@ -50,7 +54,10 @@
 - (void)setReplacePhotoItems:(NSArray<TLPhotoChooseItem *> *)replacePhotoItems {
 
     
-    _replacePhotoItems = replacePhotoItems;
+    _replacePhotoItems = [replacePhotoItems copy];
+    
+    //移除以前的
+    [[TLChooseResultManager manager].hasChooseItems removeAllObjects];
     [[TLChooseResultManager manager].hasChooseItems addObjectsFromArray:_replacePhotoItems];
     self.displayVC.replacePhotoItems = _replacePhotoItems;
     

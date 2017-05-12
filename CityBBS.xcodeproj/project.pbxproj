@@ -332,6 +332,7 @@
 		2EE1995B1EC2E01400F35B62 /* CSWRelationUserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE1995A1EC2E01400F35B62 /* CSWRelationUserModel.m */; };
 		2EE1995E1EC2F1BA00F35B62 /* CSWAccountFlowModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE1995D1EC2F1BA00F35B62 /* CSWAccountFlowModel.m */; };
 		2EE199611EC3070800F35B62 /* CSWPlateDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE199601EC3070800F35B62 /* CSWPlateDetailModel.m */; };
+		2EE199641EC4592F00F35B62 /* CSWAtUserSearchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE199631EC4592F00F35B62 /* CSWAtUserSearchVC.m */; };
 		79B8414366990370B2E167C3 /* libPods-CityBBS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00E9F737182A35C66A3AEA4A /* libPods-CityBBS.a */; };
 /* End PBXBuildFile section */
 
@@ -977,6 +978,8 @@
 		2EE1995D1EC2F1BA00F35B62 /* CSWAccountFlowModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWAccountFlowModel.m; sourceTree = "<group>"; };
 		2EE1995F1EC3070800F35B62 /* CSWPlateDetailModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWPlateDetailModel.h; sourceTree = "<group>"; };
 		2EE199601EC3070800F35B62 /* CSWPlateDetailModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWPlateDetailModel.m; sourceTree = "<group>"; };
+		2EE199621EC4592F00F35B62 /* CSWAtUserSearchVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSWAtUserSearchVC.h; sourceTree = "<group>"; };
+		2EE199631EC4592F00F35B62 /* CSWAtUserSearchVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSWAtUserSearchVC.m; sourceTree = "<group>"; };
 		626EB6FF8CB264869FFDD743 /* Pods-CityBBS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityBBS.release.xcconfig"; path = "Pods/Target Support Files/Pods-CityBBS/Pods-CityBBS.release.xcconfig"; sourceTree = "<group>"; };
 		B01BAB57D36E23B637CCE73A /* Pods-CityBBS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityBBS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CityBBS/Pods-CityBBS.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1012,6 +1015,8 @@
 				2E03B3521E866EF800616707 /* TLComposeManager.m */,
 				2E03B34E1E86660600616707 /* TLComposeArticleItem.h */,
 				2E03B34F1E86660600616707 /* TLComposeArticleItem.m */,
+				2EE199621EC4592F00F35B62 /* CSWAtUserSearchVC.h */,
+				2EE199631EC4592F00F35B62 /* CSWAtUserSearchVC.m */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -3194,6 +3199,7 @@
 				2E9539FC1E6BE91400668E0F /* MWTapDetectingView.m in Sources */,
 				2E953A471E6BE91400668E0F /* EaseChatBarMoreView.m in Sources */,
 				2EABB0F31E715A7D00FD2A68 /* TLTextStorage.m in Sources */,
+				2EE199641EC4592F00F35B62 /* CSWAtUserSearchVC.m in Sources */,
 				2E0E18C91E7BC4AF00079648 /* CSWUserEditCell.m in Sources */,
 				2E5A61BB1EC06DA1003AF623 /* CSWWebVC.m in Sources */,
 				2E0E18BA1E7B8E6900079648 /* TLUserRegistVC.m in Sources */,

@@ -15,15 +15,18 @@
 #import "TLTextStorage.h"
 #import "MLLinkLabel.h"
 #import "NSString+MLExpression.h"
-#import "PYPhotosView.h"
+
 #import "TLPhotoChooseView.h"
-#import "TLImagePicker.h"
+
+//#import "TLImagePicker.h"
 #import "TLPlateChooseView.h"
-//#import "TZImagePickerController.h"
 #import "TLImagePickerController.h"
 #import "CSWSmallPlateModel.h"
 #import "QNUploadManager.h"
 #import "QNConfiguration.h"
+#import "CSWAtUserSearchVC.h"
+#import "TLNavigationController.h"
+#import "QNResponseInfo.h"
 
 #define TITLE_MARGIN 10
 #define TEXT_MARGIN 5
@@ -37,15 +40,17 @@
 
 @property (nonatomic, strong) TLComposeTextView *composeTextView;
 @property (nonatomic, strong) UIScrollView *bgScrollView;
+
+//用于展示已经选择图片的视图
 @property (nonatomic, strong) TLPhotoChooseView *photoChooseView;
-@property (nonatomic, strong) TLImagePicker *imagePicker;
+//@property (nonatomic, strong) TLImagePicker *imagePicker;
 
 @property (nonatomic, strong) UIButton *titleBtn;//顶部板块吊起
 @property (nonatomic, strong) UILabel *titleLbl;
 
 @property (nonatomic, strong) TLPlateChooseView *plateChooseView;
 
-@property (nonatomic, copy) NSArray <TLPhotoChooseItem *>*replacePhotoItems;
+
 //数据
 @property (nonatomic, copy) NSArray <CSWSmallPlateModel *>*smallPlateModelRoom;
 
@@ -66,6 +71,31 @@
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+
+    if ([text isEqualToString:@"@"]) {
+        
+        CSWAtUserSearchVC *searchUserVC = [[CSWAtUserSearchVC alloc] init];
+        TLNavigationController *navCtrl = [[TLNavigationController alloc] initWithRootViewController:searchUserVC];
+        
+        [searchUserVC setChooseUserAction:^(NSString *nickname){
+            
+            [self.composeTextView insertText:[NSString stringWithFormat:@"@%@ ",nickname]];
+            [self.composeTextView becomeFirstResponder];
+            
+        }];
+        
+        [self presentViewController:navCtrl animated:YES completion:nil];
+        
+        return NO;
+        
+    } else {
+    
+        return YES;
+    }
+
 }
 
 - (void)viewDidLoad {
@@ -89,6 +119,10 @@
     self.bgScrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     [self.view addSubview:self.bgScrollView];
 //    self.bgScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT - 64 - 0 + 10);
+    
+    //
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.bgScrollView.backgroundColor = [UIColor whiteColor];
 
     
     //板块选择
@@ -153,8 +187,9 @@
     //解决切换 效果差
     toolBar.height = 350;
     [self.view addSubview:toolBar];
-    self.toolBar  = toolBar;
+    self.toolBar = toolBar;
 
+    
 #pragma mark- 切换工具
     __weak typeof(self) weakself = self;
     toolBar.changeType = ^(ChangeType type){
@@ -177,17 +212,34 @@
             
         } else if (type == ChangeTypePhoto) {
             
-            //要把已经选中的图片回源，显示已经展示得图片
-             TLImagePickerController *imagePickerController = [[TLImagePickerController alloc] init];
+           
+           TLImagePickerController *imagePickerController = [[TLImagePickerController alloc] init];
             imagePickerController.pickerDelegate = self;
-            imagePickerController.replacePhotoItems = self.replacePhotoItems;
+            
+            //要把已经选中的图片回源，显示已经展示的图片
+            imagePickerController.replacePhotoItems = self.photoChooseView.currentPhotoItems;
+            
+            //
             [self presentViewController:imagePickerController animated:YES completion:nil];
         
         } else { // At
-        
-        
+            
+            CSWAtUserSearchVC *searchUserVC = [[CSWAtUserSearchVC alloc] init];
+            TLNavigationController *navCtrl = [[TLNavigationController alloc] initWithRootViewController:searchUserVC];
+            
+            [searchUserVC setChooseUserAction:^(NSString *nickname){
+                
+                [self.composeTextView insertText:[NSString stringWithFormat:@"@%@ ",nickname]];
+                
+                [self.composeTextView becomeFirstResponder];
+                
+            }];
+            
+            [self presentViewController:navCtrl animated:YES completion:nil];
+         
         }
     
+        
     };
     
 #pragma mark- 板块选择
@@ -213,6 +265,18 @@
         
     }];
 
+#pragma mark- 图片添加
+    [self.photoChooseView setAddAction:^{
+        
+        TLImagePickerController *imagePickerController = [[TLImagePickerController alloc] init];
+        imagePickerController.pickerDelegate = weakself;
+        //要把已经选中的图片回源，显示已经展示的图片
+        imagePickerController.replacePhotoItems = weakself.photoChooseView.currentPhotoItems;
+        //
+        [weakself presentViewController:imagePickerController animated:YES completion:nil];
+        
+        
+    }];
     
 }
 
@@ -225,38 +289,32 @@
 }
 
 
-- (void)imagePickerController:(TLImagePickerController *)picker didFinishPickingWithImages:(NSArray <UIImage *> *)imgs chooseItems:(NSArray<TLPhotoChooseItem *> *)items{
+- (void)imagePickerController:(TLImagePickerController *)picker didFinishPickingWithImages:(NSArray <UIImage *> *)imgs chooseItems:(NSMutableArray<TLPhotoChooseItem *> *)items{
+    
+    //--//
+    [self.photoChooseView finishChooseWithImgs:items];
 
-    //再次点击 图片选择进行回传
-    if (items) {
-        self.replacePhotoItems = items;
-    }
-    
-    //图片展示
-    [self.photoChooseView finishChooseWithImgs:imgs];
-    
-    //
     [picker dismissViewControllerAnimated:YES completion:nil];
 
 }
 
-- (TLImagePicker *)imagePicker {
-
-    if (!_imagePicker) {
-        
-        _imagePicker = [[TLImagePicker alloc] initWithVC:self];
-        __weak typeof(self) weakself = self;
-        _imagePicker.pickFinish = ^(NSDictionary *info,UIImage *img) {
-        
-            UIImage *image = info[@"UIImagePickerControllerOriginalImage"];
-            [weakself.photoChooseView beginChooseWithImg:image];
-            
-        };
-        
-    }
-    return _imagePicker;
-
-}
+//- (TLImagePicker *)imagePicker {
+//
+//    if (!_imagePicker) {
+//        
+//        _imagePicker = [[TLImagePicker alloc] initWithVC:self];
+//        __weak typeof(self) weakself = self;
+//        _imagePicker.pickFinish = ^(NSDictionary *info,UIImage *img) {
+//        
+//            UIImage *image = info[@"UIImagePickerControllerOriginalImage"];
+//            [weakself.photoChooseView beginChooseWithImg:image];
+//            
+//        };
+//        
+//    }
+//    return _imagePicker;
+//
+//}
 
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
@@ -278,13 +336,14 @@
             
             textView.height = size.height + 2*TITLE_MARGIN;
             
-
         } else {
             
             textView.height = [textView.font lineHeight] + 2*TITLE_MARGIN;
 
         }
+        
         self.composeTextView.y = self.titleTextView.yy + 1;
+        
     } else {
         
         //内容
@@ -354,7 +413,7 @@
     
     NSMutableString *plainStr = [self.composeTextView.attributedText string].mutableCopy;
     
-    //倒叙遍历
+    //倒叙遍历,emjio
     [self.composeTextView.attributedText enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(0, self.composeTextView.attributedText.length) options:NSAttributedStringEnumerationReverse usingBlock:^(id  _Nullable value, NSRange range, BOOL * _Nonnull stop) {
         
         if ([value isKindOfClass:[TLTextAttachment class]]) {
@@ -367,72 +426,80 @@
     }];
     
     
-    if (self.photoChooseView.imgs.count > 0) {
+    
+    
+    if (self.photoChooseView.currentPhotoItems.count) {
         //图片上传
         //获取图片名称
-        NSMutableArray *imgNames = [[NSMutableArray alloc] initWithCapacity:self.photoChooseView.imgs.count];
-       __block NSInteger uploadSuccessCount = 0;
-        [self.photoChooseView.imgs enumerateObjectsUsingBlock:^(UIImage * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            
-            [imgNames addObject:[obj getUploadImgName]];
-            
-        }];
         
-        
-        //---//
-        [TLProgressHUD showWithStatus:@"图片上传中"];
-        TLNetworking *getUploadToken = [TLNetworking new];
-        getUploadToken.code = IMG_UPLOAD_CODE;
-        getUploadToken.parameters[@"token"] = [TLUser user].token;
-        [getUploadToken postWithSuccess:^(id responseObject) {
+        [self.photoChooseView getImgs:^(NSArray<UIImage *> *imgs) {
             
-            //
-            NSString *token = responseObject[@"data"][@"uploadToken"];
-            //
-            QNUploadManager *qnUoloadManange = [[QNUploadManager alloc] initWithConfiguration:[QNConfiguration build:^(QNConfigurationBuilder *builder) {
+            NSMutableArray *imgNames = [[NSMutableArray alloc] initWithCapacity:imgs.count];
+            __block NSInteger uploadSuccessCount = 0;
+            [imgs enumerateObjectsUsingBlock:^(UIImage * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-                builder.zone = [QNZone zone2];
-                
-            }]];
-            //可直接上传PHAsset 以后优化
-            
-            [self.photoChooseView.imgs enumerateObjectsUsingBlock:^(UIImage * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-                dispatch_group_enter(_uploadGroup);
-                [qnUoloadManange putData:UIImageJPEGRepresentation(obj, 1) key:imgNames[idx] token:token complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
-                    
-                dispatch_group_leave(_uploadGroup);
-                    
-                    if (key) {
-                        uploadSuccessCount ++;
-                    }
-                    
-                } option:nil];
+                [imgNames addObject:[obj getUploadImgName]];
                 
             }];
             
             
-            dispatch_group_notify(_uploadGroup, dispatch_get_main_queue(), ^{
+            //---//
+            [TLProgressHUD showWithStatus:@"图片上传中"];
+            TLNetworking *getUploadToken = [TLNetworking new];
+            getUploadToken.code = IMG_UPLOAD_CODE;
+            getUploadToken.parameters[@"token"] = [TLUser user].token;
+            [getUploadToken postWithSuccess:^(id responseObject) {
+                
+                //
+                NSString *token = responseObject[@"data"][@"uploadToken"];
+                //
+                QNUploadManager *qnUoloadManange = [[QNUploadManager alloc] initWithConfiguration:[QNConfiguration build:^(QNConfigurationBuilder *builder) {
+                    
+                    builder.zone = [QNZone zone2];
+                    
+                }]];
+                //可直接上传PHAsset 以后优化
+                
+                [imgs enumerateObjectsUsingBlock:^(UIImage * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    dispatch_group_enter(_uploadGroup);
+                    [qnUoloadManange putData:UIImageJPEGRepresentation(obj, 1) key:imgNames[idx] token:token complete:^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
+                        
+                        dispatch_group_leave(_uploadGroup);
+                        
+                        if (key && !info.error) {
+                            uploadSuccessCount ++;
+                        }
+                        
+                    } option:nil];
+                    
+                }];
+                
+                
+                dispatch_group_notify(_uploadGroup, dispatch_get_main_queue(), ^{
+                    
+                    [TLProgressHUD dismiss];
+                    if (uploadSuccessCount) {
+                        //拼接图片
+                        NSString *pic = [imgNames componentsJoinedByString:@"||"];
+                        [self composeWithContentStr:plainStr picStr:pic plateCode:plateCode];
+                        
+                    } else {
+                        
+                        [TLAlert alertHUDWithMsg:@"图片上传失败"];
+                        
+                    }
+                    
+                });
+                
+                
+            } failure:^(NSError *error) {
                 
                 [TLProgressHUD dismiss];
-                if (uploadSuccessCount) {
-                    //拼接图片
-                    NSString *pic = [imgNames componentsJoinedByString:@"||"];
-                    [self composeWithContentStr:plainStr picStr:pic plateCode:plateCode];
-                    
-                } else {
                 
-                    [TLAlert alertHUDWithMsg:@"图片上传失败"];
-
-                }
-                
-            });
-        
+            }];
             
-        } failure:^(NSError *error) {
             
-            [TLProgressHUD dismiss];
-
         }];
 
 
@@ -490,6 +557,7 @@
 }
 
 
+#pragma mark- 表情视图，和事件处理
 - (TLEmoticonInputView *)emoticonInputView {
 
     if (!_emoticonInputView) {

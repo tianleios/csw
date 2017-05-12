@@ -38,10 +38,27 @@
                           failure:(void(^)())failure;
 
 /**
+ 取消收藏帖子
+ */
++ (void)cancleCollectionArticleWithCode:(NSString *)code
+                             user:(NSString *)userId
+                          success:(void(^)())success
+                          failure:(void(^)())failure;
+
+/**
  点赞帖子
  */
 + (void)dzArticleWithCode:(NSString *)code
                     user: (NSString *)userId
+                  success:(void(^)())success
+                  failure:(void(^)())failure;
+
+
+/**
+ 取消点赞帖子
+ */
++ (void)cancleDzArticleWithCode:(NSString *)code
+                     user: (NSString *)userId
                   success:(void(^)())success
                   failure:(void(^)())failure;
 
@@ -55,6 +72,30 @@
                   failure:(void(^)())failure;
 
 
+
+
+/**
+ 增加帖子阅读量
+ @param articleCode 帖子编号
+ */
++ (void)addReadTimesWithArticleCode:(NSString *)articleCode;
+
+
+/**
+ 删除帖子
+ */
++ (void)deleteArticleWithCode:(NSString *)code
+                     user:(NSString *)userId
+                  success:(void(^)())success
+                  failure:(void(^)())failure;
+
+/**
+ 删除评论
+ */
++ (void)deleteCommentWithCode:(NSString *)code
+                         user:(NSString *)userId
+                      success:(void(^)())success
+                      failure:(void(^)())failure;
 
 
 ///**
