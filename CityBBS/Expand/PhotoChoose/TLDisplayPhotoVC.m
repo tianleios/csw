@@ -120,9 +120,8 @@
                 case PHAuthorizationStatusAuthorized: {
                     
                     //开始加载图片
-                    
-                    
                     [self beginLoadPhoto];
+                    
                 }
                     break;
             }
@@ -140,8 +139,10 @@
 #pragma mark- 开始加载图片
 - (void)beginLoadPhoto {
 
-//    _group = dispatch_group_create();
+    CGFloat w = (SCREEN_WIDTH - 2*3)/4.0;
+
     
+//    _group = dispatch_group_create();
     self.assetRoom = [NSMutableArray array];
     self.photoItems = [NSMutableArray array];
     
@@ -149,6 +150,119 @@
     TLPhotoChooseItem *cameraItem = [TLPhotoChooseItem new];
     cameraItem.isCamera = YES;
     [self.photoItems addObject:cameraItem];
+ 
+
+    //----// 以下为获取图片
+    
+    
+    //图片库
+    //    PHPhotoLibrary *photoLibrary = [PHPhotoLibrary sharedPhotoLibrary];
+    
+    //一、  PHAsset 和 PHCollection 两种途径获取资源
+    //二、  两个子类 1.PHCollectionList:文件夹  2.PHAssetCollection:相册
+    //    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+    //        NSLog(@"获取权限");
+    //    }];
+    
+//    //获取相册
+//    PHFetchResult<PHAssetCollection *> *albumResult = [PHAssetCollection
+//                                                       
+//                                                       fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum
+//                                                       subtype:PHAssetCollectionSubtypeAny
+//                                                       options:nil];
+//    
+//    //遍历相册
+//    [albumResult enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        
+//        
+//        if ([obj isKindOfClass:[PHAssetCollection class]]) {
+//            
+//            PHFetchOptions *assetsFetchOptions = [[PHFetchOptions alloc] init];
+//            assetsFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
+//            
+//            PHFetchResult<PHAsset *> *assetsResult =  [PHAsset fetchAssetsInAssetCollection:obj options:assetsFetchOptions];
+//            
+//            //遍历相册里的图片
+//            [assetsResult enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
+//                
+//                //只获取图片资源
+//                if (asset.mediaType == PHAssetMediaTypeImage) {
+//                    
+//                    [self.assetRoom addObject:asset];
+//                    
+//                    TLPhotoChooseItem *photoItem = [TLPhotoChooseItem new];
+//                    photoItem.thumbnailSize = CGSizeMake(w, w);
+//                    photoItem.asset = asset;
+//                    [self.photoItems addObject:photoItem];
+//                    
+//                    //比对已经选择的图片，进行展示
+//                    if (self.replacePhotoItems) {
+//                        
+//                        [self.replacePhotoItems enumerateObjectsUsingBlock:^(TLPhotoChooseItem * _Nonnull replaceItem, NSUInteger idx, BOOL * _Nonnull stop) {
+//                            
+//                            if ([photoItem.asset.localIdentifier isEqualToString: replaceItem.asset.localIdentifier]) {
+//                                
+//                                photoItem.isSelected = YES;
+//                            }
+//                            
+//                        }];
+//                    }
+//                }
+//                
+//            }];
+//            *stop = YES;
+//        }
+//        
+//    }];
+    
+    
+    ///
+    
+    PHFetchOptions *assetsFetchOptions = [[PHFetchOptions alloc] init];
+    assetsFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
+    PHFetchResult<PHAsset *> *assetsResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:assetsFetchOptions];
+    [assetsResult enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        [self.assetRoom addObject:asset];
+        
+        TLPhotoChooseItem *photoItem = [TLPhotoChooseItem new];
+        photoItem.thumbnailSize = CGSizeMake(w, w);
+        photoItem.asset = asset;
+        [self.photoItems addObject:photoItem];
+        
+        //比对已经选择的图片，进行展示
+        if (self.replacePhotoItems) {
+            
+            [self.replacePhotoItems enumerateObjectsUsingBlock:^(TLPhotoChooseItem * _Nonnull replaceItem, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                if ([photoItem.asset.localIdentifier isEqualToString: replaceItem.asset.localIdentifier]) {
+                    
+                    photoItem.isSelected = YES;
+                }
+                
+            }];
+        }
+        
+        
+    }];
+    
+    //从相册中，获取图片资源
+    
+    //由 asset 获取图片
+    PHImageRequestOptions *imageRequestOptions = [[PHImageRequestOptions alloc] init];
+    imageRequestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+    
+    
+    //带有缓存的取出图片 比PHImageManager 性能更好
+    //什么时候缓存完成呢
+    PHCachingImageManager *cachingImageManager = (PHCachingImageManager *)[PHCachingImageManager defaultManager];
+    cachingImageManager.allowsCachingHighQualityImages = NO;
+    [cachingImageManager startCachingImagesForAssets:self.assetRoom
+                                          targetSize:CGSizeMake(w, w)
+                                         contentMode:PHImageContentModeAspectFit
+                                             options:imageRequestOptions];
+
+    
     
     
     //
@@ -156,7 +270,6 @@
     flowLayout.minimumLineSpacing = 2;
     flowLayout.minimumInteritemSpacing = 2;
     
-    CGFloat w = (SCREEN_WIDTH - 2*3)/4.0;
     flowLayout.itemSize = CGSizeMake(w, w);
     
     //
@@ -175,88 +288,6 @@
     }];
     
     [collectionView registerClass:[TLPhotoCell class] forCellWithReuseIdentifier:@"id"];
-    
-    
-    //----// 以下为获取图片
-    
-    
-    //图片库
-    //    PHPhotoLibrary *photoLibrary = [PHPhotoLibrary sharedPhotoLibrary];
-    
-    //一、  PHAsset 和 PHCollection 两种途径获取资源
-    //二、  两个子类 1.PHCollectionList:文件夹  2.PHAssetCollection:相册
-    //    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-    //        NSLog(@"获取权限");
-    //    }];
-    
-    
-    
-    //拉取选项
-    PHFetchOptions *fetchOptions = [[PHFetchOptions alloc] init];
-    //    fetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
-    
-    //获取相册
-    PHFetchResult<PHAssetCollection *> *albumResult = [PHAssetCollection
-                                                       
-                                                       fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum
-                                                       subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary
-                                                       options:fetchOptions];
-    
-    //遍历相册
-    [albumResult enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        
-        if ([obj isKindOfClass:[PHAssetCollection class]]) {
-            
-            PHFetchOptions *assetsFetchOptions = [[PHFetchOptions alloc] init];
-            assetsFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
-            
-            PHFetchResult<PHAsset *> *assetsResult =  [PHAsset fetchAssetsInAssetCollection:obj options:assetsFetchOptions];
-            
-            //遍历相册里的图片
-            [assetsResult enumerateObjectsUsingBlock:^(PHAsset * _Nonnull asset, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-                //只获取图片资源
-                if (asset.mediaType == PHAssetMediaTypeImage) {
-                    
-                    [self.assetRoom addObject:asset];
-                    
-                    TLPhotoChooseItem *photoItem = [TLPhotoChooseItem new];
-                    photoItem.thumbnailSize = CGSizeMake(w, w);
-                    photoItem.asset = asset;
-                    [self.photoItems addObject:photoItem];
-                    
-                    //比对已经选择的图片，进行展示
-                    if (self.replacePhotoItems) {
-                        
-                        [self.replacePhotoItems enumerateObjectsUsingBlock:^(TLPhotoChooseItem * _Nonnull replaceItem, NSUInteger idx, BOOL * _Nonnull stop) {
-                            
-                            if ([photoItem.asset.localIdentifier isEqualToString: replaceItem.asset.localIdentifier]) {
-                                
-                                photoItem.isSelected = YES;
-                            }
-                            
-                        }];
-                    }
-                }
-                
-            }];
-            *stop = YES;
-        }
-        
-    }];
-    
-    //从相册中，获取图片资源
-    
-    //由 asset 获取图片
-    PHImageRequestOptions *imageRequestOptions = [[PHImageRequestOptions alloc] init];
-    imageRequestOptions.deliveryMode=PHImageRequestOptionsDeliveryModeHighQualityFormat;
-    
-    //带有缓存的取出图片 比PHImageManager 性能更好
-    //什么时候缓存完成呢
-    PHCachingImageManager *cachingImageManager = (PHCachingImageManager *)[PHCachingImageManager defaultManager];
-    [cachingImageManager startCachingImagesForAssets:self.assetRoom targetSize:CGSizeMake(w, w) contentMode:PHImageContentModeAspectFit options:imageRequestOptions];
-
 }
 
 #pragma mark- 确定图片选择,
@@ -380,7 +411,7 @@
     
     if (self.photoItems[indexPath.row].isCamera) { //拍照
         
-        if ([TLChooseResultManager manager].hasChooseItems.count > 9) {
+        if ([TLChooseResultManager manager].hasChooseItems.count >= 9) {
             
             [TLAlert alertWithInfo:@"图片数量不能大于9"];
             return;

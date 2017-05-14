@@ -162,7 +162,9 @@
     self.photoImageView.contentMode = UIViewContentModeScaleAspectFill;
     self.selectedBtn.selected = _photoItem.isSelected;
 
-    [[PHCachingImageManager defaultManager] requestImageForAsset:_photoItem.asset targetSize:_photoItem.thumbnailSize contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+    [[PHCachingImageManager defaultManager] requestImageForAsset:_photoItem.asset
+                                                      targetSize:_photoItem.thumbnailSize contentMode:PHImageContentModeAspectFill options:nil
+                                                   resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
         
         self.photoImageView.image = result;
         //缩略图存储

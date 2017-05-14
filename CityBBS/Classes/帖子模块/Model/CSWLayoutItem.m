@@ -38,7 +38,7 @@ static MLLinkLabel * kProtypeLabel() {
     CGFloat contentW = [CSWLayoutHelper helper].contentWidth;
     //1.标题
     CGSize titleSize = [_article.title calculateStringSize:CGSizeMake(contentW, MAXFLOAT) font:[CSWLayoutHelper helper].titleFont];
-    self.titleFrame =CGRectMake(leftMargin, CONST_TOP_HEIGHT, titleSize.width + 1, titleSize.height + 2);
+    self.titleFrame =CGRectMake(leftMargin, CONST_TOP_HEIGHT, ceilf(contentW), ceilf(titleSize.height));
     
     //2.内容-- 先给值才能计算出真正的高度
 //    CGSize contentSize = [_article.content calculateStringSize:CGSizeMake(contentW, MAXFLOAT) font:[CSWLayoutHelper helper].contentFont];
@@ -46,7 +46,7 @@ static MLLinkLabel * kProtypeLabel() {
     MLLinkLabel *testLabel = kProtypeLabel();
     testLabel.attributedText = self.contentAttributedString;
     CGSize contenSize = [testLabel sizeThatFits:CGSizeMake(contentW, MAXFLOAT)];
-    self.contentFrame = CGRectMake(leftMargin, CGRectGetMaxY(self.titleFrame) + 5, contenSize.width, contenSize.height);
+    self.contentFrame = CGRectMake(leftMargin, CGRectGetMaxY(self.titleFrame) + 5, ceilf(contenSize.width), ceilf(contenSize.height));
     
     //3.图片
     NSInteger hang = 0;

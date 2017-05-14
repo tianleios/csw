@@ -59,10 +59,12 @@
     //移除以前的
     [[TLChooseResultManager manager].hasChooseItems removeAllObjects];
     [[TLChooseResultManager manager].hasChooseItems addObjectsFromArray:_replacePhotoItems];
+    NSLog(@"%@",_replacePhotoItems[0].asset.localIdentifier);
     self.displayVC.replacePhotoItems = _replacePhotoItems;
     
 }
 
+//--//
 - (instancetype)init
 {
     
