@@ -11,12 +11,16 @@ target 'CityBBS' do
   pod 'Masonry'
   pod 'MBProgressHUD'
   pod 'AFNetworking'
-  pod 'SDWebImage'
   pod 'MLLabel'
   pod 'SVProgressHUD'
-  pod 'PYPhotoBrowser'
+  
+  #1.1.5图片不会自动缩放
+  pod 'PYPhotoBrowser','1.1.5'
+  pod 'SDWebImage','3.8.2'
+  #
   pod 'IQKeyboardManager'
   pod 'TZImagePickerController'
+  
   #七牛云
   pod 'Qiniu'
   pod 'Realm'

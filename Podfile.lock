@@ -17,27 +17,27 @@ PODS:
   - DACircularProgress (2.3.1)
   - FDFullscreenPopGesture (1.1)
   - HappyDNS (0.3.10)
-  - IQKeyboardManager (4.0.8)
+  - IQKeyboardManager (4.0.9)
   - Masonry (1.0.2)
   - MBProgressHUD (1.0.0)
   - MJExtension (3.0.13)
   - MJRefresh (3.1.12)
-  - MLLabel (1.10.2)
+  - MLLabel (1.10.3)
   - PYPhotoBrowser (1.1.5):
     - DACircularProgress
     - MBProgressHUD
     - SDWebImage
-  - Qiniu (7.1.4):
+  - Qiniu (7.1.5):
     - AFNetworking (~> 3)
     - HappyDNS (~> 0.3)
-  - Realm (2.1.2):
-    - Realm/Headers (= 2.1.2)
-  - Realm/Headers (2.1.2)
+  - Realm (2.7.0):
+    - Realm/Headers (= 2.7.0)
+  - Realm/Headers (2.7.0)
   - SDWebImage (3.8.2):
     - SDWebImage/Core (= 3.8.2)
   - SDWebImage/Core (3.8.2)
   - SVProgressHUD (2.1.2)
-  - TZImagePickerController (1.7.8)
+  - TZImagePickerController (1.7.9)
 
 DEPENDENCIES:
   - AFNetworking
@@ -48,10 +48,10 @@ DEPENDENCIES:
   - MJExtension
   - MJRefresh
   - MLLabel
-  - PYPhotoBrowser
+  - PYPhotoBrowser (= 1.1.5)
   - Qiniu
   - Realm
-  - SDWebImage
+  - SDWebImage (= 3.8.2)
   - SVProgressHUD
   - TZImagePickerController
 
@@ -60,19 +60,19 @@ SPEC CHECKSUMS:
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   FDFullscreenPopGesture: a8a620179e3d9c40e8e00256dcee1c1a27c6d0f0
   HappyDNS: 06a9fed2796663fd87626dbf02552933265bf059
-  IQKeyboardManager: 1a8189fa153bf09044355ee0ad36826f6767e7f7
+  IQKeyboardManager: 322c7405df3eb5f7e50dede32ea937bf3d4364e0
   Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
   MJExtension: 5932755f451458eefa24239358817f8d291240c7
   MJRefresh: b96cdb21c4aa75a7b07654311ab2f315c497e806
-  MLLabel: 71315bd11dc45bebba159e07427496ea8bfc2b0a
+  MLLabel: 3760fb38aeac53b212409b634bc4aa4bf39ab628
   PYPhotoBrowser: ae866ee6b263b2e680dbb0abcbbad32bae7db1e3
-  Qiniu: a4c962782035ee25b9da3e195181d8c384bb75be
-  Realm: efe855f4d977c8ce5a82d3116d9f1ff155a6550c
+  Qiniu: 77a3dba411556a383d72d17e842345a9d4c83252
+  Realm: 07e5d3a9e0e41d65fd5f9f05150ed6295d0f093b
   SDWebImage: '098e97e6176540799c27e804c96653ee0833d13c'
   SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
-  TZImagePickerController: 87a138ae5d585225aaa6c8abe2cface0f0ad19dd
+  TZImagePickerController: 0a8ff228d287ebdd7d485e8c42a2a932894f1fba
 
-PODFILE CHECKSUM: 0a6d349ae7ec33a8cff1555070eaac91b3457cc2
+PODFILE CHECKSUM: ec01fc4a53d7e9da65835679a1c88770f5e20707
 
 COCOAPODS: 1.2.0
