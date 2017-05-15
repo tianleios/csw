@@ -28,6 +28,7 @@
 
     NSLog(@"多图选择被释放");
 }
+
 //- (instancetype)initWithDelegate:(id<TLImagePickerControllerDelegate> )pickerDelegate {
 //
 //    TLDisplayPhotoVC *displayVC = [[TLDisplayPhotoVC alloc] init];

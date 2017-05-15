@@ -32,10 +32,6 @@
 //@property (nonatomic, strong) CSWCommentInputView *commentInputView;
 @property (nonatomic, strong) CSWArticleDetailToolBarView *toolBarView;
 
-
-@property (nonatomic, strong) NSMutableArray <CSWCommentLayoutItem *> *commentLayoutItems;
-@property (nonatomic, strong) NSMutableArray <CSWLikeModel *>*dzModels;
-
 @property (nonatomic, assign) BOOL isComment;
 
 //重新设计
@@ -44,9 +40,9 @@
 
 @property (nonatomic, strong) TLTableView *articleDetailTableView; //显示帖子详情 + 赏金
 
-
+//--//
 @property (nonatomic, strong) TLTableView *commentTableView; //评论
-@property (nonatomic, strong) TLTableView *dzTableView; //点赞
+//@property (nonatomic, strong) TLTableView *dzTableView; //点赞
 
 
 @property (nonatomic, strong) CSWLayoutItem *layoutItem;
@@ -57,8 +53,14 @@
 
 @property (nonatomic, strong) CSWCommentModel *currentOperationComment;
 
-@property (nonatomic, strong) NSMutableArray <CSWDSRecord *>*dsRecordRoom;
+@property (nonatomic, strong) NSMutableArray <CSWDSRecord *>*dsRecordRoom; //打赏列表
 @property (nonatomic, strong) CSWTimeLineCell *currentDetailTimeLineCell;
+
+//评论
+@property (nonatomic, strong) NSMutableArray <CSWCommentLayoutItem *> *commentLayoutItems;
+
+//点赞
+@property (nonatomic, strong) NSMutableArray <CSWLikeModel *>*dzModels;
 
 //--// 当用户登录的时候，判断是否关注了该发帖人
 @property (nonatomic, assign) BOOL isFocus;
@@ -66,7 +68,13 @@
 @property (nonatomic, assign) BOOL isDZ;//是否点赞
 @property (nonatomic, assign) BOOL isSC;//是否收藏
 
+@property (nonatomic, assign) BOOL isDisplayComment;//展示评论数据
+
+@property (nonatomic, assign) NSInteger commentPageStart;
+@property (nonatomic, assign) NSInteger dzPageStart;
+
 @end
+
 
 @implementation CSWArticleDetailVC
 
@@ -102,6 +110,10 @@
     self.title = @"帖子详情";
     
     self.isComment = YES;
+    self.isDisplayComment = YES;
+    
+    self.commentPageStart = 2;
+    self.dzPageStart = 2;
     
     if (!self.articleCode) {
         
@@ -143,6 +155,87 @@
         
         //UI
         [self setUpUI];
+        
+        __weak typeof(self) weakself = self;
+        //添加上拉行为
+        [self.commentTableView addLoadMoreAction:^{
+            
+            if (weakself.isDisplayComment) {
+                
+                TLNetworking *http = [TLNetworking new];
+                //    http.showView = self.view;
+                http.code = @"610133";
+                http.parameters[@"start"] = [NSString stringWithFormat:@"%ld",weakself.commentPageStart];
+                http.parameters[@"limit"] = @"10";
+                //    http.parameters[@"status"] = @"D";
+                http.parameters[@"postCode"] = weakself.layoutItem.article.code;
+                [http postWithSuccess:^(id responseObject) {
+                    
+                    NSArray *arr =  responseObject[@"data"][@"list"];
+                    [weakself.commentTableView endRefreshFooter];
+
+                    if (!arr.count) {//
+
+                        [weakself.commentTableView endRefreshingWithNoMoreData_tl];
+                        
+                    } else {
+                        
+                        [arr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                            
+                            CSWCommentModel *commentModel = [CSWCommentModel tl_objectWithDictionary:obj];
+                            CSWCommentLayoutItem *layoutItem = [CSWCommentLayoutItem new];
+                            layoutItem.commentModel = commentModel;
+                            //
+                            [weakself.commentLayoutItems addObject:layoutItem];
+                            
+                        }];
+                        
+                        weakself.commentPageStart ++;
+                        [weakself.commentTableView reloadData_tl];
+                        
+                    }
+                    
+                    
+                    
+                } failure:^(NSError *error) {
+                    
+                }];
+                
+            } else { //加载更多点赞
+                
+                //                //获取点赞
+                TLNetworking *dzHttp = [TLNetworking new];
+                //    dzHttp.showView = self.view;
+                dzHttp.code = @"610141";
+                dzHttp.parameters[@"start"] = [NSString stringWithFormat:@"%ld",weakself.dzPageStart];;
+                dzHttp.parameters[@"limit"] = @"10";
+                dzHttp.parameters[@"userId"] = weakself.layoutItem.article.publisher;
+                dzHttp.parameters[@"postCode"] = weakself.layoutItem.article.code;
+                [dzHttp postWithSuccess:^(id responseObject) {
+                    
+                    NSArray *arr = responseObject[@"data"][@"list"];
+                    [weakself.commentTableView endRefreshFooter];
+
+                    if (!arr.count) {
+                        //
+                        [weakself.commentTableView endRefreshingWithNoMoreData_tl];
+                        //
+                    } else {
+                        //
+                        weakself.dzPageStart ++;
+                        [weakself.dzModels addObjectsFromArray:[CSWLikeModel tl_objectArrayWithDictionaryArray:arr]];
+                        [weakself.commentTableView reloadData_tl];
+                        
+                    }
+                    //
+                    //
+                } failure:^(NSError *error) {
+                    
+                }];
+                //
+                
+            }
+        }];
         
         //--//
         self.toolBarView.isCollection = NO;
@@ -269,7 +362,7 @@
     //    http.showView = self.view;
     http.code = @"610133";
     http.parameters[@"start"] = @"1";
-    http.parameters[@"limit"] = @"100";
+    http.parameters[@"limit"] = @"10";
     //    http.parameters[@"status"] = @"D";
     http.parameters[@"postCode"] = self.layoutItem.article.code;
     [http postWithSuccess:^(id responseObject) {
@@ -297,26 +390,26 @@
     }];
     
     //获取点赞
-    TLNetworking *dzHttp = [TLNetworking new];
-    //    dzHttp.showView = self.view;
-    dzHttp.code = @"610141";
-    dzHttp.parameters[@"start"] = @"1";
-    dzHttp.parameters[@"limit"] = @"10";
-    dzHttp.parameters[@"userId"] = self.layoutItem.article.publisher;
-    dzHttp.parameters[@"postCode"] = self.layoutItem.article.code;
-    [dzHttp postWithSuccess:^(id responseObject) {
-        
-        self.dzModels = [CSWLikeModel tl_objectArrayWithDictionaryArray:responseObject[@"data"][@"list"]];
-        
-        if(self.dzModels.count) {
-            
-            [self.dzTableView reloadData];
-
-        }
-        
-    } failure:^(NSError *error) {
-        
-    }];
+//    TLNetworking *dzHttp = [TLNetworking new];
+//    //    dzHttp.showView = self.view;
+//    dzHttp.code = @"610141";
+//    dzHttp.parameters[@"start"] = @"1";
+//    dzHttp.parameters[@"limit"] = @"10";
+//    dzHttp.parameters[@"userId"] = self.layoutItem.article.publisher;
+//    dzHttp.parameters[@"postCode"] = self.layoutItem.article.code;
+//    [dzHttp postWithSuccess:^(id responseObject) {
+//        
+//        self.dzModels = [CSWLikeModel tl_objectArrayWithDictionaryArray:responseObject[@"data"][@"list"]];
+//        
+//        if(self.dzModels.count) {
+//            
+//            [self.dzTableView reloadData];
+//
+//        }
+//        
+//    } failure:^(NSError *error) {
+//        
+//    }];
     
     //打赏
     TLNetworking *dsRecordHttp = [TLNetworking new];
@@ -642,46 +735,46 @@
     }
 
     //
-    if ([scrollView isEqual:self.commentTableView]) {
-        
-        //两个内容同步
-        self.dzTableView.contentOffset = scrollView.contentOffset;
-        
-        
-        if(scrollView.contentOffset.y > 0 ) {
-        
-            //1............
-            if (scrollView.contentOffset.y > self.articleDetailTableViewHeigth) {
-            
-                 self.userActionSwitchView.y = scrollView.contentOffset.y;
-            } else {
-            
-                self.userActionSwitchView.y = self.articleDetailTableViewHeigth;
-
-            }
-            
-        }
-        
-    } else {
-    
-        //两个内容同步
-        self.commentTableView.contentOffset = scrollView.contentOffset;
-        
-        
-        if(scrollView.contentOffset.y > 0 ) {
-            
-            //1.
-            if (scrollView.contentOffset.y > self.articleDetailTableViewHeigth) {
-                
-                self.userActionSwitchView.y = scrollView.contentOffset.y;
-            } else {
-                
-                self.userActionSwitchView.y = self.articleDetailTableViewHeigth;
-                
-            }
-        }
-    }
-    
+//    if ([scrollView isEqual:self.commentTableView]) {
+//        
+//        //两个内容同步
+//        self.dzTableView.contentOffset = scrollView.contentOffset;
+//        
+//        
+//        if(scrollView.contentOffset.y > 0 ) {
+//        
+//            //1............
+//            if (scrollView.contentOffset.y > self.articleDetailTableViewHeigth) {
+//            
+//                 self.userActionSwitchView.y = scrollView.contentOffset.y;
+//            } else {
+//            
+//                self.userActionSwitchView.y = self.articleDetailTableViewHeigth;
+//
+//            }
+//            
+//        }
+//        
+//    } else {
+//    
+//        //两个内容同步
+//        self.commentTableView.contentOffset = scrollView.contentOffset;
+//        
+//        
+//        if(scrollView.contentOffset.y > 0 ) {
+//            
+//            //1.
+//            if (scrollView.contentOffset.y > self.articleDetailTableViewHeigth) {
+//                
+//                self.userActionSwitchView.y = scrollView.contentOffset.y;
+//            } else {
+//                
+//                self.userActionSwitchView.y = self.articleDetailTableViewHeigth;
+//                
+//            }
+//        }
+//    }
+//    
 
 }
 
@@ -712,15 +805,14 @@
     
     
     //假header
-    UIView *falseHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, articleDetailTableViewHeight + USER_ACTION_SWITCH_HEIGHT)];
-    
+//    UIView *falseHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, articleDetailTableViewHeight + USER_ACTION_SWITCH_HEIGHT)];
     
     //5.点赞的table
-    self.dzTableView = [TLTableView  tableViewWithframe:CGRectMake(0, 0, self.bgScrollView.width, self.bgScrollView.height) delegate:self dataSource:self];
-    [self.bgScrollView addSubview:self.dzTableView];
-    self.dzTableView.backgroundColor = [UIColor backgroundColor];
-    self.dzTableView.tableHeaderView = falseHeaderView;
-    self.dzHeaderView = falseHeaderView;
+//    self.dzTableView = [TLTableView  tableViewWithframe:CGRectMake(0, 0, self.bgScrollView.width, self.bgScrollView.height) delegate:self dataSource:self];
+//    [self.bgScrollView addSubview:self.dzTableView];
+//    self.dzTableView.backgroundColor = [UIColor backgroundColor];
+//    self.dzTableView.tableHeaderView = falseHeaderView;
+//    self.dzHeaderView = falseHeaderView;
     
     //-//
     UIView *falseHeaderView1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, articleDetailTableViewHeight + USER_ACTION_SWITCH_HEIGHT)];
@@ -730,11 +822,12 @@
     self.commentHeaderView = falseHeaderView1;
     
     //4.评论的tableView
-    self.commentTableView = [TLTableView  tableViewWithframe:self.dzTableView.frame delegate:self dataSource:self];
+    self.commentTableView = [TLTableView  tableViewWithframe:CGRectMake(0, 0, self.bgScrollView.width, self.bgScrollView.height) delegate:self dataSource:self];
     self.commentTableView.backgroundColor = [UIColor cyanColor];
     self.commentTableView.tableHeaderView = falseHeaderView1;
     self.commentTableView.backgroundColor = [UIColor backgroundColor];
     [self.bgScrollView addSubview:self.commentTableView];
+    self.commentTableView.placeHolderView = [TLPlaceholderView placeholderViewWithText:@"暂无数据"];
     
     
     //调整 背景scrollView暂无-----特殊用途，可能view也可以
@@ -746,7 +839,7 @@
     (SCREEN_WIDTH, self.bgScrollView.height + self.articleDetailTableViewHeigth);
     
     //
-    self.dzTableView.contentSize = self.commentTableView.contentSize;
+//    self.dzTableView.contentSize = self.commentTableView.contentSize;
     
     
 }
@@ -770,24 +863,66 @@
 
 //    [self.articleDetailTableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];
     
+//    if (idx == 0) {
+//        //评论
+//        self.commentTableView.hidden = NO;
+////        self.dzTableView.hidden = YES;
+//        [self.commentHeaderView  addSubview:self.articleDetailTableView];
+//        [self.commentHeaderView  addSubview:self.userActionSwitchView];
+//
+//    } else {
+//        
+//        self.commentTableView.hidden = YES;
+////        self.dzTableView.hidden = NO;
+////        [self.bgScrollView bringSubviewToFront:self.dzTableView];
+//        [self.dzHeaderView  addSubview:self.articleDetailTableView];
+//        [self.dzHeaderView  addSubview:self.userActionSwitchView];
+//
+//    }
+    
+    [self.commentTableView resetNoMoreData_tl];
     if (idx == 0) {
-        //评论
-        self.commentTableView.hidden = NO;
-        self.dzTableView.hidden = YES;
-        [self.commentHeaderView  addSubview:self.articleDetailTableView];
-        [self.commentHeaderView  addSubview:self.userActionSwitchView];
-
+        
+        self.isDisplayComment = YES;
+        [self.commentTableView reloadData_tl];
+        
     } else {
         
-        self.commentTableView.hidden = YES;
-        self.dzTableView.hidden = NO;
-//        [self.bgScrollView bringSubviewToFront:self.dzTableView];
-        [self.dzHeaderView  addSubview:self.articleDetailTableView];
-        [self.dzHeaderView  addSubview:self.userActionSwitchView];
+        //是否有数据
+        if (self.dzModels.count) {
+            self.isDisplayComment = NO;
+            [self.commentTableView reloadData];
 
+            return;
+        }
+        
+            TLNetworking *dzHttp = [TLNetworking new];
+           dzHttp.showView = self.view;
+            dzHttp.code = @"610141";
+            dzHttp.parameters[@"start"] = @"1";
+            dzHttp.parameters[@"limit"] = @"10";
+            dzHttp.parameters[@"userId"] = self.layoutItem.article.publisher;
+            dzHttp.parameters[@"postCode"] = self.layoutItem.article.code;
+            [dzHttp postWithSuccess:^(id responseObject) {
+        
+                self.dzModels = [CSWLikeModel tl_objectArrayWithDictionaryArray:responseObject[@"data"][@"list"]];
+        
+//                if(self.dzModels.count) {
+        
+                    self.isDisplayComment = NO;
+                    [self.commentTableView reloadData];
+        
+//                }
+                
+            } failure:^(NSError *error) {
+                
+            }];
+    
+    
     }
 
 }
+
 
 #pragma mark- 关注行为
 -(void)focusAction:(UIButton *)btn {
@@ -860,7 +995,7 @@
             
         }
         
-    } else if ([tableView isEqual:self.commentTableView]) {
+    } else if (self.isDisplayComment) {
     
         return self.commentLayoutItems[indexPath.row].cellHeight;
 
@@ -880,7 +1015,7 @@
         
         return 1;
         
-    } else if ([tableView isEqual:self.commentTableView]) {
+    } else if (self.isDisplayComment) {
         
         return self.commentLayoutItems.count;
         
@@ -929,7 +1064,7 @@
             
         }
         
-    } else if ([tableView isEqual:self.commentTableView]) {
+    } else if (self.isDisplayComment) {
         //评论的tableView
         
 //        if (tableView.contentSize.height < (self.bgScrollView.height + self.articleDetailTableViewHeigth)) {
@@ -1002,14 +1137,9 @@
         
         return 2;
         
-    } else if ([tableView isEqual:self.commentTableView]) {
-        
+    } else  {
+    
         return 1;
-        
-    } else {
-        //点赞
-        return 1;
-        
     }
 }
 
@@ -1024,6 +1154,7 @@
     if ([tableView isEqual:self.articleDetailTableView]) {
         return 10;
     }
+    
     return 0.01;
  
 }

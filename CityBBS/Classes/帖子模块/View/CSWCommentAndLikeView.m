@@ -41,8 +41,8 @@
     if (self) {
         
         self.backgroundColor = [UIColor colorWithHexString:@"#f5f5f5"];
-//                self.layer.cornerRadius = 8;
-//                self.layer.masksToBounds = YES;
+        self.layer.cornerRadius = 8;
+        self.layer.masksToBounds = YES;
         
         
         CSWLayoutHelper *layout = [CSWLayoutHelper helper];

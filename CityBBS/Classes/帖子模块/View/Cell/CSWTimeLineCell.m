@@ -49,8 +49,8 @@
         //
         self.photoImageView = [[CSWUserPhotoView alloc] initWithFrame:CGRectMake(15, 15, 50, 50)];
         [self.contentView addSubview:self.photoImageView];
-//        self.photoImageView.layer.cornerRadius = 25;
-//        self.photoImageView.layer.masksToBounds = YES;
+        self.photoImageView.layer.cornerRadius = 25;
+        self.photoImageView.layer.masksToBounds = YES;
         self.photoImageView.backgroundColor = [UIColor orangeColor];
         
         //名称
