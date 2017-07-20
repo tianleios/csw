@@ -28,7 +28,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-    我先修改了，但我没提交
 
     //2.应用环境
     [AppConfig config].runEnv = RunEnvDev;
