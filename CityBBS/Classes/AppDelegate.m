@@ -29,6 +29,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     branch_B
+    branch_B
+
     //2.应用环境
     [AppConfig config].runEnv = RunEnvDev;
     
