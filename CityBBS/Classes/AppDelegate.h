@@ -10,7 +10,6 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
-branch_b
 @property (strong, nonatomic) UIWindow *window;
 
 
